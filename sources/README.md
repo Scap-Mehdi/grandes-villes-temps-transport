@@ -5,6 +5,7 @@ Généré par `build_pages.py` à partir des fiches `sources/<ville>.json`.
 | Ville | Réseau | Licence | GTFS téléchargé le | Validité du GTFS | Jour de référence |
 |---|---|---|---|---|---|
 | [Angers](angers.json) | Irigo | ODbL | 2026-10-04 | 2026-09-19 → 2027-07-02 | 2026-11-03 |
+| [Besançon](besancon.json) | Ginko | Licence Ouverte 2.0 | 2026-10-05 | 2026-09-10 → 2026-11-27 | 2026-10-06 |
 | [Bordeaux](bordeaux.json) | TBM | Licence Ouverte 2.0 | 2026-10-04 | 2026-10-02 → 2027-07-02 | 2026-11-05 |
 | [Brest](brest.json) | Bibus | Licence Ouverte 2.0 | 2026-10-04 | 2026-09-28 → 2026-12-20 | 2026-10-13 |
 | [Clermont-Ferrand](clermont-ferrand.json) | T2C | Licence Ouverte 2.0 | 2026-10-04 | 2026-08-31 → 2026-12-31 | 2026-10-06 |

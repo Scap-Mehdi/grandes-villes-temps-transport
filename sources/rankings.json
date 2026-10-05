@@ -1469,6 +1469,80 @@
     },
     "weekdayTrips": 532
   },
+  "besancon": {
+    "city": "Besançon",
+    "slug": "besancon",
+    "path": "besancon/",
+    "externalUrl": null,
+    "network": "Ginko",
+    "source": {
+      "dataset": "https://transport.data.gouv.fr/datasets/gtfs-et-siri-du-reseau-ginko-besancon-lignes-urbaines-et-periurbaines",
+      "licence": "lo",
+      "fetchedAt": "2026-10-05"
+    },
+    "weekday": "2026-10-06",
+    "saturday": "2026-10-10",
+    "centre": {
+      "station": "Révolution",
+      "firstWeekday": {
+        "time": "04:56",
+        "seconds": 17760,
+        "line": "T1"
+      },
+      "lastWeekday": {
+        "time": "00:34 (+1)",
+        "seconds": 88440,
+        "line": "T1"
+      },
+      "lastSaturday": {
+        "time": "02:00 (+1)",
+        "seconds": 93600,
+        "line": "T1"
+      }
+    },
+    "busiestStation": {
+      "station": null,
+      "tied": [
+        "UFR Santé",
+        "Maison des Familles",
+        "CHU Minjoz",
+        "Ile de France",
+        "Epoisses",
+        "Allende",
+        "Micropolis",
+        "Malcombe",
+        "Rosemont",
+        "Brulard",
+        "Polygone",
+        "Chamars",
+        "Canot",
+        "Battant",
+        "Révolution",
+        "République",
+        "Parc Micaud"
+      ],
+      "passages": 336
+    },
+    "lines": {
+      "T1": {
+        "mode": "tram",
+        "color": "#00A5C2",
+        "peakPassages": 6,
+        "peakHeadway": 10.0,
+        "endToEndMinutes": 42,
+        "endToEnd": "Hauts du Chazal → Chalezeule - Chalezeule"
+      },
+      "T2": {
+        "mode": "tram",
+        "color": "#006D78",
+        "peakPassages": 6,
+        "peakHeadway": 10.0,
+        "endToEndMinutes": 30,
+        "endToEnd": "Hauts du Chazal → Gare Viotte"
+      }
+    },
+    "weekdayTrips": 336
+  },
   "paris": {
     "city": "Paris",
     "slug": "paris",

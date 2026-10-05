@@ -1,0 +1,19 @@
+{
+  "slug": "besancon",
+  "order": 24,
+  "name": "Besançon",
+  "network": "Ginko",
+  "metropole": "Grand Besançon Métropole",
+  "epci": "242500361",
+  "communes": "served",
+  "gtfsUrl": "https://www.data.gouv.fr/api/1/datasets/r/e18e0aeb-8805-47fd-bcdb-c226d21c96fe",
+  "gtfsDataset": "https://transport.data.gouv.fr/datasets/gtfs-et-siri-du-reseau-ginko-besancon-lignes-urbaines-et-periurbaines",
+  "gtfsLicence": "lo",
+  "defaultFrom": {
+    "lat": 47.24046,
+    "lon": 6.02295,
+    "label": "Place de la Révolution"
+  },
+  "searchExample": "Gare Viotte",
+  "published": "2026-10-05"
+}

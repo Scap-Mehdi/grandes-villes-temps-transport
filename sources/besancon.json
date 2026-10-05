@@ -1,0 +1,86 @@
+{
+  "city": "Besançon",
+  "builtAt": "2026-10-05T16:55:01+00:00",
+  "referenceDate": "2026-10-06",
+  "serviceWindow": "7h–20h",
+  "gtfs": {
+    "network": "Ginko",
+    "dataset": "https://transport.data.gouv.fr/datasets/gtfs-et-siri-du-reseau-ginko-besancon-lignes-urbaines-et-periurbaines",
+    "source": "https://www.data.gouv.fr/api/1/datasets/r/e18e0aeb-8805-47fd-bcdb-c226d21c96fe",
+    "how": "download",
+    "fetchedAt": "2026-10-05T16:54:49+00:00",
+    "bytes": 4360706,
+    "sha256": "41fae308f9f03b8255a0c5ad580de3bcf27cba3c45369baa951d71913ed13503",
+    "feedInfo": {
+      "feed_publisher_name": "Keolis Besançon Mobilités",
+      "feed_publisher_url": "https://www.ginko.voyage",
+      "feed_lang": "FR",
+      "feed_start_date": "20260910",
+      "feed_end_date": "20261127",
+      "feed_contact_email": "ginko.support-ssi@keolis.com"
+    },
+    "servicePeriod": [
+      "2026-09-10",
+      "2026-11-27"
+    ]
+  },
+  "communes": {
+    "metropole": "Grand Besançon Métropole",
+    "epci": "242500361",
+    "source": "https://geo.api.gouv.fr/epcis/242500361/communes?fields=nom,code&format=geojson&geometry=contour",
+    "how": "download",
+    "fetchedAt": "2026-10-05T16:54:49+00:00",
+    "bytes": 307283,
+    "sha256": "7782dc0474edf64f203cbd7b8805845b37ef7895f7f3ded5ffd2b3e6157c52b5"
+  },
+  "openStreetMap": {
+    "licence": "ODbL, © contributeurs OpenStreetMap",
+    "osm_water_parks": {
+      "source": "Overpass API: [out:json][timeout:180];(relation[\"natural\"=\"water\"](47.02,5.7,47.46,6.34);way[\"natural\"=\"water\"](47.02,5.7,47.46,6.34);relation[\"leisure\"=\"park\"](47.18,5.94,47.3,6.1);way[\"leisure\"=\"park\"](47.18,5.94,47.3,6.1););out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-05T16:54:54+00:00",
+      "bytes": 3900443,
+      "sha256": "a3591ccf51b6877f8dc76e4c282dbb272bbe04a67b5605b8201e6cfd8364b1e7"
+    }
+  },
+  "railGeometry": "GTFS shapes.txt",
+  "excludedRoutes": [],
+  "network": {
+    "lines": {
+      "bus": 177,
+      "tram": 2
+    },
+    "stops": 721,
+    "railStations": 31
+  },
+  "stats": {
+    "lines": [
+      {
+        "name": "T1",
+        "mode": "tram",
+        "color": "#00A5C2",
+        "stations": 29,
+        "headway": 11.8
+      },
+      {
+        "name": "T2",
+        "mode": "tram",
+        "color": "#006D78",
+        "stations": 20,
+        "headway": 11.3
+      }
+    ],
+    "railStations": 31,
+    "busLines": 177,
+    "center": "Place de la Révolution",
+    "within15": 42,
+    "within30": 100,
+    "farthestStation": "Hauts du Chazal",
+    "farthestMinutes": 30,
+    "ogTrip": {
+      "name": "Micropolis",
+      "lat": 47.22089,
+      "lon": 5.97835
+    }
+  }
+}
