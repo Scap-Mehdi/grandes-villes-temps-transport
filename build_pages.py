@@ -32,6 +32,13 @@ LICENCES = {
     "lo": ("Licence Ouverte 2.0", "https://www.etalab.gouv.fr/licence-ouverte-open-licence/"),
     "odbl": ("ODbL", "https://opendatacommons.org/licenses/odbl/1-0/"),
     "mobilites": ("Licence Mobilités", "https://wiki.lafabriquedesmobilites.fr/wiki/Licence_Mobilit%C3%A9s"),
+    "ccby": ("CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/deed.fr"),
+}
+GEO_CREDITS = {
+    "ban": '<a href="https://geo.api.gouv.fr/">contours communaux</a>, recherche d\'adresse via la\n'
+    '          <a href="https://adresse.data.gouv.fr/">Base Adresse Nationale</a>.',
+    "photon": 'limites administratives OpenStreetMap, recherche d\'adresse via\n'
+    '          <a href="https://photon.komoot.io/">Photon</a> (komoot, données OpenStreetMap).',
 }
 ODBL_URL = "https://opendatacommons.org/licenses/odbl/1-0/"
 MODE_LABEL_SHORT = {"tram": "Tram", "metro": "Métro", "metro+tram": "Métro et tram"}
@@ -150,7 +157,7 @@ def header(base: str) -> str:
     </header>"""
 
 
-def footer(cities: list[dict], base: str, data_credit: str) -> str:
+def footer(cities: list[dict], base: str, data_credit: str, geocoder: str = "ban") -> str:
     links = " · ".join(f'<a href="{base}{city["path"]}">{esc(city["name"])}</a>' for city in sorted(cities, key=lambda c: c["name"]))
     return f"""    <footer class="site-footer">
       <div class="footer-inner">
@@ -172,8 +179,7 @@ def footer(cities: list[dict], base: str, data_credit: str) -> str:
           adapté ensuite à Paris par Jules Grandin
           (<a href="https://julesgrandin.github.io/paris-temps-transport/">C'est encore loin&nbsp;?</a>).
           {data_credit} Fond de carte © <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>,
-          <a href="https://geo.api.gouv.fr/">contours communaux</a>, recherche d'adresse via la
-          <a href="https://adresse.data.gouv.fr/">Base Adresse Nationale</a>.
+          {GEO_CREDITS[geocoder]}
           Données calculées publiées sous licence <a href="{ODBL_URL}">ODbL</a>, code sous licence MIT.
         </p>
       </div>
@@ -232,6 +238,16 @@ def author_schema() -> dict:
             "https://github.com/camilleroux",
         ],
     }
+
+
+def city_count(cities: list[dict]) -> str:
+    """« 20 villes françaises », then the cities abroad by name: « 20 villes françaises et Montréal »."""
+    french = sum(1 for city in cities if city["country"] == "FR")
+    abroad = [city["name"] for city in cities if city["country"] != "FR"]
+    text = f"{french} villes françaises"
+    if abroad:
+        text += (", " + ", ".join(abroad[:-1]) if len(abroad) > 1 else "") + f" et {abroad[-1]}"
+    return esc(text)
 
 
 def city_card(city: dict, base: str, heading: str = "h3") -> str:
@@ -389,6 +405,8 @@ def render_city(template: Template, cities: list[dict], city: dict) -> str:
         "railNoun": rail_noun,
         "railStations": city["railStations"],
         "busNoun": city["busNoun"],
+        "geocoder": city["geocoder"],
+        "searchBbox": city["osmBbox"],
     }
     data_credit = (
         f'Horaires&nbsp;: <a href="{esc(city["gtfsDataset"])}">GTFS {esc(city["network"])}</a> ({esc(city["metropole"])}).'
@@ -405,7 +423,7 @@ def render_city(template: Template, cities: list[dict], city: dict) -> str:
             graph=graph,
         ),
         "header": header(base),
-        "footer": footer(cities, base, data_credit),
+        "footer": footer(cities, base, data_credit, city["geocoder"]),
         "analytics": ANALYTICS,
         "base": base,
         "city_config": json.dumps(config, ensure_ascii=False).replace("</", "<\\/"),
@@ -493,7 +511,7 @@ def render_home(template: Template, cities: list[dict]) -> str:
         "header": header("./"),
         "footer": footer(cities, "./", "Horaires&nbsp;: GTFS des réseaux de chaque ville (détail dans les mentions légales)."),
         "analytics": ANALYTICS,
-        "city_count": str(len(cities)),
+        "city_count": city_count(cities),
         "city_cards": "\n".join(city_card(city, "./", "h2") for city in cities),
         "city_links": "\n".join(
             f'          <a class="chip" href="./{city["path"]}">{esc(city["name"])}</a>'
@@ -544,12 +562,14 @@ def render_legal(cities: list[dict]) -> str:
         <h2>Mesure d'audience et données personnelles</h2>
         <p>La fréquentation est mesurée avec Cloudflare Web Analytics, sans cookie ni identifiant personnel. Les trajets
         sont calculés dans votre navigateur&nbsp;: aucune position ni adresse n'est enregistrée. La recherche d'adresse
-        interroge l'API de la Base Adresse Nationale (adresse.data.gouv.fr).</p>
+        interroge l'API de la Base Adresse Nationale (adresse.data.gouv.fr) et, hors de France, l'API Photon de komoot
+        (photon.komoot.io, données OpenStreetMap).</p>
         <h2>Licences</h2>
         <p>Le code est publié sous licence MIT sur <a href="{GITHUB_URL}">GitHub</a>. Les données calculées
         (<code>data/*.json</code>) sont des bases de données dérivées, publiées sous licence <a href="{ODBL_URL}">ODbL</a>.
         Fond de carte et tracés&nbsp;: © <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>
-        (ODbL). Contours communaux&nbsp;: <a href="https://geo.api.gouv.fr/">geo.api.gouv.fr</a> (Licence Ouverte).</p>
+        (ODbL). Contours communaux&nbsp;: <a href="https://geo.api.gouv.fr/">geo.api.gouv.fr</a> (Licence Ouverte) et, hors
+        de France, limites administratives OpenStreetMap (ODbL).</p>
         <table class="lines-table">
           <caption>Horaires utilisés pour chaque ville</caption>
           <thead><tr><th scope="col">Ville</th><th scope="col">Source</th><th scope="col">Licence</th><th scope="col">Téléchargé le</th></tr></thead>

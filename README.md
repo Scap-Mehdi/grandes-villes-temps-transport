@@ -1,10 +1,10 @@
 # À portée de tram
 
-Cartes interactives des temps de trajet en **tram et métro** (et, en option, en **bus**) dans les grandes villes françaises.
+Cartes interactives des temps de trajet en **tram et métro** (et, en option, en **bus**) dans les grandes villes françaises, à Bruxelles et à Montréal.
 
 👉 **https://tram.camilleroux.com/**
 
-23 villes : [Angers](https://tram.camilleroux.com/angers/) · [Besançon](https://tram.camilleroux.com/besancon/) · [Bordeaux](https://tram.camilleroux.com/bordeaux/) · [Brest](https://tram.camilleroux.com/brest/) · [Clermont-Ferrand](https://tram.camilleroux.com/clermont-ferrand/) · [Dijon](https://tram.camilleroux.com/dijon/) · [Grenoble](https://tram.camilleroux.com/grenoble/) · [Le Mans](https://tram.camilleroux.com/le-mans/) · [Lille](https://tram.camilleroux.com/lille/) · [Lyon](https://tram.camilleroux.com/lyon/) · [Marseille](https://tram.camilleroux.com/marseille/) · [Montpellier](https://tram.camilleroux.com/montpellier/) · [Nantes](https://tram.camilleroux.com/nantes/) · [Nice](https://tram.camilleroux.com/nice/) · [Orléans](https://tram.camilleroux.com/orleans/) · [Paris](https://tram.camilleroux.com/paris/) · [Reims](https://tram.camilleroux.com/reims/) · [Rennes](https://tram.camilleroux.com/rennes/) · [Rouen](https://tram.camilleroux.com/rouen/) · [Saint-Étienne](https://tram.camilleroux.com/saint-etienne/) · [Strasbourg](https://tram.camilleroux.com/strasbourg/) · [Toulouse](https://tram.camilleroux.com/toulouse/) · [Tours](https://tram.camilleroux.com/tours/)
+25 villes : [Angers](https://tram.camilleroux.com/angers/) · [Besançon](https://tram.camilleroux.com/besancon/) · [Bordeaux](https://tram.camilleroux.com/bordeaux/) · [Brest](https://tram.camilleroux.com/brest/) · [Bruxelles](https://tram.camilleroux.com/bruxelles/) · [Clermont-Ferrand](https://tram.camilleroux.com/clermont-ferrand/) · [Dijon](https://tram.camilleroux.com/dijon/) · [Grenoble](https://tram.camilleroux.com/grenoble/) · [Le Mans](https://tram.camilleroux.com/le-mans/) · [Lille](https://tram.camilleroux.com/lille/) · [Lyon](https://tram.camilleroux.com/lyon/) · [Marseille](https://tram.camilleroux.com/marseille/) · [Montpellier](https://tram.camilleroux.com/montpellier/) · [Montréal](https://tram.camilleroux.com/montreal/) · [Nantes](https://tram.camilleroux.com/nantes/) · [Nice](https://tram.camilleroux.com/nice/) · [Orléans](https://tram.camilleroux.com/orleans/) · [Paris](https://tram.camilleroux.com/paris/) · [Reims](https://tram.camilleroux.com/reims/) · [Rennes](https://tram.camilleroux.com/rennes/) · [Rouen](https://tram.camilleroux.com/rouen/) · [Saint-Étienne](https://tram.camilleroux.com/saint-etienne/) · [Strasbourg](https://tram.camilleroux.com/strasbourg/) · [Toulouse](https://tram.camilleroux.com/toulouse/) · [Tours](https://tram.camilleroux.com/tours/)
 
 Idée originale : le [NYC Transit Time Cartogram](https://castrio.me/nyc/) d'Anthony Castrio, puis sa
 [déclinaison parisienne](https://github.com/JulesGrandin/paris-temps-transport) par Jules Grandin.
@@ -73,6 +73,10 @@ bateau (`fetch_data.py <ville> --rivers-only` télécharge cours d'eau et ponts)
 2. Options utiles : `"communes": "served"` (seulement les communes desservies), `routeModes` (corriger le mode d'une
    ligne), `modeAccess` (temps d'accès au quai), `agencies` (filtrer un GTFS régional), `railGeometry: "osm"` et
    `osmRefAliases` (GTFS sans tracés), `seaDepartments` / `contextOsmRelations` (villes côtières : la mer en bleu).
+   Hors de France (Montréal) : `country` (code pays, `FR` par défaut ; les villes étrangères ont une carte mais restent
+   hors des classements), `communesOsm` (identifiants des relations OSM des communes ou arrondissements, à la place
+   d'`epci`), recherche d'adresse via Photon (komoot, OSM) au lieu de la BAN, `stopNameRewrites` (paires regex →
+   remplacement pour nettoyer les noms d'arrêts), licence `ccby` (CC BY 4.0).
 3. `python3 build.py <ville> --fetch`, puis vérifier le tableau de contrôle et `node tools/check_trips.mjs <ville>`.
 
 ## Données

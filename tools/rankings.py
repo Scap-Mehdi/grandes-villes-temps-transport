@@ -221,7 +221,11 @@ def city_rankings(city: dict) -> dict:
 
 def main() -> None:
     slugs = sys.argv[1:]
-    cities = [city for city in load_cities(include_rankings_only=True) if not slugs or city["slug"] in slugs]
+    # Rankings of France's trams and metros: cities abroad (Montréal) have a map, but are not ranked.
+    cities = [
+        city for city in load_cities(include_rankings_only=True)
+        if city["country"] == "FR" and (not slugs or city["slug"] in slugs)
+    ]
     out = ROOT / "sources" / "rankings.json"
     previous = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
     results = {}

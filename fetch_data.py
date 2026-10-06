@@ -136,9 +136,15 @@ def main() -> None:
         return
 
     print(f"Communes de {city['metropole']}…")
-    communes_url = f"https://geo.api.gouv.fr/epcis/{city['epci']}/communes?fields=nom,code&format=geojson&geometry=contour"
-    (out / "communes.geojson").write_bytes(download(communes_url))
-    record(out, "communes.geojson", communes_url)
+    if city.get("communesOsm"):
+        # Outside France (no EPCI): the municipalities and boroughs are OSM administrative boundaries.
+        query = "[out:json][timeout:110];(" + "".join(f"relation({rel});" for rel in city["communesOsm"]) + ");out geom;"
+        (out / "communes_osm.json").write_bytes(overpass(query))
+        record(out, "communes_osm.json", f"Overpass API: {query}")
+    else:
+        communes_url = f"https://geo.api.gouv.fr/epcis/{city['epci']}/communes?fields=nom,code&format=geojson&geometry=contour"
+        (out / "communes.geojson").write_bytes(download(communes_url))
+        record(out, "communes.geojson", communes_url)
     if city.get("arrondissements"):
         print("Arrondissements municipaux…")
         url = (f"https://geo.api.gouv.fr/communes?type=arrondissement-municipal&codeParent={city['arrondissements']}"

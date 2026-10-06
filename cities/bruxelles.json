@@ -1,0 +1,27 @@
+{
+  "slug": "bruxelles",
+  "order": 26,
+  "name": "Bruxelles",
+  "country": "BE",
+  "kind": "metro+tram",
+  "network": "STIB",
+  "metropole": "Région de Bruxelles-Capitale",
+  "area": "de la Région",
+  "communesOsm": [
+    58254, 58263, 60140, 58274, 58252, 60144, 58249, 58257, 58250, 58258,
+    58256, 58255, 58248, 58262, 58260, 58253, 58264, 60167, 60168,
+    78953, 78958, 78954, 207264
+  ],
+  "gtfsUrl": "https://api-management-discovery-production.azure-api.net/api/gtfs/feed/stibmivb/static",
+  "gtfsDataset": "https://data.belgianmobility.io/fr/data.html?agency=stibmivb",
+  "gtfsLicence": "ccby",
+  "stopNameLanguage": "fr",
+  "defaultFrom": {
+    "lat": 50.8467,
+    "lon": 4.3524,
+    "label": "Grand-Place"
+  },
+  "searchExample": "Atomium",
+  "published": "2026-10-06",
+  "ogAlt": "Carte de Bruxelles colorée selon le temps de trajet en métro et tram depuis la Grand-Place, avec les isochrones 15 et 30 minutes."
+}

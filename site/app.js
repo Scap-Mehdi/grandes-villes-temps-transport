@@ -4,7 +4,8 @@
 
 const CITY = JSON.parse(document.getElementById("city-config").textContent);
 const DATA_URL = new URL(`./data/${CITY.slug}.json?v=${CITY.dataVersion}`, import.meta.url);
-const GEOCODER_URL = "https://api-adresse.data.gouv.fr/search/";
+// Base Adresse Nationale in France; Photon (OSM) elsewhere, limited to the city's area.
+const GEOCODER_URL = CITY.geocoder === "photon" ? "https://photon.komoot.io/api/" : "https://api-adresse.data.gouv.fr/search/";
 
 const DEFAULT_FROM = CITY.defaultFrom;
 const MODE_LABELS = {
@@ -1365,11 +1366,26 @@ function searchStops(query) {
     }));
 }
 
+/** Photon gives the parts of an address: « 1200 Rue Saint-Denis », « Ville-Marie, Montréal ». */
+function photonLabel(properties) {
+  const street = [properties.housenumber, properties.street].filter(Boolean).join(" ");
+  const label = properties.name || street || properties.city || "";
+  const context = [properties.name && street, properties.district, properties.city]
+    .filter((part, index, parts) => part && part !== label && parts.indexOf(part) === index)
+    .join(", ");
+  return { label, context };
+}
+
 async function searchAddress(query) {
   const stops = searchStops(query);
   searchController?.abort();
   searchController = new AbortController();
   const params = new URLSearchParams({ q: query, limit: "6", lat: String(DEFAULT_FROM.lat), lon: String(DEFAULT_FROM.lon) });
+  if (CITY.geocoder === "photon") {
+    const [south, west, north, east] = CITY.searchBbox;
+    params.set("lang", "fr");
+    params.set("bbox", [west, south, east, north].join(","));
+  }
   let payload = { features: [] };
   try {
     const response = await fetch(`${GEOCODER_URL}?${params}`, { signal: searchController.signal });
@@ -1380,7 +1396,8 @@ async function searchAddress(query) {
   const addresses = payload.features
     .map((feature) => {
       const [lon, lat] = feature.geometry.coordinates;
-      return { label: feature.properties.label, context: feature.properties.context, point: toWorld(lat, lon) };
+      const { label, context } = CITY.geocoder === "photon" ? photonLabel(feature.properties) : feature.properties;
+      return { label, context, point: toWorld(lat, lon) };
     })
     .filter((result) => isOnLand(result.point));
   return [...stops, ...addresses].slice(0, 7);

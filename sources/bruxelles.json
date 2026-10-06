@@ -1,0 +1,227 @@
+{
+  "city": "Bruxelles",
+  "builtAt": "2026-10-06T12:44:27+00:00",
+  "referenceDate": "2026-10-06",
+  "serviceWindow": "7h–20h",
+  "gtfs": {
+    "network": "STIB",
+    "dataset": "https://data.belgianmobility.io/fr/data.html?agency=stibmivb",
+    "source": "https://api-management-discovery-production.azure-api.net/api/gtfs/feed/stibmivb/static",
+    "how": "download",
+    "fetchedAt": "2026-10-06T12:39:13+00:00",
+    "bytes": 19837741,
+    "sha256": "a79592efdf259783125ff84aa7ef4f0cea1b35557d3a4b321e3064af3c5769b6",
+    "feedInfo": {
+      "feed_publisher_name": "STIB",
+      "feed_publisher_url": "https://www.stib-mivb.be/index.htm?l=fr",
+      "feed_lang": "fr",
+      "feed_start_date": "20260928",
+      "feed_end_date": "20261025",
+      "feed_version": "2_21_20261002_143730",
+      "feed_contact_email": "data@stib-mivb.brussels"
+    },
+    "servicePeriod": [
+      "2026-09-28",
+      "2026-10-25"
+    ]
+  },
+  "communes": {
+    "metropole": "Région de Bruxelles-Capitale",
+    "source": "Overpass API: [out:json][timeout:110];(relation(58254);relation(58263);relation(60140);relation(58274);relation(58252);relation(60144);relation(58249);relation(58257);relation(58250);relation(58258);relation(58256);relation(58255);relation(58248);relation(58262);relation(58260);relation(58253);relation(58264);relation(60167);relation(60168);relation(78953);relation(78958);relation(78954);relation(207264););out geom;",
+    "how": "download",
+    "fetchedAt": "2026-10-06T12:39:16+00:00",
+    "bytes": 711267,
+    "sha256": "5af1abfaa0925e5ec9a0aa7b466bd244735329339a36b095e5be8fa96d3c68cd"
+  },
+  "openStreetMap": {
+    "licence": "ODbL, © contributeurs OpenStreetMap",
+    "osm_water_parks": {
+      "source": "Overpass API: [out:json][timeout:180];(relation[\"natural\"=\"water\"](50.63,4.03,51.07,4.67);way[\"natural\"=\"water\"](50.63,4.03,51.07,4.67);relation[\"leisure\"=\"park\"](50.79,4.27,50.91,4.43);way[\"leisure\"=\"park\"](50.79,4.27,50.91,4.43););out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T12:44:21+00:00",
+      "bytes": 18200280,
+      "sha256": "6372df3eab83f7f70e0daa5b5d48b4a74047cd6435ad09e8269a5f7b347c7d54"
+    }
+  },
+  "railGeometry": "GTFS shapes.txt",
+  "excludedRoutes": [],
+  "network": {
+    "lines": {
+      "metro": 4,
+      "tram": 18,
+      "bus": 52
+    },
+    "stops": 859,
+    "railStations": 303
+  },
+  "stats": {
+    "lines": [
+      {
+        "name": "1",
+        "mode": "metro",
+        "color": "#B5378C",
+        "stations": 30,
+        "headway": 5.8
+      },
+      {
+        "name": "2",
+        "mode": "metro",
+        "color": "#ED6C23",
+        "stations": 19,
+        "headway": 6.3
+      },
+      {
+        "name": "5",
+        "mode": "metro",
+        "color": "#F6A90B",
+        "stations": 28,
+        "headway": 5.8
+      },
+      {
+        "name": "6",
+        "mode": "metro",
+        "color": "#0066A3",
+        "stations": 26,
+        "headway": 6.2
+      },
+      {
+        "name": "4",
+        "mode": "tram",
+        "color": "#EA4F80",
+        "stations": 26,
+        "headway": 6.6
+      },
+      {
+        "name": "7",
+        "mode": "tram",
+        "color": "#EFE048",
+        "stations": 34,
+        "headway": 6.6
+      },
+      {
+        "name": "8",
+        "mode": "tram",
+        "color": "#169FDB",
+        "stations": 31,
+        "headway": 6.9
+      },
+      {
+        "name": "9",
+        "mode": "tram",
+        "color": "#C44F97",
+        "stations": 24,
+        "headway": 5.4
+      },
+      {
+        "name": "10",
+        "mode": "tram",
+        "color": "#8F4199",
+        "stations": 21,
+        "headway": 6.4
+      },
+      {
+        "name": "18",
+        "mode": "tram",
+        "color": "#91BEE7",
+        "stations": 15,
+        "headway": 8.5
+      },
+      {
+        "name": "19",
+        "mode": "tram",
+        "color": "#E43C2E",
+        "stations": 12,
+        "headway": 9.0
+      },
+      {
+        "name": "25",
+        "mode": "tram",
+        "color": "#A12944",
+        "stations": 26,
+        "headway": 6.6
+      },
+      {
+        "name": "35",
+        "mode": "tram",
+        "color": "#336195",
+        "stations": 7,
+        "headway": 6.8
+      },
+      {
+        "name": "39",
+        "mode": "tram",
+        "color": "#E43C2E",
+        "stations": 15,
+        "headway": 8.1
+      },
+      {
+        "name": "44",
+        "mode": "tram",
+        "color": "#F3C300",
+        "stations": 12,
+        "headway": 8.0
+      },
+      {
+        "name": "51",
+        "mode": "tram",
+        "color": "#F3C300",
+        "stations": 16,
+        "headway": 7.7
+      },
+      {
+        "name": "55",
+        "mode": "tram",
+        "color": "#F3C300",
+        "stations": 11,
+        "headway": 6.0
+      },
+      {
+        "name": "62",
+        "mode": "tram",
+        "color": "#F29DC3",
+        "stations": 28,
+        "headway": 12.8
+      },
+      {
+        "name": "81",
+        "mode": "tram",
+        "color": "#4C8B33",
+        "stations": 13,
+        "headway": 7.9
+      },
+      {
+        "name": "82",
+        "mode": "tram",
+        "color": "#91BEE7",
+        "stations": 38,
+        "headway": 6.6
+      },
+      {
+        "name": "92",
+        "mode": "tram",
+        "color": "#E43C2E",
+        "stations": 36,
+        "headway": 6.6
+      },
+      {
+        "name": "93",
+        "mode": "tram",
+        "color": "#ED7807",
+        "stations": 31,
+        "headway": 6.6
+      }
+    ],
+    "railStations": 303,
+    "busLines": 52,
+    "center": "Grand-Place",
+    "within15": 9,
+    "within30": 53,
+    "farthestStation": "Van Haelen",
+    "farthestMinutes": 54,
+    "ogTrip": {
+      "name": "Beaulieu",
+      "lat": 50.81539,
+      "lon": 4.40876
+    }
+  }
+}

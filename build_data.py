@@ -342,18 +342,18 @@ def extract_rivers(data_dir: Path, city: dict) -> Tuple[List[List[Point]], List[
 # --- Land, water, parks -----------------------------------------------------
 
 
-def served_communes(payload: dict, stations: Sequence[dict]) -> set:
+def served_communes(features: Sequence[Tuple[str, MultiPolygon]], stations: Sequence[dict]) -> set:
     """Communes with a few stops of the network and a tram/metro station within reach: big intercommunalities
     (Grand Reims, Nice Côte d'Azur…) reach far beyond their urban network."""
     rail_points = [station["point"] for station in stations if station["rail"]]
     names = set()
-    for feature in payload["features"]:
-        polygons = PolygonSet(coords_to_polygons(feature["geometry"]))
-        inside = [station["point"] for station in stations if polygons.contains(station["point"])]
+    for name, polygons in features:
+        polygon_set = PolygonSet(polygons)
+        inside = [station["point"] for station in stations if polygon_set.contains(station["point"])]
         if len(inside) < SERVED_MIN_STOPS:
             continue
         if min(dist(point, rail) for point in inside for rail in rail_points) <= SERVED_MAX_RAIL_DISTANCE:
-            names.add(feature["properties"]["nom"])
+            names.add(name)
     return names
 
 
@@ -383,23 +383,31 @@ def extract_arrondissements(data_dir: Path, city: dict) -> List[dict]:
     return arrondissements
 
 
+def load_communes(data_dir: Path) -> List[Tuple[str, MultiPolygon]]:
+    """(name, polygons) of each commune: from geo.api.gouv.fr in France, from OSM boundaries elsewhere (Montréal)."""
+    if (data_dir / "communes_osm.json").exists():
+        return [
+            # French name first: « Bruxelles », not the bilingual « Bruxelles - Brussel ».
+            (element["tags"].get("name:fr") or element["tags"]["name"], [[simplify_ring(ring, MIN_RING_DISTANCE) for ring in polygon] for polygon in osm_polygons(element)])
+            for element in load_json(data_dir / "communes_osm.json")["elements"]
+        ]
+    return [(feature["properties"]["nom"], coords_to_polygons(feature["geometry"])) for feature in load_json(data_dir / "communes.geojson")["features"]]
+
+
 def extract_communes(data_dir: Path, city: dict, stations: Sequence[dict]) -> Tuple[List[dict], MultiPolygon]:
-    payload = load_json(data_dir / "communes.geojson")
+    features = load_communes(data_dir)
     # Some metropolises are far larger than their urban network (Aix-Marseille-Provence): keep only the listed
     # communes, or the ones actually served.
-    wanted = served_communes(payload, stations) if city.get("communes") == "served" else set(city.get("communes", []))
+    wanted = served_communes(features, stations) if city.get("communes") == "served" else set(city.get("communes", []))
     communes = []
     all_polygons: MultiPolygon = []
-    for feature in sorted(payload["features"], key=lambda f: f["properties"]["nom"]):
-        if wanted and feature["properties"]["nom"] not in wanted:
-            continue
-        polygons = coords_to_polygons(feature["geometry"])
-        if not polygons:
+    for name, polygons in sorted(features, key=lambda feature: feature[0]):
+        if (wanted and name not in wanted) or not polygons:
             continue
         largest = max((polygon[0] for polygon in polygons), key=lambda ring: abs(ring_area(ring)))
         communes.append(
             {
-                "name": feature["properties"]["nom"],
+                "name": name,
                 "polygons": [serialize_polygon(polygon) for polygon in polygons],
                 "outline": [[round_point(point) for point in polygon[0]] for polygon in polygons],
                 "label": round_point(polygon_centroid(largest)),
@@ -666,6 +674,16 @@ def extract_network(data_dir: Path, city: dict):
         routes = {row["route_id"]: row for row in read_gtfs_table(archive, "routes.txt")}
         excluded = {route_id for route_id, row in routes.items() if route_excluded(row, city)}
         stops = {row["stop_id"]: row for row in read_gtfs_table(archive, "stops.txt")}
+        if city.get("stopNameLanguage"):
+            # STIB writes « TRONE » in stops.txt and « Trône » in its French translations.
+            names = {
+                row["field_value"]: row["translation"]
+                for row in read_gtfs_table(archive, "translations.txt")
+                if row.get("table_name") == "stops" and row.get("field_name") == "stop_name"
+                and row.get("language") == city["stopNameLanguage"] and row.get("field_value")
+            }
+            for row in stops.values():
+                row["stop_name"] = names.get(row["stop_name"], row["stop_name"])
         services = services_by_date(list(read_gtfs_table(archive, "calendar.txt")), list(read_gtfs_table(archive, "calendar_dates.txt")))
         # Demand-responsive trips (TaM flags them in a "TAD" column) cannot be modelled with fixed times.
         all_trips = [
@@ -692,6 +710,10 @@ def extract_network(data_dir: Path, city: dict):
 
     used_stop_ids = {stop_id for sequence in stop_times.values() for _, stop_id, _, _ in sequence}
     complexes, complex_of = group_stops(stops, used_stop_ids)
+    # Names cleaned up by the config: STM writes « Station Montmorency -Zone B » for the metro.
+    for pattern, replacement in city.get("stopNameRewrites", []):
+        for station in complexes:
+            station["name"] = re.sub(pattern, replacement, station["name"])
 
     ride_samples: Dict[Tuple[int, int, str], List[float]] = defaultdict(list)
     departures: Dict[Tuple[int, str], Counter] = defaultdict(Counter)
@@ -979,7 +1001,11 @@ def write_provenance(city: dict, data_dir: Path, reference_date: date, route_inf
             "feedInfo": feed_info,
             "servicePeriod": [days[0].isoformat(), days[-1].isoformat()] if days else None,
         },
-        "communes": {"metropole": city["metropole"], "epci": city["epci"], **manifest.get("communes.geojson", {})},
+        "communes": {
+            "metropole": city["metropole"],
+            **({"epci": city["epci"]} if city.get("epci") else {}),
+            **manifest.get("communes_osm.json" if city.get("communesOsm") else "communes.geojson", {}),
+        },
         **({"arrondissements": manifest["arrondissements.geojson"]} if "arrondissements.geojson" in manifest else {}),
         "openStreetMap": {
             "licence": "ODbL, © contributeurs OpenStreetMap",

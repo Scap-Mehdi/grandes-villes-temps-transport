@@ -39,6 +39,9 @@ def with_defaults(raw: dict) -> dict:
     city.setdefault("busLabel", "Bus")
     city.setdefault("area", "de la Métropole" if "métropole" in city["metropole"].lower() else "de l'agglomération")
     city.setdefault("railGeometry", "gtfs")
+    # Outside France (`country`), no Base Adresse Nationale: addresses are looked up in OSM through Photon.
+    city.setdefault("country", "FR")
+    city.setdefault("geocoder", "ban" if city["country"] == "FR" else "photon")
     city.setdefault("lat0", round(lat, 2))
     city.setdefault("osmBbox", [round(lat - OSM_HALF_SIZE[0], 2), round(lon - OSM_HALF_SIZE[1], 2),
                                 round(lat + OSM_HALF_SIZE[0], 2), round(lon + OSM_HALF_SIZE[1], 2)])

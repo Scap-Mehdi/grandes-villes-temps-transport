@@ -1,0 +1,40 @@
+{
+  "slug": "montreal",
+  "order": 25,
+  "name": "Montréal",
+  "country": "CA",
+  "kind": "metro",
+  "network": "STM",
+  "metropole": "Agglomération de Montréal",
+  "communesOsm": [
+    8803535, 8803286, 8806187, 8806483, 8805426, 5363262, 1878503, 8805747, 8803356, 8803462,
+    8803553, 8806364, 8802299, 8803540, 8806186, 8803537, 8805573, 1572820, 8803536,
+    197579, 197578, 5361655, 197601, 197562, 197569, 197577, 197567, 1634159, 7022381,
+    197576, 197580, 197583, 197561,
+    8797481, 8797405, 19294938
+  ],
+  "gtfsUrl": "https://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip",
+  "gtfsDataset": "https://www.stm.info/fr/a-propos/developpeurs",
+  "gtfsLicence": "ccby",
+  "defaultFrom": {
+    "lat": 45.5156,
+    "lon": -73.562,
+    "label": "Place Émilie-Gamelin"
+  },
+  "searchExample": "Oratoire Saint-Joseph",
+  "published": "2026-10-06",
+  "osmBbox": [
+    45.38,
+    -74.0,
+    45.72,
+    -73.42
+  ],
+  "parksBbox": [
+    45.42,
+    -73.75,
+    45.62,
+    -73.48
+  ],
+  "stopNameRewrites": [["^Station ", ""], [" -Zone [A-C]$", ""]],
+  "rivers": ["Fleuve Saint-Laurent", "Rivière des Prairies"]
+}

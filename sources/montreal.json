@@ -1,0 +1,113 @@
+{
+  "city": "Montréal",
+  "builtAt": "2026-10-06T12:38:36+00:00",
+  "referenceDate": "2026-10-06",
+  "serviceWindow": "7h–20h",
+  "gtfs": {
+    "network": "STM",
+    "dataset": "https://www.stm.info/fr/a-propos/developpeurs",
+    "source": "https://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip",
+    "how": "download",
+    "fetchedAt": "2026-10-06T12:04:48+00:00",
+    "bytes": 42928416,
+    "sha256": "1b8e59076ee50773e80bca33dd5f4f95f24bd3d0ee6283ffb62337f5bf8eb0da",
+    "feedInfo": {
+      "feed_publisher_name": "Société de transport de Montréal",
+      "feed_publisher_url": "https://www.stm.info",
+      "feed_lang": "fr",
+      "feed_start_date": "20260615",
+      "feed_end_date": "20261025",
+      "feed_version": "20260805110000_26S"
+    },
+    "servicePeriod": [
+      "2026-06-15",
+      "2026-10-25"
+    ]
+  },
+  "communes": {
+    "metropole": "Agglomération de Montréal",
+    "source": "Overpass API: [out:json][timeout:110];(relation(8803535);relation(8803286);relation(8806187);relation(8806483);relation(8805426);relation(5363262);relation(1878503);relation(8805747);relation(8803356);relation(8803462);relation(8803553);relation(8806364);relation(8802299);relation(8803540);relation(8806186);relation(8803537);relation(8805573);relation(1572820);relation(8803536);relation(197579);relation(197578);relation(5361655);relation(197601);relation(197562);relation(197569);relation(197577);relation(197567);relation(1634159);relation(7022381);relation(197576);relation(197580);relation(197583);relation(197561);relation(8797481);relation(8797405);relation(19294938););out geom;",
+    "how": "download",
+    "fetchedAt": "2026-10-06T12:06:14+00:00",
+    "bytes": 506636,
+    "sha256": "9004377130e960574e941eefaeda4c6b89ceb8d1ef1f4f0a17cc926b3d4ce117"
+  },
+  "openStreetMap": {
+    "licence": "ODbL, © contributeurs OpenStreetMap",
+    "osm_water_parks": {
+      "source": "Overpass API: [out:json][timeout:180];(relation[\"natural\"=\"water\"](45.38,-74.0,45.72,-73.42);way[\"natural\"=\"water\"](45.38,-74.0,45.72,-73.42);relation[\"leisure\"=\"park\"](45.42,-73.75,45.62,-73.48);way[\"leisure\"=\"park\"](45.42,-73.75,45.62,-73.48););out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T12:06:31+00:00",
+      "bytes": 8646627,
+      "sha256": "73a077b80d84ccf4a4f5fb1736d7347014c4cc7b8a8f69d864007d6d6f341f9c"
+    },
+    "osm_rivers": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"waterway\"=\"river\"][\"name\"~\"^(Fleuve\\ Saint\\-Laurent|Rivière\\ des\\ Prairies)( - .*)?$\"][\"tunnel\"!~\".\"](45.38,-74.0,45.72,-73.42);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T12:06:33+00:00",
+      "bytes": 46361,
+      "sha256": "99a9896ae59959c7e475ef7757deecc5fac97314c02cf87f5539cd4e662d57d9"
+    },
+    "osm_bridges": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"bridge\"][\"highway\"][\"highway\"!~\"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$\"][\"foot\"!=\"no\"](45.38,-74.0,45.72,-73.42);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T12:06:38+00:00",
+      "bytes": 1240271,
+      "sha256": "8184ff6a35cf67dab5b8ecc1f9d6ec9b1f39f190b5060bedaf70c08e3f97795f"
+    }
+  },
+  "railGeometry": "GTFS shapes.txt",
+  "excludedRoutes": [],
+  "network": {
+    "lines": {
+      "metro": 4,
+      "bus": 203
+    },
+    "stops": 5629,
+    "railStations": 68
+  },
+  "stats": {
+    "lines": [
+      {
+        "name": "1",
+        "mode": "metro",
+        "color": "#00B300",
+        "stations": 27,
+        "headway": 4.3
+      },
+      {
+        "name": "2",
+        "mode": "metro",
+        "color": "#D95700",
+        "stations": 31,
+        "headway": 4.3
+      },
+      {
+        "name": "4",
+        "mode": "metro",
+        "color": "#FFD900",
+        "stations": 3,
+        "headway": 6.8
+      },
+      {
+        "name": "5",
+        "mode": "metro",
+        "color": "#0095E6",
+        "stations": 12,
+        "headway": 5.7
+      }
+    ],
+    "railStations": 68,
+    "busLines": 203,
+    "center": "Place Émilie-Gamelin",
+    "within15": 43,
+    "within30": 100,
+    "farthestStation": "Côte-Vertu",
+    "farthestMinutes": 29,
+    "ogTrip": {
+      "name": "Jolicoeur",
+      "lat": 45.457,
+      "lon": -73.58188
+    }
+  }
+}
