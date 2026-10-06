@@ -4,14 +4,50 @@
   "name": "Montréal",
   "country": "CA",
   "kind": "metro",
-  "network": "STM",
+  "network": "STM et REM",
+  "gtfsNetwork": "STM",
   "metropole": "Agglomération de Montréal",
   "communesOsm": [
-    8803535, 8803286, 8806187, 8806483, 8805426, 5363262, 1878503, 8805747, 8803356, 8803462,
-    8803553, 8806364, 8802299, 8803540, 8806186, 8803537, 8805573, 1572820, 8803536,
-    197579, 197578, 5361655, 197601, 197562, 197569, 197577, 197567, 1634159, 7022381,
-    197576, 197580, 197583, 197561,
-    8797481, 8797405, 19294938
+    8803535,
+    8803286,
+    8806187,
+    8806483,
+    8805426,
+    5363262,
+    1878503,
+    8805747,
+    8803356,
+    8803462,
+    8803553,
+    8806364,
+    8802299,
+    8803540,
+    8806186,
+    8803537,
+    8805573,
+    1572820,
+    8803536,
+    197579,
+    197578,
+    5361655,
+    197601,
+    197562,
+    197569,
+    197577,
+    197567,
+    1634159,
+    7022381,
+    197576,
+    197580,
+    197583,
+    197561,
+    8797481,
+    8797405,
+    19294938,
+    2812764,
+    8797549,
+    8796997,
+    2798489
   ],
   "gtfsUrl": "https://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip",
   "gtfsDataset": "https://www.stm.info/fr/a-propos/developpeurs",
@@ -27,7 +63,7 @@
     45.38,
     -74.0,
     45.72,
-    -73.42
+    -73.38
   ],
   "parksBbox": [
     45.42,
@@ -35,6 +71,41 @@
     45.62,
     -73.48
   ],
-  "stopNameRewrites": [["^Station ", ""], [" -Zone [A-C]$", ""]],
-  "rivers": ["Fleuve Saint-Laurent", "Rivière des Prairies"]
+  "stopNameRewrites": [
+    [
+      "^Station ",
+      ""
+    ],
+    [
+      " -Zone [A-C]$",
+      ""
+    ],
+    [
+      " (- Q|q)uai \\d+$",
+      ""
+    ]
+  ],
+  "rivers": [
+    "Fleuve Saint-Laurent",
+    "Rivière des Prairies"
+  ],
+  "gtfsExtra": [
+    {
+      "slug": "rem",
+      "network": "REM",
+      "url": "https://gtfs.gpmmom.ca/gtfs/gtfs.zip",
+      "dataset": "https://www.transit.land/feeds/f-reseau~express~metropolitain",
+      "licence": "ccby"
+    }
+  ],
+  "routeModes": {
+    "rem:S1": "metro"
+  },
+  "routeNames": {
+    "rem:S1": "REM"
+  },
+  "mergeRoutes": {
+    "rem:S2": "rem:S1",
+    "rem:S3": "rem:S1"
+  }
 }

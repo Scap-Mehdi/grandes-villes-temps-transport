@@ -132,6 +132,12 @@ def main() -> None:
     else:
         (out / "gtfs.zip").write_bytes(download(city["gtfsUrl"]))
         record(out, "gtfs.zip", city["gtfsUrl"])
+    for extra in city.get("gtfsExtra", []):
+        # Lines published in a feed of their own (the REM in Montréal), merged by build_data.py.
+        print(f"GTFS {extra['network']}…")
+        name = f"gtfs_{extra['slug']}.zip"
+        (out / name).write_bytes(download(extra["url"]))
+        record(out, name, extra["url"])
     if "--gtfs-only" in sys.argv:
         return
 

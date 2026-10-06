@@ -76,7 +76,11 @@ bateau (`fetch_data.py <ville> --rivers-only` télécharge cours d'eau et ponts)
    Hors de France (Montréal) : `country` (code pays, `FR` par défaut ; les villes étrangères ont une carte mais restent
    hors des classements), `communesOsm` (identifiants des relations OSM des communes ou arrondissements, à la place
    d'`epci`), recherche d'adresse via Photon (komoot, OSM) au lieu de la BAN, `stopNameRewrites` (paires regex →
-   remplacement pour nettoyer les noms d'arrêts), licence `ccby` (CC BY 4.0).
+   remplacement pour nettoyer les noms d'arrêts), `stopNameLanguage` (noms tirés de `translations.txt`, STIB), licence
+   `ccby` (CC BY 4.0).
+   Plusieurs GTFS (REM à côté de la STM) : `gtfsExtra` (`slug`, `network`, `url`, `dataset`, `licence`) les fusionne dans
+   `data/<ville>/gtfs_merged.zip`, identifiants préfixés par le slug (`rem:S1`) ; `gtfsNetwork` nomme le flux principal,
+   `mergeRoutes` regroupe les services d'une même ligne, `routeNames` renomme une ligne.
 3. `python3 build.py <ville> --fetch`, puis vérifier le tableau de contrôle et `node tools/check_trips.mjs <ville>`.
 
 ## Données

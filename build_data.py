@@ -512,6 +512,53 @@ def extract_context(data_dir: Path, city: dict) -> MultiPolygon:
 # --- GTFS -------------------------------------------------------------------
 
 
+# Tables merged from a city's extra feeds (`gtfsExtra`: the REM next to the STM), and their identifier columns,
+# prefixed with the feed's slug so that they cannot collide with the main feed's.
+MERGED_TABLES = ("agency.txt", "routes.txt", "trips.txt", "stops.txt", "stop_times.txt", "shapes.txt", "calendar.txt", "calendar_dates.txt")
+GTFS_ID_COLUMNS = {"route_id", "agency_id", "trip_id", "service_id", "stop_id", "parent_station", "shape_id"}
+
+
+def gtfs_path(data_dir: Path, city: dict) -> Path:
+    """The city's GTFS. With extra feeds, a gtfs_merged.zip (rebuilt when a source changes): the main feed copied as
+    is, then the rows of each extra feed, in the main feed's columns."""
+    extras = city.get("gtfsExtra", [])
+    if not extras:
+        return data_dir / "gtfs.zip"
+    sources = [data_dir / "gtfs.zip", *(data_dir / f"gtfs_{extra['slug']}.zip" for extra in extras)]
+    merged = data_dir / "gtfs_merged.zip"
+    if merged.exists() and all(merged.stat().st_mtime >= source.stat().st_mtime for source in sources):
+        return merged
+    print(f"Fusion des GTFS ({', '.join(source.name for source in sources)})…")
+    archives = [zipfile.ZipFile(source) for source in sources]
+    main, others = archives[0], list(zip(extras, archives[1:]))
+    with zipfile.ZipFile(merged, "w", zipfile.ZIP_DEFLATED) as out:
+        for name in main.namelist():
+            with main.open(name) as source, out.open(name, "w", force_zip64=True) as target:
+                last = b"\n"
+                while chunk := source.read(1 << 20):
+                    target.write(chunk)
+                    last = chunk[-1:]
+                if name not in MERGED_TABLES:
+                    continue
+                if last != b"\n":
+                    target.write(b"\n")
+                with main.open(name) as header_source:
+                    header = next(csv.reader(io.TextIOWrapper(header_source, encoding="utf-8-sig")))
+                text = io.TextIOWrapper(target, encoding="utf-8", newline="")
+                writer = csv.writer(text, lineterminator="\n")
+                for extra, archive in others:
+                    for row in read_gtfs_table(archive, name):
+                        writer.writerow(
+                            f"{extra['slug']}:{row[column]}" if column in GTFS_ID_COLUMNS and row.get(column) else row.get(column, "")
+                            for column in header
+                        )
+                text.flush()
+                text.detach()
+    for archive in archives:
+        archive.close()
+    return merged
+
+
 def read_gtfs_table(archive: zipfile.ZipFile, name: str) -> Iterable[dict]:
     if name not in archive.namelist():
         return
@@ -670,7 +717,7 @@ def extract_network(data_dir: Path, city: dict):
     # Some feeds mislabel their lines (Reims declares its tram as a metro); configs fix them by short name, or by
     # route_id when the name is ambiguous (the RER A of Île-de-France and the A buses of its suburbs).
     mode_overrides = city.get("routeModes", {})
-    with zipfile.ZipFile(data_dir / "gtfs.zip") as archive:
+    with zipfile.ZipFile(gtfs_path(data_dir, city)) as archive:
         routes = {row["route_id"]: row for row in read_gtfs_table(archive, "routes.txt")}
         excluded = {route_id for route_id, row in routes.items() if route_excluded(row, city)}
         stops = {row["stop_id"]: row for row in read_gtfs_table(archive, "stops.txt")}
@@ -684,6 +731,11 @@ def extract_network(data_dir: Path, city: dict):
             }
             for row in stops.values():
                 row["stop_name"] = names.get(row["stop_name"], row["stop_name"])
+        # Names cleaned up by the config before stops are grouped by name: STM writes « Station Montmorency -Zone B »,
+        # the REM one stop per platform (« Station Gare Centrale - Quai 1 »).
+        for pattern, replacement in city.get("stopNameRewrites", []):
+            for row in stops.values():
+                row["stop_name"] = re.sub(pattern, replacement, row["stop_name"])
         services = services_by_date(list(read_gtfs_table(archive, "calendar.txt")), list(read_gtfs_table(archive, "calendar_dates.txt")))
         # Demand-responsive trips (TaM flags them in a "TAD" column) cannot be modelled with fixed times.
         all_trips = [
@@ -691,6 +743,10 @@ def extract_network(data_dir: Path, city: dict):
             for row in read_gtfs_table(archive, "trips.txt")
             if not (row.get("TAD") or "").strip() and row["route_id"] not in excluded
         ]
+        # Services of one line published as separate routes (the REM: Deux-Montagnes, Anse-à-l'Orme and Bois-Franc
+        # trains, all to Brossard): one route, so that waits on the shared trunk count every train.
+        for row in all_trips:
+            row["route_id"] = city.get("mergeRoutes", {}).get(row["route_id"], row["route_id"])
         reference_date = pick_reference_date(services, Counter(row["service_id"] for row in all_trips))
         active_services = services[reference_date]
         trips = {row["trip_id"]: row for row in all_trips if row["service_id"] in active_services}
@@ -710,10 +766,6 @@ def extract_network(data_dir: Path, city: dict):
 
     used_stop_ids = {stop_id for sequence in stop_times.values() for _, stop_id, _, _ in sequence}
     complexes, complex_of = group_stops(stops, used_stop_ids)
-    # Names cleaned up by the config: STM writes « Station Montmorency -Zone B » for the metro.
-    for pattern, replacement in city.get("stopNameRewrites", []):
-        for station in complexes:
-            station["name"] = re.sub(pattern, replacement, station["name"])
 
     ride_samples: Dict[Tuple[int, int, str], List[float]] = defaultdict(list)
     departures: Dict[Tuple[int, str], Counter] = defaultdict(Counter)
@@ -748,7 +800,7 @@ def extract_network(data_dir: Path, city: dict):
             "mode": mode,
             "rail": mode in RAIL_MODES,
             "color": f"#{(row.get('route_color') or '888888').strip().lstrip('#') or '888888'}",
-            "name": row.get("route_short_name") or row.get("route_long_name") or route_id,
+            "name": city.get("routeNames", {}).get(route_id) or row.get("route_short_name") or row.get("route_long_name") or route_id,
         }
     rail_shape_ids = {
         trip["shape_id"] for trip in trips.values() if route_info.get(trip["route_id"], {}).get("rail") and trip.get("shape_id")
@@ -815,9 +867,9 @@ def build_graph(complexes: Sequence[dict], edges, waits, route_info: Dict[str, d
 # --- Rail geometry ----------------------------------------------------------
 
 
-def rail_routes_from_gtfs(data_dir: Path, shape_routes: Dict[str, str], route_info: Dict[str, dict]) -> List[dict]:
+def rail_routes_from_gtfs(gtfs: Path, shape_routes: Dict[str, str], route_info: Dict[str, dict]) -> List[dict]:
     points: Dict[str, List[Tuple[int, Point]]] = defaultdict(list)
-    with zipfile.ZipFile(data_dir / "gtfs.zip") as archive:
+    with zipfile.ZipFile(gtfs) as archive:
         for row in read_gtfs_table(archive, "shapes.txt"):
             if row["shape_id"] in shape_routes:
                 points[row["shape_id"]].append(
@@ -984,7 +1036,7 @@ def write_provenance(city: dict, data_dir: Path, reference_date: date, route_inf
     """Record in sources/<city>.json (versioned) which raw files were used, when they were fetched and what they cover."""
     manifest_path = data_dir / "manifest.json"
     manifest = load_json(manifest_path) if manifest_path.exists() else {}
-    with zipfile.ZipFile(data_dir / "gtfs.zip") as archive:
+    with zipfile.ZipFile(gtfs_path(data_dir, city)) as archive:
         feed_info = next(iter(read_gtfs_table(archive, "feed_info.txt")), None)
         services = services_by_date(list(read_gtfs_table(archive, "calendar.txt")), list(read_gtfs_table(archive, "calendar_dates.txt")))
     days = sorted(day for day, active in services.items() if active)
@@ -1001,6 +1053,10 @@ def write_provenance(city: dict, data_dir: Path, reference_date: date, route_inf
             "feedInfo": feed_info,
             "servicePeriod": [days[0].isoformat(), days[-1].isoformat()] if days else None,
         },
+        **({"gtfsExtra": [
+            {"network": extra["network"], "dataset": extra["dataset"], **manifest.get(f"gtfs_{extra['slug']}.zip", {})}
+            for extra in city["gtfsExtra"]
+        ]} if city.get("gtfsExtra") else {}),
         "communes": {
             "metropole": city["metropole"],
             **({"epci": city["epci"]} if city.get("epci") else {}),
@@ -1053,7 +1109,7 @@ def main() -> None:
     if city.get("railGeometry") == "osm":
         routes = rail_routes_from_osm(data_dir, city, route_info)
     else:
-        routes = rail_routes_from_gtfs(data_dir, shape_routes, route_info)
+        routes = rail_routes_from_gtfs(gtfs_path(data_dir, city), shape_routes, route_info)
 
     stations = [
         {

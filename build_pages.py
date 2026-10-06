@@ -408,9 +408,9 @@ def render_city(template: Template, cities: list[dict], city: dict) -> str:
         "geocoder": city["geocoder"],
         "searchBbox": city["osmBbox"],
     }
-    data_credit = (
-        f'Horaires&nbsp;: <a href="{esc(city["gtfsDataset"])}">GTFS {esc(city["network"])}</a> ({esc(city["metropole"])}).'
-    )
+    feeds = " et ".join(f'<a href="{esc(feed["dataset"])}">GTFS {esc(feed["network"])}</a>' for feed in gtfs_feeds(city))
+    data_credit = f'Horaires&nbsp;: {feeds} ({esc(city["metropole"])}).'
+
     values = {
         "head": head(
             title=f"{city['title']} · {city['titleSuffix']}",
@@ -523,13 +523,27 @@ def render_home(template: Template, cities: list[dict]) -> str:
     return template.substitute(values)
 
 
+def gtfs_feeds(city: dict) -> list[dict]:
+    """The feeds of a city: its main GTFS, then the extra ones merged into it (the REM next to the STM in Montréal)."""
+    main = {
+        "network": city.get("gtfsNetwork", city["network"]),
+        "dataset": city["gtfsDataset"],
+        "licence": city["gtfsLicence"],
+        "fetchedAt": city["sources"]["gtfs"].get("fetchedAt"),
+    }
+    fetched = {extra["network"]: extra.get("fetchedAt") for extra in city["sources"].get("gtfsExtra", [])}
+    extras = [{**extra, "fetchedAt": fetched.get(extra["network"])} for extra in city.get("gtfsExtra", [])]
+    return [main, *extras]
+
+
 def render_legal(cities: list[dict]) -> str:
     """Mentions légales (LCEN) and the licence of every source."""
     rows = "\n".join(
-        f'          <tr><td>{esc(city["name"])}</td><td><a href="{esc(city["gtfsDataset"])}">GTFS {esc(city["network"])}</a></td>'
-        f'<td><a href="{LICENCES[city["gtfsLicence"]][1]}">{LICENCES[city["gtfsLicence"]][0]}</a></td>'
-        f'<td>{french_date(city["sources"]["gtfs"]["fetchedAt"]) if city["sources"]["gtfs"].get("fetchedAt") else "—"}</td></tr>'
+        f'          <tr><td>{esc(city["name"])}</td><td><a href="{esc(feed["dataset"])}">GTFS {esc(feed["network"])}</a></td>'
+        f'<td><a href="{LICENCES[feed["licence"]][1]}">{LICENCES[feed["licence"]][0]}</a></td>'
+        f'<td>{french_date(feed["fetchedAt"]) if feed["fetchedAt"] else "—"}</td></tr>'
         for city in sorted(cities, key=lambda item: item["name"])
+        for feed in gtfs_feeds(city)
     )
     rows += "".join(
         f'\n          <tr><td>{esc(city["city"])} (classements)</td><td><a href="{esc(city["source"]["dataset"])}">GTFS {esc(city["network"])}</a></td>'
