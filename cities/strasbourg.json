@@ -16,5 +16,18 @@
   },
   "searchExample": "Gare de Strasbourg",
   "published": "2026-10-05",
-  "railGeometry": "osm"
+  "railGeometry": "osm",
+  "railLabel": "Tram et BHNS",
+  "railStations": "stations de tram et de BHNS",
+  "routeModes": {
+    "G": "bhns",
+    "H": "bhns"
+  },
+  "osmBusRoutes": {
+    "network": "Compagnie des Transports Strasbourgeois",
+    "refs": [
+      "G",
+      "H"
+    ]
+  }
 }

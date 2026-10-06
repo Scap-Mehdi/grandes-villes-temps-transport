@@ -17,6 +17,7 @@ const MODE_LABELS = {
   cable: "Téléphérique",
   ferry: "Bateau",
   busway: "Busway",
+  bhns: "BHNS",
   bus: "Bus",
 };
 const DEFAULT_MAX = 45;

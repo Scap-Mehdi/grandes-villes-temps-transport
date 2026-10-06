@@ -1,6 +1,6 @@
 {
   "city": "Strasbourg",
-  "builtAt": "2026-10-04T23:02:51+00:00",
+  "builtAt": "2026-10-06T22:16:55+00:00",
   "referenceDate": "2026-11-03",
   "serviceWindow": "7h–20h",
   "gtfs": {
@@ -29,11 +29,11 @@
   "openStreetMap": {
     "licence": "ODbL, © contributeurs OpenStreetMap",
     "osm_rail": {
-      "source": "Overpass API: [out:json][timeout:110];relation[\"route\"~\"^(tram|subway|light_rail|funicular)$\"](48.36,7.43,48.8,8.07);out geom;",
+      "source": "Overpass API: [out:json][timeout:110];(relation[\"route\"~\"^(tram|subway|light_rail|funicular)$\"](48.36,7.43,48.8,8.07);relation[\"route\"=\"bus\"][\"network\"=\"Compagnie des Transports Strasbourgeois\"][\"ref\"~\"^(G|H)$\"](48.36,7.43,48.8,8.07););out geom;",
       "how": "download",
-      "fetchedAt": "2026-10-04T22:22:17+00:00",
-      "bytes": 1201041,
-      "sha256": "bab760669ee7b288fee9d5e6ccce4d620f9fe87e00541a0cd0e9f08d1cf8dac2"
+      "fetchedAt": "2026-10-06T22:16:45+00:00",
+      "bytes": 1333888,
+      "sha256": "2870f22f8d501a938b58d94ad5987881d4127e4cde7a27c742b9a6efb6c3ed54"
     },
     "osm_water_parks": {
       "source": "Overpass API: [out:json][timeout:180];(relation[\"natural\"=\"water\"](48.36,7.43,48.8,8.07);way[\"natural\"=\"water\"](48.36,7.43,48.8,8.07);relation[\"leisure\"=\"park\"](48.52,7.67,48.64,7.83);way[\"leisure\"=\"park\"](48.52,7.67,48.64,7.83););out geom;",
@@ -47,11 +47,12 @@
   "excludedRoutes": [],
   "network": {
     "lines": {
-      "bus": 37,
-      "tram": 6
+      "bus": 35,
+      "tram": 6,
+      "bhns": 2
     },
     "stops": 565,
-    "railStations": 94
+    "railStations": 118
   },
   "stats": {
     "lines": [
@@ -96,13 +97,27 @@
         "color": "#97BF0D",
         "stations": 20,
         "headway": 7.5
+      },
+      {
+        "name": "G",
+        "mode": "bhns",
+        "color": "#F6C900",
+        "stations": 24,
+        "headway": 6.4
+      },
+      {
+        "name": "H",
+        "mode": "bhns",
+        "color": "#A62341",
+        "stations": 10,
+        "headway": 9.9
       }
     ],
-    "railStations": 94,
-    "busLines": 37,
+    "railStations": 118,
+    "busLines": 35,
     "center": "Place Kléber",
     "within15": 30,
-    "within30": 94,
+    "within30": 95,
     "farthestStation": "Graffenstaden",
     "farthestMinutes": 36,
     "ogTrip": {

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Download the raw sources of a city into data/<city>/.
 
-Usage: python3 fetch_data.py <city> [--gtfs-only | --context-only | --rivers-only]
+Usage: python3 fetch_data.py <city> [--gtfs-only | --context-only | --rivers-only | --rail-only]
 """
 
 from __future__ import annotations
@@ -87,6 +87,21 @@ def fetch_context(city: dict, out: Path) -> None:
         record(out, "context_osm.json", f"Overpass API: {query}")
 
 
+def fetch_rail(city: dict, out: Path) -> None:
+    """Line geometries from OSM, for feeds without shapes. `osmBusRoutes` adds bus lines run like a tram
+    (Strasbourg's BHNS G and H), picked by network since other operators reuse the same letters."""
+    print("Tracés des lignes (OSM)…")
+    area = bbox(city["osmRailBbox"])
+    query = f'[out:json][timeout:110];(relation["route"~"^(tram|subway|light_rail|funicular)$"]({area});'
+    buses = city.get("osmBusRoutes")
+    if buses:
+        refs = "|".join(re.escape(ref) for ref in buses["refs"])
+        query += f'relation["route"="bus"]["network"="{buses["network"]}"]["ref"~"^({refs})$"]({area});'
+    query += ");out geom;"
+    (out / "osm_rail.json").write_bytes(overpass(query))
+    record(out, "osm_rail.json", f"Overpass API: {query}")
+
+
 def fetch_rivers(city: dict, out: Path) -> None:
     """Rivers crossed on foot only by a bridge (`"rivers"`: names, and their « La Loire - Bras de Pirmil » parts)."""
     if not city.get("rivers"):
@@ -117,6 +132,9 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     if "--context-only" in sys.argv:
         fetch_context(city, out)
+        return
+    if "--rail-only" in sys.argv:
+        fetch_rail(city, out)
         return
     if "--rivers-only" in sys.argv:
         fetch_rivers(city, out)
@@ -159,10 +177,7 @@ def main() -> None:
         record(out, "arrondissements.geojson", url)
 
     if city.get("railGeometry") == "osm":
-        print("Tracés des lignes (OSM)…")
-        query = f'[out:json][timeout:110];relation["route"~"^(tram|subway|light_rail|funicular)$"]({bbox(city["osmRailBbox"])});out geom;'
-        (out / "osm_rail.json").write_bytes(overpass(query))
-        record(out, "osm_rail.json", f"Overpass API: {query}")
+        fetch_rail(city, out)
 
     print("Eau et parcs (OSM)…")
     area, parks = bbox(city["osmBbox"]), bbox(city["parksBbox"])
