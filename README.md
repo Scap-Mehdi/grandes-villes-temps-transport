@@ -98,7 +98,11 @@ Les temps viennent des horaires GTFS d'un mardi ou jeudi de semaine scolaire typ
 - jour de référence = programme de service le plus courant parmi les mardis et jeudis à venir bien remplis ;
 - durée de chaque inter-station = médiane des durées planifiées ;
 - attente = moitié de l'intervalle moyen entre deux passages à l'arrêt (bornée entre 1 et 15 min) ;
-- correspondance = 1,5 min de marche + attente de la ligne suivante ; marche possible entre arrêts proches (< 450 m) ;
+- ligne à branches (métro 13, RER A…) : pour aller sur une branche, on attend un train de cette branche (attente
+  supplémentaire comptée au point de séparation, affichée avec l'attente) ;
+- correspondance = 1,5 min de marche + attente de la ligne suivante, ou, avec `"transferTimes": "gtfs"`, le temps de quai
+  à quai publié par le réseau (`transfers.txt` : 4 à 10 min dans les couloirs de Châtelet) ; marche possible entre arrêts
+  proches (< 450 m) ;
 - marche à pied à 75 m/min (4,5 km/h) à vol d'oiseau, sans pénalité d'accès (arrêts en surface).
 
 Pas de temps réel ni de perturbations. Les trajets à la demande (TaD) sont exclus.

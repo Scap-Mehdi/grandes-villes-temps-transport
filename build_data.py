@@ -42,6 +42,8 @@ STOP_GROUP_RADIUS = 350.0
 MIN_RIDE_MINUTES = 0.4
 MIN_WAIT = 1.0
 MAX_WAIT = 15.0
+# A next stop served by less than this share of the trains leaving in its direction is a branch.
+BRANCH_SHARE = 0.9
 # Daytime window used to measure headways and ride times (weekday, 7h–20h).
 SERVICE_WINDOW = (7 * 3600, 20 * 3600)
 MIN_RING_DISTANCE = 45.0
@@ -751,6 +753,7 @@ def extract_network(data_dir: Path, city: dict):
         active_services = services[reference_date]
         trips = {row["trip_id"]: row for row in all_trips if row["service_id"] in active_services}
         stop_times = read_stop_times(archive, trips)
+        transfer_rows = list(read_gtfs_table(archive, "transfers.txt")) if city.get("transferTimes") == "gtfs" else []
 
     if city.get("stopsBbox"):
         # Regional feeds (Île-de-France) run far beyond the map: the RER reaches Creil. Trips are cut at the edge.
@@ -769,27 +772,58 @@ def extract_network(data_dir: Path, city: dict):
 
     ride_samples: Dict[Tuple[int, int, str], List[float]] = defaultdict(list)
     departures: Dict[Tuple[int, str], Counter] = defaultdict(Counter)
+    # Departures towards each next stop, and the stops trains come from before each ride: branches (line 13, RER A).
+    next_departures: Dict[Tuple[int, str], Counter] = defaultdict(Counter)
+    previous: Dict[Tuple[int, int, str], set] = defaultdict(set)
+    stop_routes: Dict[str, set] = defaultdict(set)
     window_start, window_end = SERVICE_WINDOW
     for trip_id, sequence in stop_times.items():
         trip = trips[trip_id]
         route_id = trip["route_id"]
         sequence.sort()
+        before = None
         for (_, stop_a, _, dep_a), (_, stop_b, arr_b, _) in zip(sequence, sequence[1:]):
             a, b = complex_of[stop_a], complex_of[stop_b]
             complexes[a]["routes"].add(route_id)
             complexes[b]["routes"].add(route_id)
-            if a == b or not window_start <= dep_a < window_end:
+            stop_routes[stop_a].add(route_id)
+            stop_routes[stop_b].add(route_id)
+            if a == b:
+                continue
+            if before is not None:
+                previous[(a, b, route_id)].add(before)
+            before = a
+            if not window_start <= dep_a < window_end:
                 continue
             ride_samples[(a, b, route_id)].append(max(0, arr_b - dep_a) / 60.0)
             departures[(a, route_id)][trip.get("direction_id") or "0"] += 1
+            next_departures[(a, route_id)][b] += 1
 
-    edges = {key: max(MIN_RIDE_MINUTES, statistics.median(samples)) for key, samples in ride_samples.items()}
     window_minutes = (window_end - window_start) / 60.0
+
+    def half_headway(departures_count: float) -> float:
+        return min(MAX_WAIT, max(MIN_WAIT, window_minutes / departures_count / 2.0))
+
     waits: Dict[Tuple[int, str], float] = {}
     for key, per_direction in departures.items():
-        mean_departures = sum(per_direction.values()) / len(per_direction)
-        headway = window_minutes / mean_departures
-        waits[key] = round(min(MAX_WAIT, max(MIN_WAIT, headway / 2.0)), 2)
+        waits[key] = round(half_headway(sum(per_direction.values()) / len(per_direction)), 2)
+
+    def branch_wait(a: int, b: int, route_id: str) -> float:
+        """Where a line splits, only one train in two (or fewer) goes down each branch: boarding on the trunk for a
+        branch means waiting for that branch. The extra wait is added to the ride towards the first stop of the branch."""
+        towards = next_departures[(a, route_id)]
+        onward = sum(count for stop, count in towards.items() if stop not in previous[(a, b, route_id)])
+        if towards[b] >= BRANCH_SHARE * onward:
+            return 0.0
+        extra = half_headway(towards[b]) - half_headway(onward)
+        return round(extra, 2) if extra >= 0.1 else 0.0
+
+    # Each ride: (median minutes, extra wait for a branch).
+    edges = {
+        (a, b, route_id): (max(MIN_RIDE_MINUTES, statistics.median(samples)), branch_wait(a, b, route_id))
+        for (a, b, route_id), samples in ride_samples.items()
+    }
+    transfer_times = gtfs_transfer_times(transfer_rows, stop_routes, complex_of)
 
     served = {route_id for station in complexes for route_id in station["routes"]}
     route_info = {}
@@ -806,10 +840,27 @@ def extract_network(data_dir: Path, city: dict):
         trip["shape_id"] for trip in trips.values() if route_info.get(trip["route_id"], {}).get("rail") and trip.get("shape_id")
     }
     shape_routes = {trip["shape_id"]: trip["route_id"] for trip in trips.values() if trip.get("shape_id") in rail_shape_ids}
-    return reference_date, complexes, edges, waits, route_info, shape_routes
+    return reference_date, complexes, edges, waits, transfer_times, route_info, shape_routes
 
 
-def build_graph(complexes: Sequence[dict], edges, waits, route_info: Dict[str, dict], access_minutes: Dict[str, float], rivers: Rivers):
+def gtfs_transfer_times(rows: Sequence[dict], stop_routes: Dict[str, set], complex_of: Dict[str, int]) -> Dict[Tuple[int, str, int, str], float]:
+    """Platform-to-platform times published by the network (transfers.txt): Île-de-France Mobilités gives 4 to 10 minutes
+    in the corridors of Châtelet, where a flat estimate would say 2. Median per pair of (station, line)."""
+    samples: Dict[Tuple[int, str, int, str], List[float]] = defaultdict(list)
+    for row in rows:
+        a, b, seconds = row["from_stop_id"], row["to_stop_id"], row.get("min_transfer_time")
+        # Type 3: no transfer possible there, not a time.
+        if not seconds or row.get("transfer_type") == "3" or a not in stop_routes or b not in stop_routes:
+            continue
+        for route_a in stop_routes[a]:
+            for route_b in stop_routes[b]:
+                if route_a != route_b:
+                    samples[(complex_of[a], route_a, complex_of[b], route_b)].append(int(seconds) / 60.0)
+    return {key: round(statistics.median(values), 2) for key, values in samples.items()}
+
+
+def build_graph(complexes: Sequence[dict], edges, waits, transfer_times, route_info: Dict[str, dict],
+                access_minutes: Dict[str, float], rivers: Rivers):
     route_states: List[dict] = []
     station_states: List[List[int]] = [[] for _ in complexes]
     lookup: Dict[Tuple[int, str], int] = {}
@@ -829,14 +880,20 @@ def build_graph(complexes: Sequence[dict], edges, waits, route_info: Dict[str, d
 
     adjacency: List[List[List[float]]] = [[] for _ in route_states]
 
-    def add_edge(src: int, dst: int, weight: float) -> None:
-        adjacency[src].append([dst, round(weight, 2)])
+    def add_edge(src: int, dst: int, weight: float, extra_wait: float = 0.0) -> None:
+        # A third value, when present, is the part of the weight spent waiting (for a branch), shown as such.
+        adjacency[src].append([dst, round(weight, 2), round(extra_wait, 2)] if extra_wait else [dst, round(weight, 2)])
 
     # Ride edges are directed: one-way loops and branches stay correct.
-    for (a, b, route_id), minutes in edges.items():
-        add_edge(lookup[(a, route_id)], lookup[(b, route_id)], minutes)
+    for (a, b, route_id), (minutes, extra) in edges.items():
+        add_edge(lookup[(a, route_id)], lookup[(b, route_id)], minutes + extra, extra)
 
     def transfer(src: int, dst: int, walk: float) -> float:
+        published = transfer_times.get((route_states[src]["stationIndex"], route_states[src]["routeId"],
+                                        route_states[dst]["stationIndex"], route_states[dst]["routeId"]))
+        if published is not None:
+            # The network's own platform-to-platform time, corridors included.
+            return published + route_states[dst]["wait"]
         # Leaving one platform and reaching the other: half of each access time, plus the wait.
         access = (route_states[src]["access"] + route_states[dst]["access"]) / 2.0
         return walk + access + route_states[dst]["wait"]
@@ -998,7 +1055,7 @@ def network_stats(city: dict, route_info, stations, route_states, station_states
         time, state = heapq.heappop(heap)
         if time > best[state]:
             continue
-        for target, weight in adjacency[state]:
+        for target, weight, *_ in adjacency[state]:
             target = int(target)
             if route_info[route_states[target]["routeId"]]["rail"] and time + weight < best[target]:
                 best[target] = time + weight
@@ -1091,7 +1148,7 @@ def main() -> None:
     data_dir = ROOT / "data" / city["slug"]
     output_path = ROOT / "site" / "data" / f"{city['slug']}.json"
 
-    reference_date, complexes, edges, waits, route_info, shape_routes = extract_network(data_dir, city)
+    reference_date, complexes, edges, waits, transfer_times, route_info, shape_routes = extract_network(data_dir, city)
     for station in complexes:
         station["rail"] = any(route_info[route_id]["rail"] for route_id in station["routes"])
     communes, land = extract_communes(data_dir, city, complexes)
@@ -1105,7 +1162,7 @@ def main() -> None:
     access_minutes = {**MODE_ACCESS_MINUTES, **city.get("modeAccess", {})}
     river_lines, bridges = extract_rivers(data_dir, city)
     rivers = Rivers(river_lines, bridges)
-    route_states, station_states, adjacency = build_graph(complexes, edges, waits, route_info, access_minutes, rivers)
+    route_states, station_states, adjacency = build_graph(complexes, edges, waits, transfer_times, route_info, access_minutes, rivers)
     if city.get("railGeometry") == "osm":
         routes = rail_routes_from_osm(data_dir, city, route_info)
     else:

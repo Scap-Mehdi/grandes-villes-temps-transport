@@ -390,26 +390,33 @@ function buildItinerary(solution, point) {
 
   const name = (state) => data.stations[graph.station[state]].name;
   const steps = [{ kind: "walk", text: `À pied jusqu'à ${name(chain[0])}`, minutes: solution.seedWalk[chain[0]] }];
+  // Part du trajet passée à attendre un train de sa branche (ligne 13, RER A) : 3ᵉ valeur, rare, de l'arête.
+  const extraWait = (from, to) => data.adjacency[from].find(([target]) => target === to)?.[2] ?? 0;
   let legStart = chain[0];
+  let legExtra = 0;
   const closeLeg = (legEnd) => {
     steps.push({
       kind: "ride",
       route: graph.route[legStart],
       text: `${name(legStart)} → ${name(legEnd)}`,
-      wait: graph.wait[legStart],
-      minutes: solution.dist[legEnd] - solution.dist[legStart],
+      wait: graph.wait[legStart] + legExtra,
+      minutes: solution.dist[legEnd] - solution.dist[legStart] - legExtra,
     });
   };
   for (let i = 1; i < chain.length; i += 1) {
     const from = chain[i - 1];
     const to = chain[i];
-    if (graph.route[from] === graph.route[to] && graph.station[from] !== graph.station[to]) continue;
-    closeLeg(from);
-    if (graph.station[from] !== graph.station[to]) {
-      const meters = walkMeters(data.stations[graph.station[from]].point, data.stations[graph.station[to]].point);
-      steps.push({ kind: "walk", text: `Correspondance à pied vers ${name(to)}`, minutes: walkMinutes(meters) });
+    if (graph.route[from] === graph.route[to] && graph.station[from] !== graph.station[to]) {
+      legExtra += extraWait(from, to);
+      continue;
     }
+    closeLeg(from);
+    // Couloirs et quais : tout le temps de la correspondance, sauf l'attente de la ligne suivante (affichée avec elle).
+    const minutes = solution.dist[to] - solution.dist[from] - graph.wait[to];
+    const text = graph.station[from] === graph.station[to] ? `Correspondance à ${name(to)}` : `Correspondance à pied vers ${name(to)}`;
+    steps.push({ kind: "walk", text, minutes });
     legStart = to;
+    legExtra = 0;
   }
   closeLeg(chain[chain.length - 1]);
   // La sortie du quai (métro) est comptée avec la marche finale.
