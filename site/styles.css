@@ -1121,6 +1121,85 @@ output {
   margin: 0 0 16px;
 }
 
+.follow-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin: 28px 0 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.follow-text {
+  flex: 1 1 320px;
+}
+
+.follow-text p {
+  margin: 0;
+}
+
+.follow-text .follow-title {
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.follow-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.follow-actions .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.follow-actions svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.follow-x {
+  border-color: #000;
+  background: #000;
+}
+
+.follow-x:hover {
+  border-color: #000;
+  background: #333;
+}
+
+.follow-linkedin {
+  border-color: #0a66c2;
+  background: #0a66c2;
+}
+
+.follow-linkedin:hover {
+  border-color: #004182;
+  background: #004182;
+}
+
+@media (max-width: 440px) {
+  .follow-actions,
+  .follow-actions .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .city-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

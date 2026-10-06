@@ -21,6 +21,9 @@ ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "site"
 SITE_URL = "https://tram.camilleroux.com/"
 GITHUB_URL = "https://github.com/camilleroux/montpellier-temps-transport"
+X_URL = "https://x.com/CamilleRoux"
+LINKEDIN_URL = "https://www.linkedin.com/in/camilleroux"
+BLUESKY_URL = "https://bsky.app/profile/camilleroux.com"
 AUTHOR_URL = "https://www.camilleroux.com/"
 SITE_NAME = "À portée de tram"
 ANALYTICS = (
@@ -186,6 +189,33 @@ def footer(cities: list[dict], base: str, data_credit: str, geocoder: str = "ban
     </footer>"""
 
 
+X_ICON = (
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.21-6.82-5.97 '
+    '6.82H1.68l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.12z"/></svg>'
+)
+LINKEDIN_ICON = (
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 '
+    '1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 4.9v6.29zM5.34 7.43a2.06 '
+    '2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 '
+    '24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>'
+)
+
+
+def follow_note() -> str:
+    """Under the list of cities: where the next ones are announced, and where to ask for one."""
+    return f"""        <aside class="follow-card" aria-label="Nouvelles villes">
+          <div class="follow-text">
+            <p class="follow-title">Suivre les nouvelles villes</p>
+            <p>Chaque nouvelle ville est annoncée sur X et LinkedIn. La vôtre n'est pas encore là&nbsp;?
+            <a href="{GITHUB_URL}/issues" rel="noopener">Proposez-la sur GitHub</a>.</p>
+          </div>
+          <div class="follow-actions">
+            <a class="button follow-x" href="{X_URL}" rel="me noopener">{X_ICON} Suivre sur X</a>
+            <a class="button follow-linkedin" href="{LINKEDIN_URL}" rel="me noopener">{LINKEDIN_ICON} Suivre sur LinkedIn</a>
+          </div>
+        </aside>"""
+
+
 def faq_block(entries: list[tuple]) -> str:
     """Entries are (question, answer) or (question, answer, answer_html) when the visible answer carries links."""
     return "\n".join(
@@ -208,14 +238,16 @@ def credits_entry(question: str) -> tuple:
     text = (
         "L'idée vient du NYC Transit Time Cartogram d'Anthony Castrio, adapté ensuite à Paris par Jules Grandin "
         "(« C'est encore loin ? »). Ces cartes sont réalisées par Camille Roux, développeur et co-fondateur de Human "
-        "Coders à Montpellier, qui présente ses autres réalisations sur camilleroux.com. Le code est ouvert sur GitHub."
+        "Coders à Montpellier, qui présente ses autres réalisations et sa veille tech hebdomadaire sur camilleroux.com. Le "
+        "code est ouvert sur GitHub."
     )
     html_text = (
         'L\'idée vient du <a href="https://castrio.me/nyc/">NYC Transit Time Cartogram</a> d\'Anthony Castrio, adapté '
         'ensuite à Paris par Jules Grandin (<a href="https://julesgrandin.github.io/paris-temps-transport/">C\'est encore '
         f'loin&nbsp;?</a>). Ces cartes sont réalisées par <a href="{AUTHOR_URL}" rel="author">Camille Roux</a>, développeur '
         f'et co-fondateur de Human Coders à Montpellier&nbsp;: découvrez <a href="{AUTHOR_URL}realisations/">ses autres '
-        f'réalisations</a>. Le code est ouvert sur <a href="{GITHUB_URL}">GitHub</a>.'
+        f'réalisations</a> et <a href="{AUTHOR_URL}veille/">sa veille tech hebdomadaire</a>. Le code est ouvert sur '
+        f'<a href="{GITHUB_URL}">GitHub</a>.'
     )
     return (question, text, html_text)
 
@@ -231,9 +263,9 @@ def author_schema() -> dict:
         "worksFor": {"@type": "Organization", "name": "Human Coders", "url": "https://www.humancoders.com/"},
         "address": {"@type": "PostalAddress", "addressLocality": "Montpellier", "addressCountry": "FR"},
         "sameAs": [
-            "https://www.linkedin.com/in/camilleroux",
-            "https://x.com/CamilleRoux",
-            "https://bsky.app/profile/camilleroux.com",
+            LINKEDIN_URL,
+            X_URL,
+            BLUESKY_URL,
             "https://mastodon.social/@camilleroux",
             "https://github.com/camilleroux",
         ],
@@ -441,6 +473,7 @@ def render_city(template: Template, cities: list[dict], city: dict) -> str:
         "ranking_positions": ranking_positions_block(cities, city),
         "line_rows": line_rows,
         "faq_html": faq_block(faq),
+        "follow": follow_note(),
         "other_cities": "\n".join(city_card(other, base) for other in cities if other["slug"] != city["slug"]),
         "styles_version": short_hash(SITE / "styles.css"),
         "app_version": short_hash(SITE / "app.js"),
@@ -471,7 +504,11 @@ def render_home(template: Template, cities: list[dict]) -> str:
         (
             "Ma ville n'y est pas, pourquoi ?",
             "Il faut un réseau de tram ou de métro et des horaires publiés en open data. Les prochaines villes sont ajoutées "
-            "au fur et à mesure : vous pouvez en proposer une sur GitHub.",
+            "au fur et à mesure : vous pouvez en proposer une sur GitHub, et chaque nouvelle ville est annoncée sur X "
+            "et LinkedIn.",
+            "Il faut un réseau de tram ou de métro et des horaires publiés en open data. Les prochaines villes sont ajoutées "
+            f'au fur et à mesure&nbsp;: vous pouvez en <a href="{GITHUB_URL}/issues">proposer une sur GitHub</a>, et chaque '
+            f'nouvelle ville est annoncée sur <a href="{X_URL}">X</a> et <a href="{LINKEDIN_URL}">LinkedIn</a>.',
         ),
         credits_entry("Qui a réalisé ce site ?"),
     ]
@@ -518,6 +555,7 @@ def render_home(template: Template, cities: list[dict]) -> str:
             for city in sorted(cities, key=lambda city: unicodedata.normalize("NFD", city["name"]))
         ),
         "faq_html": faq_block(faq),
+        "follow": follow_note(),
         "styles_version": short_hash(SITE / "styles.css"),
     }
     return template.substitute(values)

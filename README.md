@@ -115,3 +115,7 @@ Pas de temps réel ni de perturbations. Les trajets à la demande (TaD) sont exc
   Licence Mobilités.
 - Mentions légales et licence de chaque source : https://tram.camilleroux.com/mentions-legales/
 
+## Auteur
+
+Camille Roux ([camilleroux.com](https://www.camilleroux.com/)), qui partage aussi une
+[veille tech hebdomadaire](https://www.camilleroux.com/veille/).
