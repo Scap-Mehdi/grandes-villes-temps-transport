@@ -57,9 +57,9 @@ CONTEXT_RING_DISTANCE = 80.0
 WATER_MASK_AREA = 1_000_000.0
 
 # GTFS route_type → mode (basic and extended types).
-RAIL_MODES = {"tram", "metro", "rer", "funicular", "cable", "busway"}
+RAIL_MODES = {"tram", "metro", "rer", "train", "funicular", "cable", "busway"}
 # Minutes to walk from the street to the platform (and back): stairs and corridors of underground lines.
-MODE_ACCESS_MINUTES = {"metro": 1.0, "rer": 1.0, "funicular": 1.0, "cable": 1.0}
+MODE_ACCESS_MINUTES = {"metro": 1.0, "rer": 1.0, "train": 1.0, "funicular": 1.0, "cable": 1.0}
 # Communes kept when a city config says "communes": "served": enough stops, and not too far from tram/metro.
 SERVED_MIN_STOPS = 3
 SERVED_MAX_RAIL_DISTANCE = 12_000.0

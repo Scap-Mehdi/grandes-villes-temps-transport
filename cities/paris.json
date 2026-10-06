@@ -3,9 +3,9 @@
   "order": 26,
   "name": "Paris",
   "kind": "metro+tram",
-  "railNoun": "métro, RER et tram",
-  "railLabel": "Métro, RER et tram",
-  "railStations": "stations de métro, de RER et de tram",
+  "railNoun": "métro, RER, Transilien et tram",
+  "railLabel": "Métro, RER, Transilien et tram",
+  "railStations": "stations de métro, de RER, de Transilien et de tram",
   "network": "Île-de-France Mobilités",
   "metropole": "Métropole du Grand Paris",
   "epci": "200054781",
@@ -30,23 +30,21 @@
   "rivers": [
     "La Seine"
   ],
-  "excludeRoutes": [
-    "IDFM:C01731",
-    "IDFM:C01741",
-    "IDFM:C01730",
-    "IDFM:C01736",
-    "IDFM:C01737",
-    "IDFM:C01738",
-    "IDFM:C01739",
-    "IDFM:C01740",
-    "IDFM:C02711"
-  ],
   "routeModes": {
     "IDFM:C01742": "rer",
     "IDFM:C01743": "rer",
     "IDFM:C01727": "rer",
     "IDFM:C01728": "rer",
-    "IDFM:C01729": "rer"
+    "IDFM:C01729": "rer",
+    "IDFM:C01731": "train",
+    "IDFM:C01741": "train",
+    "IDFM:C01730": "train",
+    "IDFM:C01736": "train",
+    "IDFM:C01737": "train",
+    "IDFM:C01738": "train",
+    "IDFM:C01739": "train",
+    "IDFM:C01740": "train",
+    "IDFM:C02711": "train"
   },
   "stopsBbox": [
     48.7,
@@ -59,7 +57,7 @@
     "title": "C'est encore loin ?",
     "url": "https://julesgrandin.github.io/paris-temps-transport/",
     "modes": "métro et RER",
-    "adds": "le tram, le téléphérique et, en option, les bus"
+    "adds": "le Transilien, le tram, le téléphérique et, en option, les bus"
   },
   "viewBbox": [
     48.79,

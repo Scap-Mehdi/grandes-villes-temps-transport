@@ -29,7 +29,7 @@ Puis ouvrir [http://localhost:8000](http://localhost:8000). `build.py` affiche �
 lus directement dans les horaires : dernier tram du samedi soir au centre, fréquence à l'heure de pointe, station la plus desservie, ligne la plus longue,
 trajets par jour ; écrit `sources/rankings.json`, publié sur `/classements/` avec une page par classement). Une ville avec `"rankingsOnly": true` (et
 `externalUrl` vers sa carte) figure dans les classements sans avoir de carte ici. À Paris, les classements comptent le métro et le
-tram, sans le RER (mode `rer`) que montre la carte. `node tools/check_trips.mjs <ville>` sonde les
+tram, sans le RER (mode `rer`) ni le Transilien (mode `train`) que montre la carte. `node tools/check_trips.mjs <ville>` sonde les
 trajets depuis le centre jusqu'aux terminus et aux gares, et signale les vitesses anormales.
 
 Les sources brutes (`data/<ville>/` : GTFS, communes, OSM) ne sont pas versionnées : elles restent en local et

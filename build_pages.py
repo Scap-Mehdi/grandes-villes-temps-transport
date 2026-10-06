@@ -42,7 +42,7 @@ GEO_CREDITS = {
 }
 ODBL_URL = "https://opendatacommons.org/licenses/odbl/1-0/"
 MODE_LABEL_SHORT = {"tram": "Tram", "metro": "Métro", "metro+tram": "Métro et tram"}
-MODE_NAMES = {"metro": "Métro", "rer": "RER", "tram": "Tram", "funicular": "Funiculaire", "cable": "Téléphérique", "busway": "Busway"}
+MODE_NAMES = {"metro": "Métro", "rer": "RER", "train": "Train", "tram": "Tram", "funicular": "Funiculaire", "cable": "Téléphérique", "busway": "Busway"}
 MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
 WEEKDAYS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
 

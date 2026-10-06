@@ -12,6 +12,7 @@ const MODE_LABELS = {
   tram: "Tram",
   metro: "Métro",
   rer: "RER",
+  train: "Train",
   funicular: "Funiculaire",
   cable: "Téléphérique",
   ferry: "Bateau",

@@ -1,6 +1,6 @@
 {
   "city": "Paris",
-  "builtAt": "2026-10-06T11:58:16+00:00",
+  "builtAt": "2026-10-06T13:52:11+00:00",
   "referenceDate": "2026-10-06",
   "serviceWindow": "7h–20h",
   "gtfs": {
@@ -58,27 +58,18 @@
     }
   },
   "railGeometry": "GTFS shapes.txt",
-  "excludedRoutes": [
-    "IDFM:C01731",
-    "IDFM:C01741",
-    "IDFM:C01730",
-    "IDFM:C01736",
-    "IDFM:C01737",
-    "IDFM:C01738",
-    "IDFM:C01739",
-    "IDFM:C01740",
-    "IDFM:C02711"
-  ],
+  "excludedRoutes": [],
   "network": {
     "lines": {
       "bus": 728,
       "metro": 16,
       "tram": 13,
       "rer": 5,
+      "train": 8,
       "cable": 1
     },
-    "stops": 7556,
-    "railStations": 662
+    "stops": 7593,
+    "railStations": 705
   },
   "stats": {
     "lines": [
@@ -326,12 +317,68 @@
         "color": "#B94E9A",
         "stations": 20,
         "headway": 12.4
+      },
+      {
+        "name": "H",
+        "mode": "train",
+        "color": "#84653D",
+        "stations": 14,
+        "headway": 13.2
+      },
+      {
+        "name": "J",
+        "mode": "train",
+        "color": "#CEC73D",
+        "stations": 14,
+        "headway": 12.3
+      },
+      {
+        "name": "K",
+        "mode": "train",
+        "color": "#9B9842",
+        "stations": 2,
+        "headway": 30.0
+      },
+      {
+        "name": "L",
+        "mode": "train",
+        "color": "#C4A4CC",
+        "stations": 22,
+        "headway": 13.1
+      },
+      {
+        "name": "N",
+        "mode": "train",
+        "color": "#00B297",
+        "stations": 8,
+        "headway": 15.0
+      },
+      {
+        "name": "P",
+        "mode": "train",
+        "color": "#F58F53",
+        "stations": 2,
+        "headway": 24.0
+      },
+      {
+        "name": "U",
+        "mode": "train",
+        "color": "#B6134C",
+        "stations": 6,
+        "headway": 20.5
+      },
+      {
+        "name": "V",
+        "mode": "train",
+        "color": "#9F9825",
+        "stations": 5,
+        "headway": 10.0
       }
     ],
-    "railStations": 662,
+    "railStations": 705,
     "busLines": 728,
     "center": "Châtelet",
-    "within15": 23,
+    "within15": 21,
     "within30": 77,
     "farthestStation": "Hôpital de Montfermeil",
     "farthestMinutes": 62,
