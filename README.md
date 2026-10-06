@@ -48,6 +48,9 @@ Particularités : le GTFS TCL (Lyon) se télécharge à la main sur data.grandly
 les nouvelles villes (`"communes": "served"`), la carte se limite aux communes réellement desservies.
 Options de carte : `"arrondissements": "<code INSEE>"` trace les arrondissements municipaux dans la commune (Marseille),
 et `"view": "stops"` cadre la vue initiale sur tous les arrêts, bus compris, plutôt que sur le seul réseau tram/métro.
+`"rivers": ["La Loire", "L'Erdre"]` rend ces cours d'eau (et leurs bras, « La Loire - Bras de Pirmil ») infranchissables
+à pied ailleurs que sur un pont : la marche passe par le meilleur pont OSM, sinon il faut prendre le tram, le bus ou le
+bateau (`fetch_data.py <ville> --rivers-only` télécharge cours d'eau et ponts).
 
 ## Organisation du site
 

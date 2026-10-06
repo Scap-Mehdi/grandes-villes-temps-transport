@@ -23,5 +23,6 @@
   "railLabel": "Tram et Busway",
   "railStations": "stations de tram et de Busway",
   "busNoun": "bus et Navibus",
-  "busLabel": "Bus et Navibus"
+  "busLabel": "Bus et Navibus",
+  "rivers": ["La Loire", "L'Erdre", "La Sèvre Nantaise"]
 }

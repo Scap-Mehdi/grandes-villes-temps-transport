@@ -139,6 +139,63 @@ function pointInPolygon(point, polygon) {
   return pointInRing(point, polygon[0]) && !polygon.slice(1).some((hole) => pointInRing(point, hole));
 }
 
+// --- Cours d'eau --------------------------------------------------------------
+// Les grands cours d'eau (Loire, Garonne, Rhône…) ne se traversent à pied que par un pont : une marche dont la ligne
+// droite en coupe un passe par le meilleur pont (un seul : une île se rejoint par ses arrêts). Même règle que build_data.py.
+
+const RIVER_BUCKET = 500;
+const MAX_BRIDGE_WALK_METERS = 3000;
+
+function riverKeys(a, b, visit) {
+  for (let gx = Math.floor(Math.min(a[0], b[0]) / RIVER_BUCKET); gx <= Math.floor(Math.max(a[0], b[0]) / RIVER_BUCKET); gx += 1) {
+    for (let gy = Math.floor(Math.min(a[1], b[1]) / RIVER_BUCKET); gy <= Math.floor(Math.max(a[1], b[1]) / RIVER_BUCKET); gy += 1) {
+      if (visit(`${gx},${gy}`)) return true;
+    }
+  }
+  return false;
+}
+
+function indexRivers(lines) {
+  const buckets = new Map();
+  for (const line of lines ?? []) {
+    for (let i = 1; i < line.length; i += 1) {
+      const segment = [line[i - 1], line[i]];
+      riverKeys(segment[0], segment[1], (key) => {
+        if (!buckets.has(key)) buckets.set(key, []);
+        buckets.get(key).push(segment);
+      });
+    }
+  }
+  return buckets;
+}
+
+function side(p, q, r) {
+  return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);
+}
+
+function crossesRiver(a, b) {
+  const buckets = app.rivers;
+  if (!buckets.size) return false;
+  return riverKeys(a, b, (key) =>
+    (buckets.get(key) ?? []).some(([c, d]) => side(a, b, c) * side(a, b, d) < 0 && side(c, d, a) * side(c, d, b) < 0),
+  );
+}
+
+/** Distance de marche en mètres : en ligne droite, ou par un pont ; infinie sans pont praticable. */
+function walkMeters(a, b) {
+  const straight = hypot(a, b);
+  if (!crossesRiver(a, b)) return straight;
+  // Le plus court détour d'abord : le premier pont dont les deux tronçons restent sur leur rive est le meilleur.
+  const detours = [];
+  for (const [endA, endB, length] of app.data.bridges ?? []) {
+    detours.push([hypot(a, endA) + length + hypot(endB, b), endA, endB], [hypot(a, endB) + length + hypot(endA, b), endB, endA]);
+  }
+  detours.sort((x, y) => x[0] - y[0]);
+  // Au-delà de 3 km (40 min), marcher n'est jamais le meilleur choix : inutile de tester les ponts lointains.
+  const found = detours.find(([meters, near, far]) => meters <= MAX_BRIDGE_WALK_METERS && !crossesRiver(a, near) && !crossesRiver(far, b));
+  return found ? found[0] : Infinity;
+}
+
 function isOnLand(point) {
   if (app.data.water.some((polygon) => pointInPolygon(point, polygon))) return false;
   return app.data.boroughs.some((commune) => commune.polygons.some((polygon) => pointInPolygon(point, polygon)));
@@ -244,9 +301,14 @@ function solveFrom(point) {
   const seedWalk = new Float64Array(graph.count);
   const heap = new MinHeap();
 
+  // Les arrêts les plus proches à vol d'oiseau, puis leur vraie distance à pied (détour par un pont).
   const seeds = data.stations
     .map((station, index) => ({ index, walk: walkMinutes(hypot(point, station.point)) }))
     .filter((seed) => stationUsable(seed.index))
+    .sort((a, b) => a.walk - b.walk)
+    .slice(0, data.meta.originStationCount * 4)
+    .map((seed) => ({ index: seed.index, walk: walkMinutes(walkMeters(point, data.stations[seed.index].point)) }))
+    .filter((seed) => Number.isFinite(seed.walk))
     .sort((a, b) => a.walk - b.walk)
     .slice(0, data.meta.originStationCount);
 
@@ -294,12 +356,13 @@ function solveFrom(point) {
 
 /** Meilleur temps vers un point quelconque : à pied direct, ou via l'arrêt le plus favorable. */
 function travelTo(solution, point) {
-  let best = { minutes: walkMinutes(hypot(solution.point, point)), station: -1, walk: 0 };
-  best.walk = best.minutes;
+  const direct = walkMinutes(walkMeters(solution.point, point));
+  let best = { minutes: direct, station: -1, walk: direct };
   app.data.stations.forEach((station, index) => {
     const arrival = solution.stationTime[index];
-    if (!Number.isFinite(arrival)) return;
-    const walk = walkMinutes(hypot(station.point, point));
+    // La vraie distance (pont), plus coûteuse, seulement pour un arrêt qui peut améliorer le trajet.
+    if (!Number.isFinite(arrival) || arrival + walkMinutes(hypot(station.point, point)) >= best.minutes) return;
+    const walk = walkMinutes(walkMeters(station.point, point));
     if (arrival + walk < best.minutes) best = { minutes: arrival + walk, station: index, walk };
   });
   return best;
@@ -340,7 +403,7 @@ function buildItinerary(solution, point) {
     if (graph.route[from] === graph.route[to] && graph.station[from] !== graph.station[to]) continue;
     closeLeg(from);
     if (graph.station[from] !== graph.station[to]) {
-      const meters = hypot(data.stations[graph.station[from]].point, data.stations[graph.station[to]].point);
+      const meters = walkMeters(data.stations[graph.station[from]].point, data.stations[graph.station[to]].point);
       steps.push({ kind: "walk", text: `Correspondance à pied vers ${name(to)}`, minutes: walkMinutes(meters) });
     }
     legStart = to;
@@ -386,12 +449,15 @@ function computeGrid(solution) {
   const { gridCols: cols, gridRows: rows } = meta;
   const times = new Float32Array(cols * rows).fill(NaN);
   for (const cell of cells) {
-    let best = walkMinutes(hypot(solution.point, cell.point));
+    // cell.access donne déjà la vraie distance à pied (build_data.py) ; la marche directe se calcule ici.
+    let best = Infinity;
     for (const [station, meters] of cell.access) {
       const time = solution.stationTime[station] + walkMinutes(meters);
       if (time < best) best = time;
     }
-    times[cell.row * cols + cell.col] = best;
+    if (walkMinutes(hypot(solution.point, cell.point)) < best) best = Math.min(best, walkMinutes(walkMeters(solution.point, cell.point)));
+    // Case enclavée derrière un cours d'eau, sans arrêt de son côté : très loin, sans infini qui contaminerait le lissage.
+    times[cell.row * cols + cell.col] = Math.min(best, 180);
   }
   // Les isochrones enjambent les fleuves (comblés avec les valeurs des rives) au lieu d'en faire le tour ;
   // elles sont ensuite découpées sur la terre ferme au dessin.
@@ -1389,6 +1455,7 @@ async function init() {
   app.data = await response.json();
   app.offset = [app.data.meta.bounds[0], app.data.meta.bounds[1]];
   app.graph = prepareGraph(app.data);
+  app.rivers = indexRivers(app.data.rivers);
   app.paths = buildPaths(app.data);
   app.size.width = 0;
   resize();

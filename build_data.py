@@ -32,6 +32,8 @@ GRID_CELL_METERS = 200.0
 WALK_METERS_PER_MINUTE = 75.0
 CELL_NEAREST_STATIONS = 5
 CELL_NEAREST_RAIL_STATIONS = 3
+# Stations looked at around each cell before dropping the ones across a river.
+CELL_CANDIDATES = 4
 ORIGIN_NEAREST_STATIONS = 8  # stations reachable on foot from a departure point (also read by site/app.js)
 DEFAULT_BOARD_WAIT = 5.0
 TRANSFER_WALK = 1.5
@@ -44,6 +46,10 @@ MAX_WAIT = 15.0
 SERVICE_WINDOW = (7 * 3600, 20 * 3600)
 MIN_RING_DISTANCE = 45.0
 MIN_LINE_DISTANCE = 25.0
+RIVER_POINT_DISTANCE = 20.0
+RIVER_BUCKET_METERS = 500.0
+# Longest walk through a bridge (40 min): beyond, walking is never the best way (also read by site/app.js).
+MAX_BRIDGE_WALK_METERS = 3000.0
 MIN_PARK_AREA = 20_000.0
 MIN_WATER_AREA = 15_000.0
 CONTEXT_RING_DISTANCE = 80.0
@@ -256,6 +262,81 @@ class StationIndex:
             for index in self.buckets.get((gx, gy), ())
             if dist(point, self.points[index]) <= radius
         ]
+
+
+class Rivers:
+    """Big rivers are crossed on foot only by a bridge: a walk whose straight line cuts one goes through the best
+    bridge instead (one bridge at most: an island is reached by its own stops). Same rule as site/app.js."""
+
+    def __init__(self, lines: Sequence[Sequence[Point]], bridges: Sequence[Tuple[Point, Point, float]] = ()):
+        self.buckets: Dict[Tuple[int, int], List[Tuple[Point, Point]]] = defaultdict(list)
+        for line in lines:
+            for a, b in zip(line, line[1:]):
+                for key in self._keys(a, b):
+                    self.buckets[key].append((a, b))
+        self.bridges = list(bridges)
+
+    @staticmethod
+    def _keys(a: Point, b: Point):
+        size = RIVER_BUCKET_METERS
+        for gx in range(int(min(a[0], b[0]) // size), int(max(a[0], b[0]) // size) + 1):
+            for gy in range(int(min(a[1], b[1]) // size), int(max(a[1], b[1]) // size) + 1):
+                yield gx, gy
+
+    def crosses(self, a: Point, b: Point) -> bool:
+        if not self.buckets:
+            return False
+        for key in self._keys(a, b):
+            for c, d in self.buckets.get(key, ()):
+                if segments_cross(a, b, c, d):
+                    return True
+        return False
+
+    def walk(self, a: Point, b: Point) -> float:
+        """Walking distance in meters: straight, or through a bridge; infinite without one."""
+        if not self.crosses(a, b):
+            return dist(a, b)
+        # Shortest detour first: the first bridge whose two legs stay on their bank is the best one.
+        detours = sorted(
+            (dist(a, near) + length + dist(far, b), near, far)
+            for end_a, end_b, length in self.bridges
+            for near, far in ((end_a, end_b), (end_b, end_a))
+        )
+        for meters, near, far in detours:
+            if meters > MAX_BRIDGE_WALK_METERS:
+                break
+            if not self.crosses(a, near) and not self.crosses(far, b):
+                return meters
+        return math.inf
+
+
+def segments_cross(a: Point, b: Point, c: Point, d: Point) -> bool:
+    def side(p: Point, q: Point, r: Point) -> float:
+        return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])
+
+    return side(a, b, c) * side(a, b, d) < 0 and side(c, d, a) * side(c, d, b) < 0
+
+
+def extract_rivers(data_dir: Path, city: dict) -> Tuple[List[List[Point]], List[Tuple[Point, Point, float]]]:
+    """River lines, and the bridges over them: (one end, other end, length)."""
+    if not city.get("rivers"):
+        return [], []
+    lines = []
+    for element in load_json(data_dir / "osm_rivers.json")["elements"]:
+        points = way_points(element.get("geometry", []))
+        if len(points) >= 2:
+            lines.append(simplify_polyline(points, RIVER_POINT_DISTANCE))
+    rivers = Rivers(lines)
+    bridges: Dict[Tuple[int, int], Tuple[Point, Point, float]] = {}
+    for element in load_json(data_dir / "osm_bridges.json")["elements"]:
+        points = way_points(element.get("geometry", []))
+        if len(points) < 2 or not any(rivers.crosses(a, b) for a, b in zip(points, points[1:])):
+            continue
+        length = sum(dist(a, b) for a, b in zip(points, points[1:]))
+        # Carriageways and sidewalks of the same bridge are separate ways: one per 40 m.
+        middle = ((points[0][0] + points[-1][0]) / 2, (points[0][1] + points[-1][1]) / 2)
+        bridges.setdefault((round(middle[0] / 40), round(middle[1] / 40)), (points[0], points[-1], length))
+    return lines, list(bridges.values())
 
 
 # --- Land, water, parks -----------------------------------------------------
@@ -641,7 +722,7 @@ def extract_network(data_dir: Path, city: dict):
     return reference_date, complexes, edges, waits, route_info, shape_routes
 
 
-def build_graph(complexes: Sequence[dict], edges, waits, route_info: Dict[str, dict], access_minutes: Dict[str, float]):
+def build_graph(complexes: Sequence[dict], edges, waits, route_info: Dict[str, dict], access_minutes: Dict[str, float], rivers: Rivers):
     route_states: List[dict] = []
     station_states: List[List[int]] = [[] for _ in complexes]
     lookup: Dict[Tuple[int, str], int] = {}
@@ -685,9 +766,10 @@ def build_graph(complexes: Sequence[dict], edges, waits, route_info: Dict[str, d
     index = StationIndex(points, range(len(points)))
     for i, a in enumerate(complexes):
         for j in index.within(a["point"], INTER_COMPLEX_WALK_RADIUS):
-            if i == j:
+            meters = rivers.walk(a["point"], complexes[j]["point"])
+            if i == j or meters > INTER_COMPLEX_WALK_RADIUS:
                 continue
-            walk = dist(a["point"], complexes[j]["point"]) / WALK_METERS_PER_MINUTE + TRANSFER_WALK
+            walk = meters / WALK_METERS_PER_MINUTE + TRANSFER_WALK
             for src in station_states[i]:
                 for dst in station_states[j]:
                     if route_states[src]["routeId"] != route_states[dst]["routeId"]:
@@ -748,7 +830,7 @@ def rail_routes_from_osm(data_dir: Path, city: dict, route_info: Dict[str, dict]
 # --- Grid -------------------------------------------------------------------
 
 
-def build_grid(land: MultiPolygon, masked_water: MultiPolygon, stations: Sequence[dict], bounds, cols: int, rows: int):
+def build_grid(land: MultiPolygon, masked_water: MultiPolygon, stations: Sequence[dict], bounds, cols: int, rows: int, rivers: Rivers):
     min_x, min_y, max_x, max_y = bounds
     cell_w = (max_x - min_x) / cols
     cell_h = (max_y - min_y) / rows
@@ -763,8 +845,20 @@ def build_grid(land: MultiPolygon, masked_water: MultiPolygon, stations: Sequenc
             point = (min_x + (col + 0.5) * cell_w, min_y + (row + 0.5) * cell_h)
             if not land_set.contains(point) or water_set.contains(point):
                 continue
-            nearest = {index: meters for meters, index in all_index.nearest(point, CELL_NEAREST_STATIONS)}
-            for meters, index in rail_index.nearest(point, CELL_NEAREST_RAIL_STATIONS):
+            def reachable(index_: StationIndex, count: int) -> List[Tuple[float, int]]:
+                found: List[Tuple[float, int]] = []
+                for straight, i in index_.nearest(point, count * CELL_CANDIDATES):
+                    # A walk is never shorter than the straight line: once `count` stops are closer, the rest is useless.
+                    if len(found) >= count and straight >= found[count - 1][0]:
+                        break
+                    meters = rivers.walk(point, points[i])
+                    if meters < math.inf:
+                        found.append((meters, i))
+                        found.sort()
+                return found[:count]
+
+            nearest = {index: meters for meters, index in reachable(all_index, CELL_NEAREST_STATIONS)}
+            for meters, index in reachable(rail_index, CELL_NEAREST_RAIL_STATIONS):
                 nearest[index] = meters
             mask[row * cols + col] = len(cells)
             cells.append(
@@ -778,7 +872,7 @@ def build_grid(land: MultiPolygon, masked_water: MultiPolygon, stations: Sequenc
     return cells, mask
 
 
-def network_stats(city: dict, route_info, stations, route_states, station_states, adjacency) -> dict:
+def network_stats(city: dict, route_info, stations, route_states, station_states, adjacency, rivers: Rivers) -> dict:
     """Figures shown on the page (and its FAQ): lines, headways, share of rail stations within 30 min of the centre."""
     rail_states = [i for i, state in enumerate(route_states) if route_info[state["routeId"]]["rail"]]
     lines = []
@@ -800,11 +894,13 @@ def network_stats(city: dict, route_info, stations, route_states, station_states
     # Same model as the browser: walk to the nearest rail stations, then rail only.
     origin = lonlat_to_xy(city["defaultFrom"]["lon"], city["defaultFrom"]["lat"])
     rail_station_ids = [i for i, station in enumerate(stations) if station["rail"]]
-    seeds = sorted(rail_station_ids, key=lambda i: dist(origin, stations[i]["point"]))[:ORIGIN_NEAREST_STATIONS]
+    nearest = sorted(rail_station_ids, key=lambda i: dist(origin, stations[i]["point"]))[: ORIGIN_NEAREST_STATIONS * CELL_CANDIDATES]
+    walks = {i: rivers.walk(origin, stations[i]["point"]) for i in nearest}
+    seeds = sorted((i for i in nearest if walks[i] < math.inf), key=walks.get)[:ORIGIN_NEAREST_STATIONS]
     best = [math.inf] * len(route_states)
     heap: List[Tuple[float, int]] = []
     for station_index in seeds:
-        walk = dist(origin, stations[station_index]["point"]) / WALK_METERS_PER_MINUTE
+        walk = walks[station_index] / WALK_METERS_PER_MINUTE
         for state in station_states[station_index]:
             if route_info[route_states[state]["routeId"]]["rail"]:
                 time = walk + route_states[state]["access"] + route_states[state]["wait"]
@@ -874,7 +970,7 @@ def write_provenance(city: dict, data_dir: Path, reference_date: date, route_inf
         **({"arrondissements": manifest["arrondissements.geojson"]} if "arrondissements.geojson" in manifest else {}),
         "openStreetMap": {
             "licence": "ODbL, © contributeurs OpenStreetMap",
-            **{name.removesuffix(".json"): manifest[name] for name in ("osm_rail.json", "osm_water_parks.json") if name in manifest},
+            **{name.removesuffix(".json"): manifest[name] for name in ("osm_rail.json", "osm_water_parks.json", "osm_rivers.json", "osm_bridges.json") if name in manifest},
         },
         "railGeometry": "OpenStreetMap" if city.get("railGeometry") == "osm" else "GTFS shapes.txt",
         "excludedRoutes": city.get("excludeRoutes", []),
@@ -912,7 +1008,9 @@ def main() -> None:
     context = extract_context(data_dir, city)
 
     access_minutes = {**MODE_ACCESS_MINUTES, **city.get("modeAccess", {})}
-    route_states, station_states, adjacency = build_graph(complexes, edges, waits, route_info, access_minutes)
+    river_lines, bridges = extract_rivers(data_dir, city)
+    rivers = Rivers(river_lines, bridges)
+    route_states, station_states, adjacency = build_graph(complexes, edges, waits, route_info, access_minutes, rivers)
     if city.get("railGeometry") == "osm":
         routes = rail_routes_from_osm(data_dir, city, route_info)
     else:
@@ -944,7 +1042,7 @@ def main() -> None:
             max(station["point"][0] for station in stations) + VIEW_PAD_METERS,
             max(station["point"][1] for station in stations) + VIEW_PAD_METERS,
         )
-    cells, mask = build_grid(land, masked_water, stations, bounds, cols, rows)
+    cells, mask = build_grid(land, masked_water, stations, bounds, cols, rows, rivers)
 
     output = {
         "meta": {
@@ -961,6 +1059,8 @@ def main() -> None:
         "context": [serialize_polygon(polygon) for polygon in context],
         "boroughs": communes,
         **({"arrondissements": arrondissements} if arrondissements else {}),
+        **({"rivers": [[round_point(point) for point in line] for line in river_lines]} if river_lines else {}),
+        **({"bridges": [[round_point(a), round_point(b), round(length, 1)] for a, b, length in bridges]} if bridges else {}),
         "water": [serialize_polygon(polygon) for polygon in masked_water + water],
         "parks": [serialize_polygon(polygon) for polygon in parks],
         "routes": routes,
@@ -975,7 +1075,7 @@ def main() -> None:
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(output, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
-    stats = network_stats(city, route_info, stations, route_states, station_states, adjacency)
+    stats = network_stats(city, route_info, stations, route_states, station_states, adjacency, rivers)
     provenance_path = write_provenance(city, data_dir, reference_date, route_info, stations, stats)
     print(f"Wrote {provenance_path.relative_to(ROOT)}")
     rail_count = sum(1 for station in stations if station["rail"])

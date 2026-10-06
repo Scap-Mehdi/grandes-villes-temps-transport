@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Download the raw sources of a city into data/<city>/.
 
-Usage: python3 fetch_data.py <city> [--gtfs-only | --context-only]
+Usage: python3 fetch_data.py <city> [--gtfs-only | --context-only | --rivers-only]
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
 import time
 from datetime import datetime, timezone
@@ -86,6 +87,28 @@ def fetch_context(city: dict, out: Path) -> None:
         record(out, "context_osm.json", f"Overpass API: {query}")
 
 
+def fetch_rivers(city: dict, out: Path) -> None:
+    """Rivers crossed on foot only by a bridge (`"rivers"`: names, and their « La Loire - Bras de Pirmil » parts)."""
+    if not city.get("rivers"):
+        return
+    print("Cours d'eau (OSM)…")
+    names = "|".join(re.escape(name) for name in city["rivers"])
+    query = (
+        f'[out:json][timeout:110];way["waterway"="river"]["name"~"^({names})( - .*)?$"]["tunnel"!~"."]'
+        f'({bbox(city["osmBbox"])});out geom;'
+    )
+    (out / "osm_rivers.json").write_bytes(overpass(query))
+    record(out, "osm_rivers.json", f"Overpass API: {query}")
+    # Bridges open to pedestrians: the ones over these rivers are kept by build_data.py.
+    query = (
+        '[out:json][timeout:110];way["bridge"]["highway"]'
+        '["highway"!~"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$"]["foot"!="no"]'
+        f'({bbox(city["osmBbox"])});out geom;'
+    )
+    (out / "osm_bridges.json").write_bytes(overpass(query))
+    record(out, "osm_bridges.json", f"Overpass API: {query}")
+
+
 def main() -> None:
     if len(sys.argv) < 2:
         sys.exit(__doc__)
@@ -94,6 +117,9 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     if "--context-only" in sys.argv:
         fetch_context(city, out)
+        return
+    if "--rivers-only" in sys.argv:
+        fetch_rivers(city, out)
         return
 
     print(f"GTFS {city['network']}…")
@@ -138,6 +164,7 @@ def main() -> None:
     )
     (out / "osm_water_parks.json").write_bytes(overpass(query))
     record(out, "osm_water_parks.json", f"Overpass API: {query}")
+    fetch_rivers(city, out)
     fetch_context(city, out)
 
 

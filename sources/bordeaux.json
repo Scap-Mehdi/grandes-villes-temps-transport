@@ -1,6 +1,6 @@
 {
   "city": "Bordeaux",
-  "builtAt": "2026-10-04T23:02:19+00:00",
+  "builtAt": "2026-10-06T00:54:07+00:00",
   "referenceDate": "2026-11-05",
   "serviceWindow": "7h–20h",
   "gtfs": {
@@ -43,6 +43,20 @@
       "fetchedAt": "2026-10-04T21:26:33+00:00",
       "bytes": 4734259,
       "sha256": "efddf02b2e2e24f275405ac032222e160de15dd8d7c37ce368c86a750812ebb4"
+    },
+    "osm_rivers": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"waterway\"=\"river\"][\"name\"~\"^(La\\ Garonne)( - .*)?$\"][\"tunnel\"!~\".\"](44.68,-0.88,45.08,-0.36);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T00:25:57+00:00",
+      "bytes": 58609,
+      "sha256": "f502169b3c47a0d234df491f3d98c73d08cf6ba7115f569cd609f7655d9dcb98"
+    },
+    "osm_bridges": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"bridge\"][\"highway\"][\"highway\"!~\"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$\"][\"foot\"!=\"no\"](44.68,-0.88,45.08,-0.36);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T00:28:13+00:00",
+      "bytes": 700891,
+      "sha256": "75c14a0e29de88b4f6712803b4d756ed028e9bdedab5cb33b52067213f45d1de"
     }
   },
   "railGeometry": "GTFS shapes.txt",

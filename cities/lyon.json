@@ -46,5 +46,6 @@
   "ogTrip": {
     "lat": 45.784,
     "lon": 4.881
-  }
+  },
+  "rivers": ["Le Rhône", "La Saône"]
 }

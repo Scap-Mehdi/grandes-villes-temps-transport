@@ -33,5 +33,6 @@
   "ogTrip": {
     "lat": 44.8256,
     "lon": -0.5562
-  }
+  },
+  "rivers": ["La Garonne"]
 }

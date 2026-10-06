@@ -1,6 +1,6 @@
 {
   "city": "Lyon",
-  "builtAt": "2026-10-05T12:19:28+00:00",
+  "builtAt": "2026-10-06T00:54:18+00:00",
   "referenceDate": "2026-10-06",
   "serviceWindow": "7h–20h",
   "gtfs": {
@@ -49,6 +49,20 @@
       "fetchedAt": "2026-10-04T21:48:59+00:00",
       "bytes": 8765049,
       "sha256": "0ea9cdda5d84e524249a65074e1e03a94013c3bd006c5e1f46c4a9c9044c17cf"
+    },
+    "osm_rivers": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"waterway\"=\"river\"][\"name\"~\"^(Le\\ Rhône|La\\ Saône)( - .*)?$\"][\"tunnel\"!~\".\"](45.55,4.66,45.95,5.12);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T00:28:16+00:00",
+      "bytes": 101351,
+      "sha256": "2cb160089885deeaf1e49bbcc59c4da6734fc9ebfb9ca609ad481480dba1e8c4"
+    },
+    "osm_bridges": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"bridge\"][\"highway\"][\"highway\"!~\"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$\"][\"foot\"!=\"no\"](45.55,4.66,45.95,5.12);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T00:28:19+00:00",
+      "bytes": 1157216,
+      "sha256": "22158db18226998a822c6034ba64c07e2984a1c587404efe6f307a851eec348e"
     }
   },
   "railGeometry": "OpenStreetMap",

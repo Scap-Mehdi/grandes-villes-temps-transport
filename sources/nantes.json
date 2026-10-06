@@ -1,6 +1,6 @@
 {
   "city": "Nantes",
-  "builtAt": "2026-10-05T14:41:59+00:00",
+  "builtAt": "2026-10-06T00:53:53+00:00",
   "referenceDate": "2026-11-03",
   "serviceWindow": "7h–20h",
   "gtfs": {
@@ -34,6 +34,20 @@
       "fetchedAt": "2026-10-04T22:18:17+00:00",
       "bytes": 16971777,
       "sha256": "1972b4803d8e5f7df11821b63e30d4b5ca39f07b521b0979b7122e122b55ff7b"
+    },
+    "osm_rivers": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"waterway\"=\"river\"][\"name\"~\"^(La\\ Loire|L'Erdre|La\\ Sèvre\\ Nantaise)( - .*)?$\"][\"tunnel\"!~\".\"](46.99,-1.88,47.43,-1.24);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T00:21:45+00:00",
+      "bytes": 140113,
+      "sha256": "582318f64455d40d9620616a2d6b8b2420196f8eda1de745d493e0e55019de42"
+    },
+    "osm_bridges": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"bridge\"][\"highway\"][\"highway\"!~\"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$\"][\"foot\"!=\"no\"](46.99,-1.88,47.43,-1.24);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T00:21:46+00:00",
+      "bytes": 1023438,
+      "sha256": "8dfe55906a0fe87ebcec13bf529cf48229c53d48fc369312162954d340b4b572"
     }
   },
   "railGeometry": "GTFS shapes.txt",
