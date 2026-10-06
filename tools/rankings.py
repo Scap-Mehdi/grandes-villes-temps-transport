@@ -197,7 +197,14 @@ def city_rankings(city: dict) -> dict:
             sequence = sorted(stop_times.get(trip_id, []))
             if len(sequence) >= 2:
                 patterns[tuple(stop[1] for stop in sequence)].append(sequence[-1][2] - sequence[0][3])
-        pattern, durations = max(patterns.items(), key=lambda item: len(item[1]))
+        # The whole line, not its most frequent variant: the longest of the main stop sequences (both directions), those
+        # run at least a third as often as the most frequent one. Short turns and occasional runs stay out (T3 Montpellier:
+        # Mosson → Pérols has one more run than Pérols → Juvignac, 6 min longer).
+        most_runs = max(len(durations) for durations in patterns.values())
+        pattern, durations = max(
+            ((pattern, durations) for pattern, durations in patterns.items() if len(durations) * 3 >= most_runs),
+            key=lambda item: statistics.median(item[1]),
+        )
         busiest_peak = max(peak.values()) if peak else 0
         lines[line(route_id)] = {
             "mode": modes[route_id],

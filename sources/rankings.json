@@ -49,16 +49,16 @@
         "color": "#EF7D00",
         "peakPassages": 12,
         "peakHeadway": 5.0,
-        "endToEndMinutes": 41,
-        "endToEnd": "Notre-Dame de Sablassou → Saint-Jean de Védas Centre"
+        "endToEndMinutes": 52,
+        "endToEnd": "Jacou → Saint-Jean de Védas Centre"
       },
       "3": {
         "mode": "tram",
         "color": "#C8D400",
         "peakPassages": 10,
         "peakHeadway": 6.0,
-        "endToEndMinutes": 47,
-        "endToEnd": "Mosson → Pérols Étang de l'Or"
+        "endToEndMinutes": 53,
+        "endToEnd": "Pérols Étang de l'Or → Juvignac"
       },
       "4": {
         "mode": "tram",
@@ -129,8 +129,8 @@
         "color": "#E50040",
         "peakPassages": 18,
         "peakHeadway": 3.3,
-        "endToEndMinutes": 54,
-        "endToEnd": "Berges de la Garonne → Pessac Centre"
+        "endToEndMinutes": 58,
+        "endToEnd": "France Alouette → Claveau"
       },
       "C": {
         "mode": "tram",
@@ -218,15 +218,15 @@
         "peakPassages": 30,
         "peakHeadway": 2.0,
         "endToEndMinutes": 20,
-        "endToEnd": "Charpennes Charles Hernu → St-Genis-Laval Hôp. Sud"
+        "endToEnd": "St-Genis-Laval Hôp. Sud → Charpennes Charles Hernu"
       },
       "C": {
         "mode": "metro",
         "color": "#EC6608",
         "peakPassages": 11,
         "peakHeadway": 5.5,
-        "endToEndMinutes": 8,
-        "endToEnd": "Hôtel de Ville L. Pradel → Cuire"
+        "endToEndMinutes": 10,
+        "endToEnd": "Cuire → Hôtel de Ville L. Pradel"
       },
       "D": {
         "mode": "metro",
@@ -242,7 +242,7 @@
         "peakPassages": 12,
         "peakHeadway": 5.0,
         "endToEndMinutes": 47,
-        "endToEnd": "IUT Feyssine → Debourg"
+        "endToEnd": "Debourg → IUT Feyssine"
       },
       "T2": {
         "mode": "tram",
@@ -250,23 +250,23 @@
         "peakPassages": 14,
         "peakHeadway": 4.3,
         "endToEndMinutes": 54,
-        "endToEnd": "Hôtel Région Montrochet → Saint-Priest Bel Air"
+        "endToEnd": "Saint-Priest Bel Air → Hôtel Région Montrochet"
       },
       "T3": {
         "mode": "tram",
         "color": "#00A3A6",
         "peakPassages": 11,
         "peakHeadway": 5.5,
-        "endToEndMinutes": 30,
-        "endToEnd": "Gare Part-Dieu Villette → Meyzieu les Panettes"
+        "endToEndMinutes": 31,
+        "endToEnd": "Meyzieu les Panettes → Gare Part-Dieu Villette"
       },
       "T4": {
         "mode": "tram",
         "color": "#662483",
         "peakPassages": 11,
         "peakHeadway": 5.5,
-        "endToEndMinutes": 53,
-        "endToEnd": "IUT Feyssine → Hôp. Feyzin Vénissieux"
+        "endToEndMinutes": 54,
+        "endToEnd": "Hôp. Feyzin Vénissieux → IUT Feyssine"
       },
       "T5": {
         "mode": "tram",
@@ -274,7 +274,7 @@
         "peakPassages": 5,
         "peakHeadway": 12.0,
         "endToEndMinutes": 20,
-        "endToEnd": "Grange Blanche → Eurexpo Entrée Princ."
+        "endToEnd": "Eurexpo Entrée Princ. → Grange Blanche"
       },
       "T6": {
         "mode": "tram",
@@ -282,7 +282,7 @@
         "peakPassages": 7,
         "peakHeadway": 8.6,
         "endToEndMinutes": 45,
-        "endToEnd": "Debourg → La Doua - Gaston Berger"
+        "endToEnd": "La Doua - Gaston Berger → Debourg"
       },
       "T7": {
         "mode": "tram",
@@ -290,7 +290,7 @@
         "peakPassages": 4,
         "peakHeadway": 15.0,
         "endToEndMinutes": 11,
-        "endToEnd": "Décines OL Vallée → Vaulx-en-Velin La Soie"
+        "endToEnd": "Vaulx-en-Velin La Soie → Décines OL Vallée"
       }
     },
     "weekdayTrips": 4612
@@ -410,7 +410,7 @@
         "peakPassages": 17,
         "peakHeadway": 3.5,
         "endToEndMinutes": 17,
-        "endToEnd": "Gèze → Sainte-Marguerite Dromel"
+        "endToEnd": "Sainte-Marguerite Dromel → Gèze"
       },
       "T1": {
         "mode": "tram",
@@ -418,15 +418,15 @@
         "peakPassages": 10,
         "peakHeadway": 6.0,
         "endToEndMinutes": 22,
-        "endToEnd": "Noailles → Les Caillols"
+        "endToEnd": "Les Caillols → Noailles"
       },
       "T2": {
         "mode": "tram",
         "color": "#F4E718",
         "peakPassages": 12,
         "peakHeadway": 5.0,
-        "endToEndMinutes": 22,
-        "endToEnd": "La Blancarde → Arenc Euroméditerranée"
+        "endToEndMinutes": 23,
+        "endToEnd": "Arenc Euroméditerranée → La Blancarde"
       },
       "T3": {
         "mode": "tram",
@@ -482,7 +482,7 @@
         "peakPassages": 40,
         "peakHeadway": 1.5,
         "endToEndMinutes": 24,
-        "endToEnd": "Chu - Eurasanté → 4 Cantons Stade P. Mauroy"
+        "endToEnd": "4 Cantons Stade P. Mauroy → Chu - Eurasanté"
       },
       "M2": {
         "mode": "metro",
@@ -490,15 +490,15 @@
         "peakPassages": 45,
         "peakHeadway": 1.3,
         "endToEndMinutes": 55,
-        "endToEnd": "Saint Philibert → C.H. Dron"
+        "endToEnd": "C.H. Dron → Saint Philibert"
       },
       "TRAM": {
         "mode": "tram",
         "color": "#009FE3",
         "peakPassages": 16,
         "peakHeadway": 3.8,
-        "endToEndMinutes": 31,
-        "endToEnd": "Gare Lille Flandres → Eurotéléport"
+        "endToEndMinutes": 34,
+        "endToEnd": "Gare Lille Flandres → Tourcoing Centre"
       }
     },
     "weekdayTrips": 2268
@@ -546,15 +546,15 @@
         "peakPassages": 20,
         "peakHeadway": 3.0,
         "endToEndMinutes": 49,
-        "endToEnd": "François Mitterrand → Beaujoire"
+        "endToEnd": "Beaujoire → François Mitterrand"
       },
       "2": {
         "mode": "tram",
         "color": "#e53138",
         "peakPassages": 17,
         "peakHeadway": 3.5,
-        "endToEndMinutes": 41,
-        "endToEnd": "Gare de Pont Rousseau → Orvault Grand Val"
+        "endToEndMinutes": 42,
+        "endToEnd": "Orvault Grand Val → Gare de Pont Rousseau"
       },
       "3": {
         "mode": "tram",
@@ -609,8 +609,8 @@
         "color": "#E10D19",
         "peakPassages": 10,
         "peakHeadway": 6.0,
-        "endToEndMinutes": 48,
-        "endToEnd": "Graffenstaden → Parc des Sports Zénith"
+        "endToEndMinutes": 49,
+        "endToEnd": "Parc des Sports Zénith → Graffenstaden"
       },
       "B": {
         "mode": "tram",
@@ -618,7 +618,7 @@
         "peakPassages": 11,
         "peakHeadway": 5.5,
         "endToEndMinutes": 48,
-        "endToEnd": "Hoenheim Gare → Lingolsheim Tiergaertel"
+        "endToEnd": "Lingolsheim Tiergaertel → Hoenheim Gare"
       },
       "C": {
         "mode": "tram",
@@ -626,7 +626,7 @@
         "peakPassages": 11,
         "peakHeadway": 5.5,
         "endToEndMinutes": 31,
-        "endToEnd": "Gare Centrale → Neuhof Rodolphe Reuss"
+        "endToEnd": "Neuhof Rodolphe Reuss → Gare Centrale"
       },
       "D": {
         "mode": "tram",
@@ -634,7 +634,7 @@
         "peakPassages": 10,
         "peakHeadway": 6.0,
         "endToEndMinutes": 43,
-        "endToEnd": "Poteries → Kehl Rathaus"
+        "endToEnd": "Kehl Rathaus → Poteries"
       },
       "E": {
         "mode": "tram",
@@ -642,15 +642,15 @@
         "peakPassages": 10,
         "peakHeadway": 6.0,
         "endToEndMinutes": 43,
-        "endToEnd": "Robertsau L'Escale → Campus d'Illkirch"
+        "endToEnd": "Campus d'Illkirch → Robertsau L'Escale"
       },
       "F": {
         "mode": "tram",
         "color": "#97BF0D",
         "peakPassages": 9,
         "peakHeadway": 6.7,
-        "endToEndMinutes": 35,
-        "endToEnd": "Place d'Islande → Wolfisheim Henri Rendu"
+        "endToEndMinutes": 36,
+        "endToEnd": "Wolfisheim Henri Rendu → Place d'Islande"
       }
     },
     "weekdayTrips": 1746
@@ -756,8 +756,8 @@
         "color": "#3376B8",
         "peakPassages": 15,
         "peakHeadway": 4.0,
-        "endToEndMinutes": 50,
-        "endToEnd": "Le Pont-de-Claix, L'Étoile → Fontaine, La Poya"
+        "endToEndMinutes": 52,
+        "endToEnd": "Fontaine, La Poya → Le Pont-de-Claix, L'Étoile"
       },
       "B": {
         "mode": "tram",
@@ -780,16 +780,16 @@
         "color": "#DE9917",
         "peakPassages": 5,
         "peakHeadway": 12.0,
-        "endToEndMinutes": 27,
-        "endToEnd": "Grenoble, Gares → Saint-Martin-d'Hères, Étienne Grappe"
+        "endToEndMinutes": 28,
+        "endToEnd": "Saint-Martin-d'Hères, Étienne Grappe → Grenoble, Gares"
       },
       "E": {
         "mode": "tram",
         "color": "#533786",
         "peakPassages": 11,
         "peakHeadway": 5.5,
-        "endToEndMinutes": 29,
-        "endToEnd": "Fontanil-Cornillon, Palluel → Grenoble, Louise Michel"
+        "endToEndMinutes": 30,
+        "endToEnd": "Grenoble, Louise Michel → Fontanil-Cornillon, Palluel"
       }
     },
     "weekdayTrips": 1578
@@ -924,8 +924,8 @@
         "color": "#379E32",
         "peakPassages": 6,
         "peakHeadway": 10.0,
-        "endToEndMinutes": 33,
-        "endToEnd": "Roseraie → Belle-Beille Campus"
+        "endToEndMinutes": 34,
+        "endToEnd": "Belle-Beille Campus → Roseraie"
       }
     },
     "weekdayTrips": 570
@@ -1050,8 +1050,8 @@
         "color": "#AB0672",
         "peakPassages": 17,
         "peakHeadway": 3.5,
-        "endToEndMinutes": 27,
-        "endToEnd": "DIJON Gare → QUETIGNY Centre La Parenthèse"
+        "endToEndMinutes": 28,
+        "endToEnd": "QUETIGNY Centre La Parenthèse → DIJON Gare"
       },
       "T2": {
         "mode": "tram",
@@ -1125,8 +1125,8 @@
         "color": "#E0001B",
         "peakPassages": 11,
         "peakHeadway": 5.5,
-        "endToEndMinutes": 33,
-        "endToEnd": "Neufchatel → Hopital Debre"
+        "endToEndMinutes": 36,
+        "endToEnd": "Neufchatel → Gare Champ. TGV"
       }
     },
     "weekdayTrips": 343
@@ -1189,8 +1189,8 @@
         "color": "#0D65AE",
         "peakPassages": 8,
         "peakHeadway": 7.5,
-        "endToEndMinutes": 29,
-        "endToEnd": "Espal-Arche de la Nature → Bellevue-Hauts de Coulaines"
+        "endToEndMinutes": 30,
+        "endToEnd": "Bellevue-Hauts de Coulaines → Espal-Arche de la Nature"
       }
     },
     "weekdayTrips": 564
@@ -1251,7 +1251,7 @@
         "peakPassages": 11,
         "peakHeadway": 5.5,
         "endToEndMinutes": 41,
-        "endToEnd": "Porte de Plouzané → Porte de Gouesnou"
+        "endToEnd": "Porte de Gouesnou → Porte de Plouzané"
       },
       "B": {
         "mode": "tram",
@@ -1408,8 +1408,8 @@
         "color": "#009640",
         "peakPassages": 7,
         "peakHeadway": 8.6,
-        "endToEndMinutes": 33,
-        "endToEnd": "Terrasse → Bellevue"
+        "endToEndMinutes": 40,
+        "endToEnd": "Hopital Nord → Bellevue"
       }
     },
     "weekdayTrips": 743
@@ -1585,8 +1585,8 @@
         "color": "#FFBE00",
         "peakPassages": 38,
         "peakHeadway": 1.6,
-        "endToEndMinutes": 36,
-        "endToEnd": "La Défense → Château de Vincennes"
+        "endToEndMinutes": 37,
+        "endToEnd": "Château de Vincennes → La Défense"
       },
       "10": {
         "mode": "metro",
@@ -1617,8 +1617,8 @@
         "color": "#82C8E6",
         "peakPassages": 37,
         "peakHeadway": 1.6,
-        "endToEndMinutes": 37,
-        "endToEnd": "Asnières - Gennevilliers - Les Courtilles → Châtillon - Montrouge"
+        "endToEndMinutes": 41,
+        "endToEnd": "Saint-Denis - Université → Châtillon - Montrouge"
       },
       "14": {
         "mode": "metro",
@@ -1642,7 +1642,7 @@
         "peakPassages": 30,
         "peakHeadway": 2.0,
         "endToEndMinutes": 32,
-        "endToEnd": "Gallieni → Pont de Levallois - Bécon"
+        "endToEnd": "Pont de Levallois - Bécon → Gallieni"
       },
       "3B": {
         "mode": "metro",
@@ -1665,16 +1665,16 @@
         "color": "#FF5A00",
         "peakPassages": 33,
         "peakHeadway": 1.8,
-        "endToEndMinutes": 34,
-        "endToEnd": "Place d'Italie → Bobigny - Pablo Picasso"
+        "endToEndMinutes": 35,
+        "endToEnd": "Bobigny - Pablo Picasso → Place d'Italie"
       },
       "6": {
         "mode": "metro",
         "color": "#82DC73",
         "peakPassages": 30,
         "peakHeadway": 2.0,
-        "endToEndMinutes": 35,
-        "endToEnd": "Nation → Charles de Gaulle - Étoile"
+        "endToEndMinutes": 36,
+        "endToEnd": "Charles de Gaulle - Étoile → Nation"
       },
       "7": {
         "mode": "metro",
@@ -1682,7 +1682,7 @@
         "peakPassages": 35,
         "peakHeadway": 1.7,
         "endToEndMinutes": 48,
-        "endToEnd": "Villejuif - Louis Aragon → La Courneuve - 8 Mai 1945"
+        "endToEnd": "Mairie d'Ivry → La Courneuve - 8 Mai 1945"
       },
       "7B": {
         "mode": "metro",
@@ -1705,8 +1705,8 @@
         "color": "#D2D200",
         "peakPassages": 33,
         "peakHeadway": 1.8,
-        "endToEndMinutes": 50,
-        "endToEnd": "Mairie de Montreuil → Pont de Sèvres"
+        "endToEndMinutes": 51,
+        "endToEnd": "Pont de Sèvres → Mairie de Montreuil"
       },
       "T1": {
         "mode": "tram",
@@ -1737,8 +1737,8 @@
         "color": "#A50034",
         "peakPassages": 6,
         "peakHeadway": 10.0,
-        "endToEndMinutes": 42,
-        "endToEnd": "Évry - Courcouronnes → Massy - Palaiseau"
+        "endToEndMinutes": 46,
+        "endToEnd": "Massy - Palaiseau → Évry - Courcouronnes"
       },
       "T13": {
         "mode": "tram",
@@ -1753,8 +1753,8 @@
         "color": "#00A092",
         "peakPassages": 2,
         "peakHeadway": 30.0,
-        "endToEndMinutes": 11,
-        "endToEnd": "Crécy-la-Chapelle → Esbly"
+        "endToEndMinutes": 12,
+        "endToEnd": "Esbly → Crécy-la-Chapelle"
       },
       "T2": {
         "mode": "tram",
@@ -1770,7 +1770,7 @@
         "peakPassages": 17,
         "peakHeadway": 3.5,
         "endToEndMinutes": 46,
-        "endToEnd": "Porte de Vincennes → Pont du Garigliano"
+        "endToEnd": "Pont du Garigliano → Porte de Vincennes"
       },
       "T3b": {
         "mode": "tram",
@@ -1778,15 +1778,15 @@
         "peakPassages": 15,
         "peakHeadway": 4.0,
         "endToEndMinutes": 66,
-        "endToEnd": "Porte Dauphine (Avenue Foch) → Porte de Vincennes"
+        "endToEnd": "Porte de Vincennes → Porte Dauphine (Avenue Foch)"
       },
       "T4": {
         "mode": "tram",
         "color": "#DC9600",
         "peakPassages": 17,
         "peakHeadway": 3.5,
-        "endToEndMinutes": 20,
-        "endToEnd": "Aulnay-sous-Bois → Bondy"
+        "endToEndMinutes": 33,
+        "endToEnd": "Hôpital de Montfermeil → Bondy"
       },
       "T5": {
         "mode": "tram",
@@ -1802,31 +1802,31 @@
         "peakPassages": 15,
         "peakHeadway": 4.0,
         "endToEndMinutes": 42,
-        "endToEnd": "Châtillon - Montrouge → Viroflay - Rive Droite"
+        "endToEnd": "Viroflay - Rive Droite → Châtillon - Montrouge"
       },
       "T7": {
         "mode": "tram",
         "color": "#6E491E",
         "peakPassages": 10,
         "peakHeadway": 6.0,
-        "endToEndMinutes": 33,
-        "endToEnd": "Villejuif - Louis Aragon → Porte de l'Essonne"
+        "endToEndMinutes": 34,
+        "endToEnd": "Porte de l'Essonne → Villejuif - Louis Aragon"
       },
       "T8": {
         "mode": "tram",
         "color": "#6E6E00",
         "peakPassages": 16,
         "peakHeadway": 3.8,
-        "endToEndMinutes": 16,
-        "endToEnd": "Villetaneuse - Université → Saint-Denis - Porte de Paris"
+        "endToEndMinutes": 24,
+        "endToEnd": "Épinay - Orgemont → Saint-Denis - Porte de Paris"
       },
       "T9": {
         "mode": "tram",
         "color": "#3C91DC",
         "peakPassages": 15,
         "peakHeadway": 4.0,
-        "endToEndMinutes": 30,
-        "endToEnd": "Porte de Choisy → Orly - Gaston Viens"
+        "endToEndMinutes": 31,
+        "endToEnd": "Orly - Gaston Viens → Porte de Choisy"
       }
     },
     "weekdayTrips": 17354

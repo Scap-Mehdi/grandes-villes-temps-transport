@@ -736,7 +736,9 @@ def ranking_definitions(data: list[dict], base: str) -> list[dict]:
             "question": "Combien de temps pour aller d'un terminus à l'autre ?",
             "intro": "Certaines lignes traversent toute l'agglomération : voici celles qu'il faut le plus de temps pour "
             "parcourir de bout en bout.",
-            "method": "Durée prévue d'un terminus à l'autre, sur le trajet le plus courant de la ligne, un jour de semaine.",
+            "method": "Durée prévue d'un terminus à l'autre, un jour de semaine, sur le plus long des trajets réguliers de la "
+            "ligne (au moins un tiers des passages du trajet le plus courant) : la ligne entière, sans les services "
+            "partiels ni les courses exceptionnelles.",
             "headers": ["Ville", "Ligne", "Trajet", "Durée"],
             "valueCol": 3,
             "byMode": True,
