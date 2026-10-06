@@ -9,11 +9,13 @@ Généré par `build_pages.py` à partir des fiches `sources/<ville>.json`.
 | [Bordeaux](bordeaux.json) | TBM | Licence Ouverte 2.0 | 2026-10-04 | 2026-10-02 → 2027-07-02 | 2026-11-05 |
 | [Brest](brest.json) | Bibus | Licence Ouverte 2.0 | 2026-10-04 | 2026-09-28 → 2026-12-20 | 2026-10-13 |
 | [Bruxelles](bruxelles.json) | STIB | CC BY 4.0 | 2026-10-06 | 2026-09-28 → 2026-10-25 | 2026-10-06 |
+| [Charleroi](charleroi.json) | TEC | CC BY 4.0 | 2026-10-06 | 2026-09-17 → 2026-12-31 | 2026-11-10 |
 | [Clermont-Ferrand](clermont-ferrand.json) | T2C | Licence Ouverte 2.0 | 2026-10-04 | 2026-08-31 → 2026-12-31 | 2026-10-06 |
 | [Dijon](dijon.json) | Divia | Licence Ouverte 2.0 | 2026-10-04 | 2026-01-01 → 2026-12-31 | 2026-10-06 |
 | [Grenoble](grenoble.json) | M réso | ODbL | 2026-10-04 | 2026-09-30 → 2026-12-31 | 2026-11-03 |
 | [Le Mans](le-mans.json) | SETRAM | Licence Ouverte 2.0 | 2026-10-04 | 2026-08-31 → 2026-11-28 | 2026-10-06 |
 | [Lille](lille.json) | Ilévia | Licence Ouverte 2.0 | 2026-10-04 | 2026-10-02 → 2027-07-02 | 2026-11-03 |
+| [Liège](liege.json) | TEC | CC BY 4.0 | 2026-10-06 | 2026-09-17 → 2026-12-31 | 2026-11-10 |
 | [Lyon](lyon.json) | TCL | Licence Mobilités | 2026-10-04 (à la main) | 2026-10-03 → 2027-08-31 | 2026-10-06 |
 | [Marseille](marseille.json) | RTM | Licence Ouverte 2.0 | 2026-10-04 | 2026-10-03 → 2026-12-02 | 2026-11-03 |
 | [Montpellier](montpellier.json) | TaM | ODbL | 2026-10-03 | 2026-09-21 → 2026-12-31 | 2026-11-03 |

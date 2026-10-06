@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Montréal à portée de métro · Temps de trajet en métro STM et REM</title>
-    <meta name="description" content="Carte des temps de trajet en métro à Montréal : choisissez un départ, toute la ville se colore selon le temps qu&#x27;il faut pour y aller (réseau STM et REM)." />
+    <title>Liège à portée de tram · Temps de trajet en tram TEC</title>
+    <meta name="description" content="Carte des temps de trajet en tram à Liège : choisissez un départ, toute la ville se colore selon le temps qu&#x27;il faut pour y aller (réseau TEC)." />
     <script>
       // Anciens liens github.io : on renvoie vers le domaine du site en gardant départ et arrivée.
-      if (location.hostname.endsWith("github.io")) location.replace("https://tram.camilleroux.com/montreal/" + location.search);
+      if (location.hostname.endsWith("github.io")) location.replace("https://tram.camilleroux.com/liege/" + location.search);
     </script>
-    <link rel="canonical" href="https://tram.camilleroux.com/montreal/" />
+    <link rel="canonical" href="https://tram.camilleroux.com/liege/" />
     <meta name="theme-color" content="#3aa70b" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="../favicon-32.png" type="image/png" sizes="32x32" />
@@ -19,39 +19,39 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="À portée de tram" />
-    <meta property="og:title" content="Montréal à portée de métro" />
-    <meta property="og:description" content="Carte des temps de trajet en métro à Montréal : choisissez un départ, toute la ville se colore selon le temps qu&#x27;il faut pour y aller (réseau STM et REM)." />
-    <meta property="og:url" content="https://tram.camilleroux.com/montreal/" />
-    <meta property="og:image" content="https://tram.camilleroux.com/og/montreal.jpg?v=3967260d" />
+    <meta property="og:title" content="Liège à portée de tram" />
+    <meta property="og:description" content="Carte des temps de trajet en tram à Liège : choisissez un départ, toute la ville se colore selon le temps qu&#x27;il faut pour y aller (réseau TEC)." />
+    <meta property="og:url" content="https://tram.camilleroux.com/liege/" />
+    <meta property="og:image" content="https://tram.camilleroux.com/og/liege.jpg?v=ba2534fb" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Carte de Montréal colorée selon le temps de trajet en métro depuis place Émilie-Gamelin, avec les isochrones 15 et 30 minutes." />
+    <meta property="og:image:alt" content="Carte de Liège colorée selon le temps de trajet en tram depuis place Saint-Lambert, avec les isochrones 15 et 30 minutes." />
     <meta property="article:author" content="https://www.camilleroux.com/" />
     <meta property="article:published_time" content="2026-10-06T08:00:00+02:00" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Montréal à portée de métro" />
-    <meta name="twitter:description" content="Carte des temps de trajet en métro à Montréal : choisissez un départ, toute la ville se colore selon le temps qu&#x27;il faut pour y aller (réseau STM et REM)." />
-    <meta name="twitter:image" content="https://tram.camilleroux.com/og/montreal.jpg?v=3967260d" />
+    <meta name="twitter:title" content="Liège à portée de tram" />
+    <meta name="twitter:description" content="Carte des temps de trajet en tram à Liège : choisissez un départ, toute la ville se colore selon le temps qu&#x27;il faut pour y aller (réseau TEC)." />
+    <meta name="twitter:image" content="https://tram.camilleroux.com/og/liege.jpg?v=ba2534fb" />
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "WebApplication",
-          "name": "Montréal à portée de métro",
-          "url": "https://tram.camilleroux.com/montreal/",
-          "description": "Carte des temps de trajet en métro à Montréal : choisissez un départ, toute la ville se colore selon le temps qu'il faut pour y aller (réseau STM et REM).",
+          "name": "Liège à portée de tram",
+          "url": "https://tram.camilleroux.com/liege/",
+          "description": "Carte des temps de trajet en tram à Liège : choisissez un départ, toute la ville se colore selon le temps qu'il faut pour y aller (réseau TEC).",
           "inLanguage": "fr",
           "applicationCategory": "TravelApplication",
           "operatingSystem": "Web",
           "isAccessibleForFree": true,
-          "image": "https://tram.camilleroux.com/og/montreal.jpg",
+          "image": "https://tram.camilleroux.com/og/liege.jpg",
           "author": {
             "@id": "https://www.camilleroux.com/#me"
           },
           "spatialCoverage": {
             "@type": "Place",
-            "name": "Agglomération de Montréal"
+            "name": "Agglomération liégeoise"
           },
           "isBasedOn": [
             "https://castrio.me/nyc/",
@@ -72,8 +72,8 @@
             {
               "@type": "ListItem",
               "position": 2,
-              "name": "Montréal",
-              "item": "https://tram.camilleroux.com/montreal/"
+              "name": "Liège",
+              "item": "https://tram.camilleroux.com/liege/"
             }
           ]
         },
@@ -82,18 +82,18 @@
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "Combien de temps faut-il pour traverser Montréal en métro ?",
+              "name": "Combien de temps faut-il pour traverser Liège en tram ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Depuis le centre (Place Émilie-Gamelin), 34 % des stations de métro sont à moins de 15 minutes et 88 % à moins de 30 minutes, marche et attente comprises. La plus éloignée, Anse-à-l'Orme, est à environ 44 minutes."
+                "text": "Depuis le centre (Place Saint-Lambert), 57 % des stations de tram sont à moins de 15 minutes et 100 % à moins de 30 minutes, marche et attente comprises. La plus éloignée, Standard, est à environ 25 minutes."
               }
             },
             {
               "@type": "Question",
-              "name": "Quelle est la fréquence des lignes de métro à Montréal ?",
+              "name": "Quelle est la fréquence des lignes de tram à Liège ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "En journée de semaine, l'intervalle moyen entre deux passages est de métro 1 : 4,3 min, métro 2 : 4,3 min, métro 4 : 6,8 min, métro 5 : 5,7 min, métro REM : 4,8 min. La ligne la plus fréquente est la 1, avec un passage toutes les 4,3 minutes environ."
+                "text": "En journée de semaine, l'intervalle moyen entre deux passages est de tram T1 : 6,1 min. La ligne la plus fréquente est la T1, avec un passage toutes les 6,1 minutes environ."
               }
             },
             {
@@ -101,15 +101,15 @@
               "name": "D'où viennent les horaires utilisés ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Des horaires théoriques publiés par le réseau STM et REM (format GTFS, CC BY 4.0), téléchargés le 6 octobre 2026 et valables jusqu'au 31 décembre 2026. Les temps correspondent au mardi 6 octobre 2026, entre 7 h et 20 h."
+                "text": "Des horaires théoriques publiés par le réseau TEC (format GTFS, CC BY 4.0), téléchargés le 6 octobre 2026 et valables jusqu'au 31 décembre 2026. Les temps correspondent au mardi 10 novembre 2026, entre 7 h et 20 h."
               }
             },
             {
               "@type": "Question",
-              "name": "Les bus sont-ils pris en compte à Montréal ?",
+              "name": "Les bus sont-ils pris en compte à Liège ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Oui, en option : cochez « Bus » sous la carte. Par défaut, seuls les métro sont affichés. L'attente aux arrêts de bus peu fréquentés est plafonnée à 15 minutes."
+                "text": "Oui, en option : cochez « Bus » sous la carte. Par défaut, seuls les tram sont affichés. L'attente aux arrêts de bus peu fréquentés est plafonnée à 15 minutes."
               }
             },
             {
@@ -117,12 +117,12 @@
               "name": "Comment les temps de trajet sont-ils calculés ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Pour chaque trajet : marche jusqu'à l'arrêt à 4,5 km/h, attente égale à la moitié de l'intervalle entre deux passages, durée prévue entre les arrêts, correspondances avec 1,5 minute de marche, et 1 minute pour rejoindre le quai du métro. Pas de temps réel ni de perturbations : c'est la ville « sur le papier »."
+                "text": "Pour chaque trajet : marche jusqu'à l'arrêt à 4,5 km/h, attente égale à la moitié de l'intervalle entre deux passages, durée prévue entre les arrêts, correspondances avec 1,5 minute de marche. Pas de temps réel ni de perturbations : c'est la ville « sur le papier »."
               }
             },
             {
               "@type": "Question",
-              "name": "Qui a réalisé cette carte de Montréal ?",
+              "name": "Qui a réalisé cette carte de Liège ?",
               "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "L'idée vient du NYC Transit Time Cartogram d'Anthony Castrio, adapté ensuite à Paris par Jules Grandin (« C'est encore loin ? »). Ces cartes sont réalisées par Camille Roux, développeur et co-fondateur de Human Coders à Montpellier, qui présente ses autres réalisations et sa veille tech hebdomadaire sur camilleroux.com. Le code est ouvert sur GitHub."
@@ -163,7 +163,7 @@
     <link rel="stylesheet" href="../styles.css?v=9e078b8e" />
   </head>
   <body>
-    <script id="city-config" type="application/json">{"slug": "montreal", "name": "Montréal", "dataVersion": "ae8bb6e8", "defaultFrom": {"lat": 45.5156, "lon": -73.562, "label": "Place Émilie-Gamelin"}, "railNoun": "métro", "railStations": "stations de métro", "busNoun": "bus", "geocoder": "photon", "searchBbox": [45.38, -74.0, 45.72, -73.38]}</script>
+    <script id="city-config" type="application/json">{"slug": "liege", "name": "Liège", "dataVersion": "98250e39", "defaultFrom": {"lat": 50.6455, "lon": 5.5735, "label": "Place Saint-Lambert"}, "railNoun": "tram", "railStations": "stations de tram", "busNoun": "bus", "geocoder": "photon", "searchBbox": [50.55, 5.42, 50.72, 5.72]}</script>
     <header class="topbar">
       <nav class="topbar-inner" aria-label="Navigation principale">
         <a class="brand" href="../"><img src="../favicon.svg" width="22" height="22" alt="" /> À portée de tram</a>
@@ -176,11 +176,11 @@
 
     <main class="page">
       <nav class="breadcrumb" aria-label="Fil d'Ariane">
-        <a href="../">À portée de tram</a> <span aria-hidden="true">›</span> <span aria-current="page">Montréal</span>
+        <a href="../">À portée de tram</a> <span aria-hidden="true">›</span> <span aria-current="page">Liège</span>
       </nav>
 
       <section class="hero">
-        <h1><button id="cityTrigger" type="button" class="city-trigger" aria-haspopup="dialog" aria-expanded="false" title="Changer de ville">Montréal<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button> à portée de&nbsp;métro</h1>
+        <h1><button id="cityTrigger" type="button" class="city-trigger" aria-haspopup="dialog" aria-expanded="false" title="Changer de ville">Liège<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button> à portée de&nbsp;tram</h1>
         <div id="cityPanel" class="city-panel" role="dialog" aria-label="Choisir une ville" hidden>
           <div class="city-panel-head">
             <input id="citySearch" type="search" placeholder="Rechercher une ville…" aria-label="Rechercher une ville" autocomplete="off" />
@@ -198,11 +198,11 @@
             <a class="city-item" href="../grenoble/" data-name="grenoble"><img src="../og/thumb-grenoble.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Grenoble</strong><small>Tram · M réso</small></span></a>
             <a class="city-item" href="../le-mans/" data-name="le mans"><img src="../og/thumb-le-mans.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Le Mans</strong><small>Tram · SETRAM</small></span></a>
             <a class="city-item" href="../lille/" data-name="lille"><img src="../og/thumb-lille.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Lille</strong><small>Métro et tram · Ilévia</small></span></a>
-            <a class="city-item" href="../liege/" data-name="liège"><img src="../og/thumb-liege.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Liège</strong><small>Tram · TEC</small></span></a>
+            <a class="city-item current" href="../liege/" aria-current="page" data-name="liège"><img src="../og/thumb-liege.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Liège</strong><small>Tram · TEC</small></span></a>
             <a class="city-item" href="../lyon/" data-name="lyon"><img src="../og/thumb-lyon.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Lyon</strong><small>Métro et tram · TCL</small></span></a>
             <a class="city-item" href="../marseille/" data-name="marseille"><img src="../og/thumb-marseille.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Marseille</strong><small>Métro et tram · RTM</small></span></a>
             <a class="city-item" href="../montpellier/" data-name="montpellier"><img src="../og/thumb-montpellier.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Montpellier</strong><small>Tram · TaM</small></span></a>
-            <a class="city-item current" href="../montreal/" aria-current="page" data-name="montréal"><img src="../og/thumb-montreal.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Montréal</strong><small>Métro · STM et REM</small></span></a>
+            <a class="city-item" href="../montreal/" data-name="montréal"><img src="../og/thumb-montreal.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Montréal</strong><small>Métro · STM et REM</small></span></a>
             <a class="city-item" href="../nantes/" data-name="nantes"><img src="../og/thumb-nantes.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Nantes</strong><small>Tram · Naolib</small></span></a>
             <a class="city-item" href="../nice/" data-name="nice"><img src="../og/thumb-nice.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Nice</strong><small>Tram · Lignes d&#x27;Azur</small></span></a>
             <a class="city-item" href="../orleans/" data-name="orléans"><img src="../og/thumb-orleans.jpg" width="120" height="63" alt="" loading="lazy" /><span><strong>Orléans</strong><small>Tram · TAO</small></span></a>
@@ -217,12 +217,12 @@
           </nav>
         </div>
         <p class="lede">
-          La ville redessinée par le temps qu'il faut pour y aller en métro. Choisissez un départ&nbsp;: la carte se
+          La ville redessinée par le temps qu'il faut pour y aller en tram. Choisissez un départ&nbsp;: la carte se
           colore selon le temps de trajet vers chaque point de l&#x27;agglomération.
         </p>
         <form id="searchForm" class="search" role="search" autocomplete="off">
           <label class="visually-hidden" for="searchInput">Adresse de départ</label>
-          <input id="searchInput" type="search" placeholder="Partir d'une adresse… (ex. Oratoire Saint-Joseph)" />
+          <input id="searchInput" type="search" placeholder="Partir d'une adresse… (ex. Gare des Guillemins)" />
           <button type="submit" class="button primary">Partir d'ici</button>
           <ul id="searchResults" class="search-results" hidden></ul>
         </form>
@@ -278,7 +278,7 @@
         <div class="controls">
           <div class="control-group">
             <span class="control-label">Réseau</span>
-            <label class="pill-toggle"><input type="checkbox" checked disabled /> Métro</label>
+            <label class="pill-toggle"><input type="checkbox" checked disabled /> Tram</label>
             <label class="pill-toggle"><input id="busToggle" type="checkbox" /> Bus</label>
           </div>
           <div id="isoToggles" class="control-group">
@@ -303,22 +303,18 @@
       </section>
 
       <section class="section" aria-labelledby="stats-title">
-        <h2 id="stats-title">Montréal en chiffres</h2>
+        <h2 id="stats-title">Liège en chiffres</h2>
         <div class="stat-grid">
-          <div class="stat"><strong>88 %</strong><span>des stations de métro à moins de 30 min du centre (Place Émilie-Gamelin)</span></div>
-          <div class="stat"><strong>89</strong><span>stations de métro</span></div>
-          <div class="stat"><strong>4,3 min</strong><span>entre deux passages sur la ligne 1, la plus fréquente</span></div>
-          <div class="stat"><strong>44 min</strong><span>depuis le centre pour rejoindre Anse-à-l&#x27;Orme, la station la plus éloignée</span></div>
+          <div class="stat"><strong>100 %</strong><span>des stations de tram à moins de 30 min du centre (Place Saint-Lambert)</span></div>
+          <div class="stat"><strong>23</strong><span>stations de tram</span></div>
+          <div class="stat"><strong>6,1 min</strong><span>entre deux passages sur la ligne T1, la plus fréquente</span></div>
+          <div class="stat"><strong>25 min</strong><span>depuis le centre pour rejoindre Standard, la station la plus éloignée</span></div>
         </div>
         <table class="lines-table">
-          <caption>Lignes de métro du réseau STM et REM, en journée de semaine</caption>
+          <caption>Lignes de tram du réseau TEC, en journée de semaine</caption>
           <thead><tr><th scope="col">Ligne</th><th scope="col">Stations</th><th scope="col">Un passage toutes les</th></tr></thead>
           <tbody>
-            <tr><td><span class="line-badge" style="background:#00B300;color:#fff">1</span> Métro</td><td>27</td><td>~4,3 min</td></tr>
-            <tr><td><span class="line-badge" style="background:#D95700;color:#fff">2</span> Métro</td><td>31</td><td>~4,3 min</td></tr>
-            <tr><td><span class="line-badge" style="background:#FFD900;color:#111">4</span> Métro</td><td>3</td><td>~6,8 min</td></tr>
-            <tr><td><span class="line-badge" style="background:#0095E6;color:#fff">5</span> Métro</td><td>12</td><td>~5,7 min</td></tr>
-            <tr><td><span class="line-badge" style="background:#73A400;color:#fff">REM</span> Métro</td><td>23</td><td>~4,8 min</td></tr>
+            <tr><td><span class="line-badge" style="background:#FFCD00;color:#111">T1</span> Tram</td><td>23</td><td>~6,1 min</td></tr>
           </tbody>
         </table>
 
@@ -326,12 +322,12 @@
 
       <section class="section" aria-labelledby="faq-title">
         <h2 id="faq-title">Questions fréquentes</h2>
-        <details class="faq"><summary>Combien de temps faut-il pour traverser Montréal en métro ?</summary><p>Depuis le centre (Place Émilie-Gamelin), 34 % des stations de métro sont à moins de 15 minutes et 88 % à moins de 30 minutes, marche et attente comprises. La plus éloignée, Anse-à-l&#x27;Orme, est à environ 44 minutes.</p></details>
-        <details class="faq"><summary>Quelle est la fréquence des lignes de métro à Montréal ?</summary><p>En journée de semaine, l&#x27;intervalle moyen entre deux passages est de métro 1 : 4,3 min, métro 2 : 4,3 min, métro 4 : 6,8 min, métro 5 : 5,7 min, métro REM : 4,8 min. La ligne la plus fréquente est la 1, avec un passage toutes les 4,3 minutes environ.</p></details>
-        <details class="faq"><summary>D&#x27;où viennent les horaires utilisés ?</summary><p>Des horaires théoriques publiés par le réseau STM et REM (format GTFS, CC BY 4.0), téléchargés le 6 octobre 2026 et valables jusqu&#x27;au 31 décembre 2026. Les temps correspondent au mardi 6 octobre 2026, entre 7 h et 20 h.</p></details>
-        <details class="faq"><summary>Les bus sont-ils pris en compte à Montréal ?</summary><p>Oui, en option : cochez « Bus » sous la carte. Par défaut, seuls les métro sont affichés. L&#x27;attente aux arrêts de bus peu fréquentés est plafonnée à 15 minutes.</p></details>
-        <details class="faq"><summary>Comment les temps de trajet sont-ils calculés ?</summary><p>Pour chaque trajet : marche jusqu&#x27;à l&#x27;arrêt à 4,5 km/h, attente égale à la moitié de l&#x27;intervalle entre deux passages, durée prévue entre les arrêts, correspondances avec 1,5 minute de marche, et 1 minute pour rejoindre le quai du métro. Pas de temps réel ni de perturbations : c&#x27;est la ville « sur le papier ».</p></details>
-        <details class="faq"><summary>Qui a réalisé cette carte de Montréal ?</summary><p>L'idée vient du <a href="https://castrio.me/nyc/">NYC Transit Time Cartogram</a> d'Anthony Castrio, adapté ensuite à Paris par Jules Grandin (<a href="https://julesgrandin.github.io/paris-temps-transport/">C'est encore loin&nbsp;?</a>). Ces cartes sont réalisées par <a href="https://www.camilleroux.com/" rel="author">Camille Roux</a>, développeur et co-fondateur de Human Coders à Montpellier&nbsp;: découvrez <a href="https://www.camilleroux.com/realisations/">ses autres réalisations</a> et <a href="https://www.camilleroux.com/veille/">sa veille tech hebdomadaire</a>. Le code est ouvert sur <a href="https://github.com/camilleroux/montpellier-temps-transport">GitHub</a>.</p></details>
+        <details class="faq"><summary>Combien de temps faut-il pour traverser Liège en tram ?</summary><p>Depuis le centre (Place Saint-Lambert), 57 % des stations de tram sont à moins de 15 minutes et 100 % à moins de 30 minutes, marche et attente comprises. La plus éloignée, Standard, est à environ 25 minutes.</p></details>
+        <details class="faq"><summary>Quelle est la fréquence des lignes de tram à Liège ?</summary><p>En journée de semaine, l&#x27;intervalle moyen entre deux passages est de tram T1 : 6,1 min. La ligne la plus fréquente est la T1, avec un passage toutes les 6,1 minutes environ.</p></details>
+        <details class="faq"><summary>D&#x27;où viennent les horaires utilisés ?</summary><p>Des horaires théoriques publiés par le réseau TEC (format GTFS, CC BY 4.0), téléchargés le 6 octobre 2026 et valables jusqu&#x27;au 31 décembre 2026. Les temps correspondent au mardi 10 novembre 2026, entre 7 h et 20 h.</p></details>
+        <details class="faq"><summary>Les bus sont-ils pris en compte à Liège ?</summary><p>Oui, en option : cochez « Bus » sous la carte. Par défaut, seuls les tram sont affichés. L&#x27;attente aux arrêts de bus peu fréquentés est plafonnée à 15 minutes.</p></details>
+        <details class="faq"><summary>Comment les temps de trajet sont-ils calculés ?</summary><p>Pour chaque trajet : marche jusqu&#x27;à l&#x27;arrêt à 4,5 km/h, attente égale à la moitié de l&#x27;intervalle entre deux passages, durée prévue entre les arrêts, correspondances avec 1,5 minute de marche. Pas de temps réel ni de perturbations : c&#x27;est la ville « sur le papier ».</p></details>
+        <details class="faq"><summary>Qui a réalisé cette carte de Liège ?</summary><p>L'idée vient du <a href="https://castrio.me/nyc/">NYC Transit Time Cartogram</a> d'Anthony Castrio, adapté ensuite à Paris par Jules Grandin (<a href="https://julesgrandin.github.io/paris-temps-transport/">C'est encore loin&nbsp;?</a>). Ces cartes sont réalisées par <a href="https://www.camilleroux.com/" rel="author">Camille Roux</a>, développeur et co-fondateur de Human Coders à Montpellier&nbsp;: découvrez <a href="https://www.camilleroux.com/realisations/">ses autres réalisations</a> et <a href="https://www.camilleroux.com/veille/">sa veille tech hebdomadaire</a>. Le code est ouvert sur <a href="https://github.com/camilleroux/montpellier-temps-transport">GitHub</a>.</p></details>
       </section>
 
       <section class="section" aria-labelledby="cities-title">
@@ -491,6 +487,13 @@
               <span>96&nbsp;% des stations de tram à moins de 30&nbsp;min du centre (Place du Martroi) · réseau TAO</span>
             </span>
           </a>
+          <a class="city-card" href="../montreal/">
+            <img src="../og/thumb-montreal.jpg" width="600" height="315" alt="" loading="lazy" />
+            <span class="city-card-body">
+              <h3>Montréal à portée de métro</h3>
+              <span>88&nbsp;% des stations de métro à moins de 30&nbsp;min du centre (Place Émilie-Gamelin) · réseau STM et REM</span>
+            </span>
+          </a>
           <a class="city-card" href="../bruxelles/">
             <img src="../og/thumb-bruxelles.jpg" width="600" height="315" alt="" loading="lazy" />
             <span class="city-card-body">
@@ -503,13 +506,6 @@
             <span class="city-card-body">
               <h3>Paris à portée de métro</h3>
               <span>63&nbsp;% des stations de métro, de RER, de Transilien et de tram à moins de 30&nbsp;min du centre (Châtelet) · réseau Île-de-France Mobilités</span>
-            </span>
-          </a>
-          <a class="city-card" href="../liege/">
-            <img src="../og/thumb-liege.jpg" width="600" height="315" alt="" loading="lazy" />
-            <span class="city-card-body">
-              <h3>Liège à portée de tram</h3>
-              <span>100&nbsp;% des stations de tram à moins de 30&nbsp;min du centre (Place Saint-Lambert) · réseau TEC</span>
             </span>
           </a>
           <a class="city-card" href="../charleroi/">
@@ -553,7 +549,7 @@
           Idée originale&nbsp;: le <a href="https://castrio.me/nyc/">NYC Transit Time Cartogram</a> d'Anthony Castrio,
           adapté ensuite à Paris par Jules Grandin
           (<a href="https://julesgrandin.github.io/paris-temps-transport/">C'est encore loin&nbsp;?</a>).
-          Horaires&nbsp;: <a href="https://www.stm.info/fr/a-propos/developpeurs">GTFS STM</a> et <a href="https://www.transit.land/feeds/f-reseau~express~metropolitain">GTFS REM</a> (Agglomération de Montréal). Fond de carte © <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>,
+          Horaires&nbsp;: <a href="https://data.belgianmobility.io/fr/data.html?agency=tec">GTFS TEC</a> (Agglomération liégeoise). Fond de carte © <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>,
           limites administratives OpenStreetMap, recherche d'adresse via
           <a href="https://photon.komoot.io/">Photon</a> (komoot, données OpenStreetMap).
           Données calculées publiées sous licence <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL</a>, code sous licence MIT.

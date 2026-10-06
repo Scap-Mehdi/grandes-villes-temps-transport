@@ -1,0 +1,110 @@
+{
+  "city": "Charleroi",
+  "builtAt": "2026-10-06T16:43:20+00:00",
+  "referenceDate": "2026-11-10",
+  "serviceWindow": "7h–20h",
+  "gtfs": {
+    "network": "TEC",
+    "dataset": "https://data.belgianmobility.io/fr/data.html?agency=tec",
+    "source": "https://api-management-discovery-production.azure-api.net/api/gtfs/feed/tec/static",
+    "how": "download",
+    "fetchedAt": "2026-10-06T16:17:38+00:00",
+    "bytes": 86783510,
+    "sha256": "232ef3122ea3da14d275d99a7940b43977cfe3936638e77998b39c0c03041d58",
+    "feedInfo": {
+      "feed_id": "tec",
+      "default_lang": "",
+      "feed_contact_email": "sav@letec.be",
+      "feed_contact_url": "http://www.letec.be",
+      "feed_end_date": " 20261225",
+      "feed_lang": "fr",
+      "feed_publisher_name": "tec",
+      "feed_publisher_url": "http://www.letec.be",
+      "feed_start_date": " 20261005",
+      "feed_version": "20261005"
+    },
+    "servicePeriod": [
+      "2026-09-17",
+      "2026-12-31"
+    ]
+  },
+  "communes": {
+    "metropole": "Charleroi",
+    "source": "Overpass API: [out:json][timeout:110];(relation(2113725);relation(2036429);relation(2075616);relation(2018746);relation(2147711););out geom;",
+    "how": "download",
+    "fetchedAt": "2026-10-06T16:28:01+00:00",
+    "bytes": 259353,
+    "sha256": "75729496e4487719ac7375c7bf9a2394ac352a841b712feeb430a235bc859b21"
+  },
+  "openStreetMap": {
+    "licence": "ODbL, © contributeurs OpenStreetMap",
+    "osm_water_parks": {
+      "source": "Overpass API: [out:json][timeout:180];(relation[\"natural\"=\"water\"](50.36,4.22,50.48,4.56);way[\"natural\"=\"water\"](50.36,4.22,50.48,4.56);relation[\"leisure\"=\"park\"](50.35,4.36,50.47,4.52);way[\"leisure\"=\"park\"](50.35,4.36,50.47,4.52););out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T16:29:33+00:00",
+      "bytes": 881570,
+      "sha256": "220a35097a4aaf8bd7d6fc23aa526b22147e5e9aed961c20dc7f724f716b0e1f"
+    },
+    "osm_rivers": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"waterway\"=\"river\"][\"name\"~\"^(La\\ Sambre)( - .*)?$\"][\"tunnel\"!~\".\"](50.36,4.22,50.48,4.56);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T16:29:37+00:00",
+      "bytes": 26980,
+      "sha256": "b9ae2863ae1c5ca819f90adc64ffd7e6549c545a66362e4aab385277367f0188"
+    },
+    "osm_bridges": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"bridge\"][\"highway\"][\"highway\"!~\"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$\"][\"foot\"!=\"no\"](50.36,4.22,50.48,4.56);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T16:34:01+00:00",
+      "bytes": 203482,
+      "sha256": "203bf98f31b6bab3b14896abdf1ee27dd09b4d69d2bbf6839666dace4cbd0896"
+    }
+  },
+  "railGeometry": "GTFS shapes.txt",
+  "excludedRoutes": [],
+  "network": {
+    "lines": {
+      "bus": 98,
+      "metro": 3
+    },
+    "stops": 1205,
+    "railStations": 48
+  },
+  "stats": {
+    "lines": [
+      {
+        "name": "M2",
+        "mode": "metro",
+        "color": "#9DC64D",
+        "stations": 23,
+        "headway": 15.1
+      },
+      {
+        "name": "M3",
+        "mode": "metro",
+        "color": "#F4AA3E",
+        "stations": 26,
+        "headway": 10.0
+      },
+      {
+        "name": "M4",
+        "mode": "metro",
+        "color": "#228CE5",
+        "stations": 9,
+        "headway": 8.5
+      }
+    ],
+    "railStations": 48,
+    "busLines": 98,
+    "center": "Place Charles II",
+    "within15": 21,
+    "within30": 65,
+    "farthestStation": "Chaussée de Fleurus",
+    "farthestMinutes": 44,
+    "ogTrip": {
+      "name": "Providence",
+      "lat": 50.41303,
+      "lon": 4.40538
+    }
+  }
+}

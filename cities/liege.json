@@ -1,0 +1,62 @@
+{
+  "slug": "liege",
+  "order": 27,
+  "name": "Liège",
+  "country": "BE",
+  "kind": "tram",
+  "network": "TEC",
+  "metropole": "Agglomération liégeoise",
+  "area": "de l'agglomération",
+  "communesOsm": [
+    1681788,
+    2435417,
+    2399230,
+    2387590,
+    2389229,
+    2437273,
+    2435591,
+    2437275
+  ],
+  "gtfsUrl": "https://api-management-discovery-production.azure-api.net/api/gtfs/feed/tec/static",
+  "gtfsDataset": "https://data.belgianmobility.io/fr/data.html?agency=tec",
+  "gtfsLicence": "ccby",
+  "stopNameRewrites": [
+    [
+      " \\((M|[Tt]ram)\\)$",
+      ""
+    ],
+    [
+      " (- Quai|quai) \\d+$",
+      ""
+    ],
+    [
+      "^[A-ZÀ-ÖØ-Þ'’.-]+ (?=\\S)",
+      ""
+    ]
+  ],
+  "stopsBbox": [
+    50.54,
+    5.4,
+    50.72,
+    5.75
+  ],
+  "defaultFrom": {
+    "lat": 50.6455,
+    "lon": 5.5735,
+    "label": "Place Saint-Lambert"
+  },
+  "searchExample": "Gare des Guillemins",
+  "published": "2026-10-06",
+  "osmBbox": [
+    50.55,
+    5.42,
+    50.72,
+    5.72
+  ],
+  "rivers": [
+    "La Meuse",
+    "L'Ourthe",
+    "Ourthe",
+    "Vesdre"
+  ]
+}

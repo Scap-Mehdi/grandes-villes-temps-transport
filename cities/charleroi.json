@@ -1,0 +1,61 @@
+{
+  "slug": "charleroi",
+  "order": 28,
+  "name": "Charleroi",
+  "country": "BE",
+  "kind": "metro",
+  "network": "TEC",
+  "metropole": "Charleroi",
+  "area": "de l'agglomération",
+  "communesOsm": [
+    2113725,
+    2036429,
+    2075616,
+    2018746,
+    2147711
+  ],
+  "gtfsUrl": "https://api-management-discovery-production.azure-api.net/api/gtfs/feed/tec/static",
+  "gtfsDataset": "https://data.belgianmobility.io/fr/data.html?agency=tec",
+  "gtfsLicence": "ccby",
+  "stopNameRewrites": [
+    [
+      " \\((M|[Tt]ram)\\)$",
+      ""
+    ],
+    [
+      " (- Quai|quai) \\d+$",
+      ""
+    ],
+    [
+      "^[A-ZÀ-ÖØ-Þ'’.-]+ (?=\\S)",
+      ""
+    ]
+  ],
+  "stopsBbox": [
+    50.33,
+    4.2,
+    50.5,
+    4.6
+  ],
+  "defaultFrom": {
+    "lat": 50.4108,
+    "lon": 4.4446,
+    "label": "Place Charles II"
+  },
+  "searchExample": "Gare de Charleroi-Central",
+  "published": "2026-10-06",
+  "osmBbox": [
+    50.36,
+    4.22,
+    50.48,
+    4.56
+  ],
+  "rivers": [
+    "La Sambre"
+  ],
+  "routeColors": {
+    "M2": "#9DC64D",
+    "M3": "#F4AA3E",
+    "M4": "#228CE5"
+  }
+}

@@ -833,7 +833,9 @@ def extract_network(data_dir: Path, city: dict):
         route_info[route_id] = {
             "mode": mode,
             "rail": mode in RAIL_MODES,
-            "color": f"#{(row.get('route_color') or '888888').strip().lstrip('#') or '888888'}",
+            # Some feeds give every line one colour (TEC: all of Charleroi's metro in yellow); configs restore them by name.
+            "color": city.get("routeColors", {}).get(row.get("route_short_name", ""))
+            or f"#{(row.get('route_color') or '888888').strip().lstrip('#') or '888888'}",
             "name": city.get("routeNames", {}).get(route_id) or row.get("route_short_name") or row.get("route_long_name") or route_id,
         }
     rail_shape_ids = {

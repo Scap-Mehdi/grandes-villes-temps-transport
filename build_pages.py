@@ -272,14 +272,17 @@ def author_schema() -> dict:
     }
 
 
+# « en France, en Belgique et au Québec »: where the cities are, for the home page.
+COUNTRY_IN = {"FR": "en France", "BE": "en Belgique", "CA": "au Québec", "CH": "en Suisse", "LU": "au Luxembourg"}
+
+
 def city_count(cities: list[dict]) -> str:
-    """« 20 villes françaises », then the cities abroad by name: « 20 villes françaises et Montréal »."""
-    french = sum(1 for city in cities if city["country"] == "FR")
-    abroad = [city["name"] for city in cities if city["country"] != "FR"]
-    text = f"{french} villes françaises"
-    if abroad:
-        text += (", " + ", ".join(abroad[:-1]) if len(abroad) > 1 else "") + f" et {abroad[-1]}"
-    return esc(text)
+    """« 23 villes françaises », then « 27 villes en France, en Belgique et au Québec » once there are cities abroad."""
+    countries = sorted({city["country"] for city in cities}, key=list(COUNTRY_IN).index)
+    if countries == ["FR"]:
+        return f"{len(cities)} villes françaises"
+    places = [COUNTRY_IN[country] for country in countries]
+    return f"{len(cities)} villes " + ", ".join(places[:-1]) + f" et {places[-1]}"
 
 
 def city_card(city: dict, base: str, heading: str = "h3") -> str:

@@ -1,0 +1,96 @@
+{
+  "city": "Liège",
+  "builtAt": "2026-10-06T16:43:06+00:00",
+  "referenceDate": "2026-11-10",
+  "serviceWindow": "7h–20h",
+  "gtfs": {
+    "network": "TEC",
+    "dataset": "https://data.belgianmobility.io/fr/data.html?agency=tec",
+    "source": "https://api-management-discovery-production.azure-api.net/api/gtfs/feed/tec/static",
+    "how": "download",
+    "fetchedAt": "2026-10-06T16:12:04+00:00",
+    "bytes": 86783510,
+    "sha256": "232ef3122ea3da14d275d99a7940b43977cfe3936638e77998b39c0c03041d58",
+    "feedInfo": {
+      "feed_id": "tec",
+      "default_lang": "",
+      "feed_contact_email": "sav@letec.be",
+      "feed_contact_url": "http://www.letec.be",
+      "feed_end_date": " 20261225",
+      "feed_lang": "fr",
+      "feed_publisher_name": "tec",
+      "feed_publisher_url": "http://www.letec.be",
+      "feed_start_date": " 20261005",
+      "feed_version": "20261005"
+    },
+    "servicePeriod": [
+      "2026-09-17",
+      "2026-12-31"
+    ]
+  },
+  "communes": {
+    "metropole": "Agglomération liégeoise",
+    "source": "Overpass API: [out:json][timeout:110];(relation(1681788);relation(2435417);relation(2399230);relation(2387590);relation(2389229);relation(2437273);relation(2435591);relation(2437275););out geom;",
+    "how": "download",
+    "fetchedAt": "2026-10-06T16:12:12+00:00",
+    "bytes": 284678,
+    "sha256": "dda443a662818c5f1bc940085cad6c6d324e68565e4baea2973eaee2f207a0cc"
+  },
+  "openStreetMap": {
+    "licence": "ODbL, © contributeurs OpenStreetMap",
+    "osm_water_parks": {
+      "source": "Overpass API: [out:json][timeout:180];(relation[\"natural\"=\"water\"](50.55,5.42,50.72,5.72);way[\"natural\"=\"water\"](50.55,5.42,50.72,5.72);relation[\"leisure\"=\"park\"](50.59,5.49,50.71,5.65);way[\"leisure\"=\"park\"](50.59,5.49,50.71,5.65););out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T16:17:25+00:00",
+      "bytes": 1547412,
+      "sha256": "0c3b5efc2102a9901e17b491e5e5274dfd29fc95ed327330cf604e693598a4b5"
+    },
+    "osm_rivers": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"waterway\"=\"river\"][\"name\"~\"^(La\\ Meuse|L'Ourthe|Ourthe|Vesdre)( - .*)?$\"][\"tunnel\"!~\".\"](50.55,5.42,50.72,5.72);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T16:17:26+00:00",
+      "bytes": 67772,
+      "sha256": "b447cabcc1134a19788e5906a8196319940ce8686b86954befebf60e7fbb1d30"
+    },
+    "osm_bridges": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"bridge\"][\"highway\"][\"highway\"!~\"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$\"][\"foot\"!=\"no\"](50.55,5.42,50.72,5.72);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T16:17:31+00:00",
+      "bytes": 352351,
+      "sha256": "28d76df567ca16a9a90943e97241d076427db27575e5aa0ccbd9275dc3faff88"
+    }
+  },
+  "railGeometry": "GTFS shapes.txt",
+  "excludedRoutes": [],
+  "network": {
+    "lines": {
+      "bus": 102,
+      "tram": 1
+    },
+    "stops": 1469,
+    "railStations": 23
+  },
+  "stats": {
+    "lines": [
+      {
+        "name": "T1",
+        "mode": "tram",
+        "color": "#FFCD00",
+        "stations": 23,
+        "headway": 6.1
+      }
+    ],
+    "railStations": 23,
+    "busLines": 102,
+    "center": "Place Saint-Lambert",
+    "within15": 57,
+    "within30": 100,
+    "farthestStation": "Standard",
+    "farthestMinutes": 25,
+    "ogTrip": {
+      "name": "Val Benoît",
+      "lat": 50.61446,
+      "lon": 5.57285
+    }
+  }
+}
