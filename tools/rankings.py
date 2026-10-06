@@ -82,7 +82,7 @@ def city_rankings(city: dict) -> dict:
         routes = {row["route_id"]: row for row in bd.read_gtfs_table(archive, "routes.txt")}
         overrides = city.get("routeModes", {})
         modes = {
-            route_id: overrides.get(row.get("route_short_name", ""), bd.route_mode(row.get("route_type", "3")))
+            route_id: overrides.get(route_id) or overrides.get(row.get("route_short_name", ""), bd.route_mode(row.get("route_type", "3")))
             for route_id, row in routes.items()
             if not bd.route_excluded(row, city)
         }

@@ -1,19 +1,70 @@
 {
   "slug": "paris",
-  "order": 99,
+  "order": 26,
   "name": "Paris",
   "kind": "metro+tram",
-  "rankingsOnly": true,
-  "externalUrl": "https://julesgrandin.github.io/paris-temps-transport/",
+  "railNoun": "métro, RER et tram",
+  "railLabel": "Métro, RER et tram",
+  "railStations": "stations de métro, de RER et de tram",
   "network": "Île-de-France Mobilités",
-  "metropole": "Île-de-France",
-  "epci": "",
+  "metropole": "Métropole du Grand Paris",
+  "epci": "200054781",
   "gtfsUrl": "https://www.data.gouv.fr/api/1/datasets/r/413988ed-d340-467b-8be2-7b999fcd207a",
   "gtfsDataset": "https://transport.data.gouv.fr/datasets/reseau-urbain-et-interurbain-dile-de-france-mobilites",
   "gtfsLicence": "mobilites",
-  "excludeRouteTypes": ["2"],
-  "excludeRouteNames": ["CDG VAL", "ORLYVAL", "FUN"],
-  "defaultFrom": {"lat": 48.85843, "lon": 2.34723, "label": "Châtelet"},
+  "excludeRouteNames": [
+    "CDG VAL",
+    "ORLYVAL",
+    "FUN",
+    "TER"
+  ],
+  "defaultFrom": {
+    "lat": 48.85843,
+    "lon": 2.34723,
+    "label": "Châtelet"
+  },
   "searchExample": "Gare du Nord",
-  "published": "2026-10-05"
+  "published": "2026-10-06",
+  "communes": "served",
+  "arrondissements": "75056",
+  "rivers": [
+    "La Seine"
+  ],
+  "excludeRoutes": [
+    "IDFM:C01731",
+    "IDFM:C01741",
+    "IDFM:C01730",
+    "IDFM:C01736",
+    "IDFM:C01737",
+    "IDFM:C01738",
+    "IDFM:C01739",
+    "IDFM:C01740",
+    "IDFM:C02711"
+  ],
+  "routeModes": {
+    "IDFM:C01742": "rer",
+    "IDFM:C01743": "rer",
+    "IDFM:C01727": "rer",
+    "IDFM:C01728": "rer",
+    "IDFM:C01729": "rer"
+  },
+  "stopsBbox": [
+    48.7,
+    2.15,
+    49.0,
+    2.6
+  ],
+  "originalMap": {
+    "author": "Jules Grandin",
+    "title": "C'est encore loin ?",
+    "url": "https://julesgrandin.github.io/paris-temps-transport/",
+    "modes": "métro et RER",
+    "adds": "le tram, le téléphérique et, en option, les bus"
+  },
+  "viewBbox": [
+    48.79,
+    2.22,
+    48.92,
+    2.47
+  ]
 }

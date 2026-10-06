@@ -35,7 +35,7 @@ LICENCES = {
 }
 ODBL_URL = "https://opendatacommons.org/licenses/odbl/1-0/"
 MODE_LABEL_SHORT = {"tram": "Tram", "metro": "Métro", "metro+tram": "Métro et tram"}
-MODE_NAMES = {"metro": "Métro", "tram": "Tram", "funicular": "Funiculaire", "cable": "Téléphérique", "busway": "Busway"}
+MODE_NAMES = {"metro": "Métro", "rer": "RER", "tram": "Tram", "funicular": "Funiculaire", "cable": "Téléphérique", "busway": "Busway"}
 MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
 WEEKDAYS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
 
@@ -300,6 +300,23 @@ def ranking_positions_block(cities: list[dict], city: dict) -> str:
         <p class="section-link"><a href="../{RANKINGS_DIR}/">Tous les classements des trams et métros de France →</a></p>"""
 
 
+def original_map(city: dict) -> str:
+    """Paris had a map before this site: Jules Grandin's, which inspired it. It comes first, above this one."""
+    original = city.get("originalMap")
+    if not original:
+        return ""
+    return f"""        <aside class="original-map">
+          <p>
+            <strong>La carte originale, c'est celle de {esc(original["author"])}&nbsp;:</strong>
+            <a href="{esc(original["url"])}">{esc(original["title"]).replace(" ?", "&nbsp;?")}</a>, en {esc(original["modes"])}, qui a
+            inspiré tout ce site (elle-même partie du <a href="https://castrio.me/nyc/">NYC Transit Time Cartogram</a>
+            d'Anthony Castrio). Allez la voir&nbsp;! Cette version-ci part des horaires {esc(city["network"])} et ajoute
+            {esc(original["adds"])}.
+          </p>
+        </aside>
+"""
+
+
 def render_city(template: Template, cities: list[dict], city: dict) -> str:
     url = SITE_URL + city["path"]
     base = "../"
@@ -393,6 +410,7 @@ def render_city(template: Template, cities: list[dict], city: dict) -> str:
         "base": base,
         "city_config": json.dumps(config, ensure_ascii=False).replace("</", "<\\/"),
         "city_items": items,
+        "original_map": original_map(city),
         "headline": headline,
         "name": esc(city["name"]),
         "area": esc(city.get("area", "de la Métropole")),
@@ -575,7 +593,7 @@ MEDALS = ["🥇", "🥈", "🥉"]
 def load_rankings(cities: list[dict]) -> list[dict]:
     """Figures read straight from the timetables (sources/rankings.json, written by tools/rankings.py).
 
-    Cities with a map here, plus the ones that only take part in the rankings (Paris, whose map is Jules Grandin's).
+    Cities with a map here, plus the ones that only take part in the rankings (`externalUrl`: their map is elsewhere).
     """
     path = ROOT / "sources" / "rankings.json"
     if not path.exists():
@@ -879,12 +897,10 @@ document.querySelectorAll("[data-copy]").forEach((button) => button.addEventList
 
 def method_section(data: list[dict], base: str, method: str) -> str:
     dates = ", ".join(f'{esc(city["city"])} ({french_date(city["weekday"])})' for city in sorted(data, key=lambda c: c["city"]))
-    paris = next((city for city in data if city.get("externalUrl")), None)
     paris = (
-        f' {esc(paris["city"])} n\'a pas de carte ici&nbsp;: elle existe déjà, c\'est <a href="{esc(paris["externalUrl"])}">celle '
-        f'de Jules Grandin</a>, qui a inspiré ce site. Ses chiffres comptent le métro et le tram d\'Île-de-France '
-        f'Mobilités, sans RER, Transilien, CDGVAL, Orlyval ni funiculaire de Montmartre.'
-        if paris
+        " À Paris, ces chiffres comptent le métro et le tram d'Île-de-France Mobilités, sans RER, Transilien, CDGVAL, "
+        "Orlyval ni funiculaire de Montmartre."
+        if any(city["slug"] == "paris" for city in data)
         else ""
     )
     return f"""      <section class="section" aria-labelledby="method-title">

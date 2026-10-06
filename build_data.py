@@ -57,9 +57,9 @@ CONTEXT_RING_DISTANCE = 80.0
 WATER_MASK_AREA = 1_000_000.0
 
 # GTFS route_type → mode (basic and extended types).
-RAIL_MODES = {"tram", "metro", "funicular", "cable", "busway"}
+RAIL_MODES = {"tram", "metro", "rer", "funicular", "cable", "busway"}
 # Minutes to walk from the street to the platform (and back): stairs and corridors of underground lines.
-MODE_ACCESS_MINUTES = {"metro": 1.0, "funicular": 1.0, "cable": 1.0}
+MODE_ACCESS_MINUTES = {"metro": 1.0, "rer": 1.0, "funicular": 1.0, "cable": 1.0}
 # Communes kept when a city config says "communes": "served": enough stops, and not too far from tram/metro.
 SERVED_MIN_STOPS = 3
 SERVED_MAX_RAIL_DISTANCE = 12_000.0
@@ -659,7 +659,8 @@ def route_excluded(row: dict, city: dict) -> bool:
 
 
 def extract_network(data_dir: Path, city: dict):
-    # Some feeds mislabel their lines (Reims declares its tram as a metro); configs fix them by short name.
+    # Some feeds mislabel their lines (Reims declares its tram as a metro); configs fix them by short name, or by
+    # route_id when the name is ambiguous (the RER A of Île-de-France and the A buses of its suburbs).
     mode_overrides = city.get("routeModes", {})
     with zipfile.ZipFile(data_dir / "gtfs.zip") as archive:
         routes = {row["route_id"]: row for row in read_gtfs_table(archive, "routes.txt")}
@@ -676,6 +677,18 @@ def extract_network(data_dir: Path, city: dict):
         active_services = services[reference_date]
         trips = {row["trip_id"]: row for row in all_trips if row["service_id"] in active_services}
         stop_times = read_stop_times(archive, trips)
+
+    if city.get("stopsBbox"):
+        # Regional feeds (Île-de-France) run far beyond the map: the RER reaches Creil. Trips are cut at the edge.
+        south, west, north, east = city["stopsBbox"]
+        inside = {
+            stop_id for stop_id, row in stops.items()
+            if south <= float(row["stop_lat"] or 0) <= north and west <= float(row["stop_lon"] or 0) <= east
+        }
+        stop_times = {
+            trip_id: kept for trip_id, sequence in stop_times.items()
+            if len(kept := [entry for entry in sequence if entry[1] in inside]) >= 2
+        }
 
     used_stop_ids = {stop_id for sequence in stop_times.values() for _, stop_id, _, _ in sequence}
     complexes, complex_of = group_stops(stops, used_stop_ids)
@@ -708,7 +721,7 @@ def extract_network(data_dir: Path, city: dict):
     route_info = {}
     for route_id in sorted(served):  # sorted: identical output from one build to the next
         row = routes[route_id]
-        mode = mode_overrides.get(row.get("route_short_name", ""), route_mode(row.get("route_type", "3")))
+        mode = mode_overrides.get(route_id) or mode_overrides.get(row.get("route_short_name", ""), route_mode(row.get("route_type", "3")))
         route_info[route_id] = {
             "mode": mode,
             "rail": mode in RAIL_MODES,
@@ -1042,6 +1055,10 @@ def main() -> None:
             max(station["point"][0] for station in stations) + VIEW_PAD_METERS,
             max(station["point"][1] for station in stations) + VIEW_PAD_METERS,
         )
+    if city.get("viewBbox"):
+        # Paris: the RER reaches far into the suburbs, the map opens on the city and its inner ring.
+        south, west, north, east = city["viewBbox"]
+        view_bounds = (*lonlat_to_xy(west, south), *lonlat_to_xy(east, north))
     cells, mask = build_grid(land, masked_water, stations, bounds, cols, rows, rivers)
 
     output = {

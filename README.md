@@ -4,7 +4,7 @@ Cartes interactives des temps de trajet en **tram et métro** (et, en option, en
 
 👉 **https://tram.camilleroux.com/**
 
-20 villes : [Angers](https://tram.camilleroux.com/angers/) · [Bordeaux](https://tram.camilleroux.com/bordeaux/) · [Brest](https://tram.camilleroux.com/brest/) · [Clermont-Ferrand](https://tram.camilleroux.com/clermont-ferrand/) · [Dijon](https://tram.camilleroux.com/dijon/) · [Grenoble](https://tram.camilleroux.com/grenoble/) · [Le Mans](https://tram.camilleroux.com/le-mans/) · [Lille](https://tram.camilleroux.com/lille/) · [Lyon](https://tram.camilleroux.com/lyon/) · [Marseille](https://tram.camilleroux.com/marseille/) · [Montpellier](https://tram.camilleroux.com/montpellier/) · [Nantes](https://tram.camilleroux.com/nantes/) · [Nice](https://tram.camilleroux.com/nice/) · [Reims](https://tram.camilleroux.com/reims/) · [Rennes](https://tram.camilleroux.com/rennes/) · [Rouen](https://tram.camilleroux.com/rouen/) · [Saint-Étienne](https://tram.camilleroux.com/saint-etienne/) · [Strasbourg](https://tram.camilleroux.com/strasbourg/) · [Toulouse](https://tram.camilleroux.com/toulouse/) · [Tours](https://tram.camilleroux.com/tours/)
+23 villes : [Angers](https://tram.camilleroux.com/angers/) · [Besançon](https://tram.camilleroux.com/besancon/) · [Bordeaux](https://tram.camilleroux.com/bordeaux/) · [Brest](https://tram.camilleroux.com/brest/) · [Clermont-Ferrand](https://tram.camilleroux.com/clermont-ferrand/) · [Dijon](https://tram.camilleroux.com/dijon/) · [Grenoble](https://tram.camilleroux.com/grenoble/) · [Le Mans](https://tram.camilleroux.com/le-mans/) · [Lille](https://tram.camilleroux.com/lille/) · [Lyon](https://tram.camilleroux.com/lyon/) · [Marseille](https://tram.camilleroux.com/marseille/) · [Montpellier](https://tram.camilleroux.com/montpellier/) · [Nantes](https://tram.camilleroux.com/nantes/) · [Nice](https://tram.camilleroux.com/nice/) · [Orléans](https://tram.camilleroux.com/orleans/) · [Paris](https://tram.camilleroux.com/paris/) · [Reims](https://tram.camilleroux.com/reims/) · [Rennes](https://tram.camilleroux.com/rennes/) · [Rouen](https://tram.camilleroux.com/rouen/) · [Saint-Étienne](https://tram.camilleroux.com/saint-etienne/) · [Strasbourg](https://tram.camilleroux.com/strasbourg/) · [Toulouse](https://tram.camilleroux.com/toulouse/) · [Tours](https://tram.camilleroux.com/tours/)
 
 Idée originale : le [NYC Transit Time Cartogram](https://castrio.me/nyc/) d'Anthony Castrio, puis sa
 [déclinaison parisienne](https://github.com/JulesGrandin/paris-temps-transport) par Jules Grandin.
@@ -27,8 +27,9 @@ Puis ouvrir [http://localhost:8000](http://localhost:8000). `build.py` affiche �
 Étapes séparées si besoin : `fetch_data.py <ville>`, `build_data.py <ville>`, `build_pages.py`,
 `tools/render_og.py <ville>|home|classements|all` (Chrome et ImageMagick requis), `tools/rankings.py` (classements
 lus directement dans les horaires : dernier tram du samedi soir au centre, fréquence à l'heure de pointe, station la plus desservie, ligne la plus longue,
-trajets par jour ; écrit `sources/rankings.json`, publié sur `/classements/` avec une page par classement). Une ville avec `"rankingsOnly": true` (Paris, dont la
-carte est celle de Jules Grandin, `externalUrl`) figure dans les classements sans avoir de carte ici. `node tools/check_trips.mjs <ville>` sonde les
+trajets par jour ; écrit `sources/rankings.json`, publié sur `/classements/` avec une page par classement). Une ville avec `"rankingsOnly": true` (et
+`externalUrl` vers sa carte) figure dans les classements sans avoir de carte ici. À Paris, les classements comptent le métro et le
+tram, sans le RER (mode `rer`) que montre la carte. `node tools/check_trips.mjs <ville>` sonde les
 trajets depuis le centre jusqu'aux terminus et aux gares, et signale les vitesses anormales.
 
 Les sources brutes (`data/<ville>/` : GTFS, communes, OSM) ne sont pas versionnées : elles restent en local et
@@ -48,6 +49,10 @@ Particularités : le GTFS TCL (Lyon) se télécharge à la main sur data.grandly
 les nouvelles villes (`"communes": "served"`), la carte se limite aux communes réellement desservies.
 Options de carte : `"arrondissements": "<code INSEE>"` trace les arrondissements municipaux dans la commune (Marseille),
 et `"view": "stops"` cadre la vue initiale sur tous les arrêts, bus compris, plutôt que sur le seul réseau tram/métro.
+`"viewBbox": [sud, ouest, nord, est]` impose ce cadrage, et `"stopsBbox"` coupe les trajets aux arrêts de ce rectangle
+(GTFS régional d'Île-de-France : le RER va jusqu'à Creil). `routeModes` accepte un `route_id` quand le nom est ambigu
+(RER A et bus A). `originalMap` met en avant, en tête de page, une carte qui existait avant celle-ci (Paris : celle de
+Jules Grandin).
 `"rivers": ["La Loire", "L'Erdre"]` rend ces cours d'eau (et leurs bras, « La Loire - Bras de Pirmil ») infranchissables
 à pied ailleurs que sur un pont : la marche passe par le meilleur pont OSM, sinon il faut prendre le tram, le bus ou le
 bateau (`fetch_data.py <ville> --rivers-only` télécharge cours d'eau et ponts).

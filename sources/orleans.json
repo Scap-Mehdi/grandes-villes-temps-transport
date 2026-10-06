@@ -1,0 +1,99 @@
+{
+  "city": "Orléans",
+  "builtAt": "2026-10-06T11:56:03+00:00",
+  "referenceDate": "2026-11-03",
+  "serviceWindow": "7h–20h",
+  "gtfs": {
+    "network": "TAO",
+    "dataset": "https://transport.data.gouv.fr/datasets/gtfs-netex-et-gtfs-rt-reseau-tao-orleans-metropole",
+    "source": "https://www.data.gouv.fr/api/1/datasets/r/b2dfbaa3-47e9-4749-b6a4-750bebd760e7",
+    "how": "download",
+    "fetchedAt": "2026-10-06T11:41:06+00:00",
+    "bytes": 16860517,
+    "sha256": "a9a2b5bef46bf5cbee010e39aa05269657e1dce58d7854a7fdd6a57d721d3d3d",
+    "feedInfo": {
+      "feed_publisher_name": "TAO (Orléans)",
+      "feed_publisher_url": "http://reseau-tao.fr/",
+      "feed_lang": "fr",
+      "feed_start_date": "20260918",
+      "feed_end_date": "20270103"
+    },
+    "servicePeriod": [
+      "2026-09-18",
+      "2027-01-03"
+    ]
+  },
+  "communes": {
+    "metropole": "Orléans Métropole",
+    "epci": "244500468",
+    "source": "https://geo.api.gouv.fr/epcis/244500468/communes?fields=nom,code&format=geojson&geometry=contour",
+    "how": "download",
+    "fetchedAt": "2026-10-06T11:41:06+00:00",
+    "bytes": 121054,
+    "sha256": "5099a57e8d63c269ab87179575b11f80ec1e009a45d186bdf5adbbd6f503d17b"
+  },
+  "openStreetMap": {
+    "licence": "ODbL, © contributeurs OpenStreetMap",
+    "osm_water_parks": {
+      "source": "Overpass API: [out:json][timeout:180];(relation[\"natural\"=\"water\"](47.68,1.58,48.12,2.22);way[\"natural\"=\"water\"](47.68,1.58,48.12,2.22);relation[\"leisure\"=\"park\"](47.84,1.82,47.96,1.98);way[\"leisure\"=\"park\"](47.84,1.82,47.96,1.98););out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T11:41:11+00:00",
+      "bytes": 9868018,
+      "sha256": "a76f2dc53396a73d99d39297f7fde7ac757c09ab9aa11df739acefc1e233f4ee"
+    },
+    "osm_rivers": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"waterway\"=\"river\"][\"name\"~\"^(La\\ Loire)( - .*)?$\"][\"tunnel\"!~\".\"](47.68,1.58,48.12,2.22);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T11:41:15+00:00",
+      "bytes": 50775,
+      "sha256": "d5bc2cac8f2fc7cf109d9d01f0ef5bd3bea5e09b7e7112d41d7ee57302d345f5"
+    },
+    "osm_bridges": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"bridge\"][\"highway\"][\"highway\"!~\"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$\"][\"foot\"!=\"no\"](47.68,1.58,48.12,2.22);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T11:41:17+00:00",
+      "bytes": 600152,
+      "sha256": "b661c2a51413a2486a042fa465517739c6c0b4f2f322b4b5fbc3817302e26556"
+    }
+  },
+  "railGeometry": "GTFS shapes.txt",
+  "excludedRoutes": [],
+  "network": {
+    "lines": {
+      "bus": 38,
+      "tram": 2
+    },
+    "stops": 684,
+    "railStations": 51
+  },
+  "stats": {
+    "lines": [
+      {
+        "name": "A",
+        "mode": "tram",
+        "color": "#E2121A",
+        "stations": 27,
+        "headway": 6.0
+      },
+      {
+        "name": "B",
+        "mode": "tram",
+        "color": "#762A80",
+        "stations": 25,
+        "headway": 8.6
+      }
+    ],
+    "railStations": 51,
+    "busLines": 38,
+    "center": "Place du Martroi",
+    "within15": 49,
+    "within30": 96,
+    "farthestStation": "Hôpital de La Source",
+    "farthestMinutes": 34,
+    "ogTrip": {
+      "name": "Georges Pompidou",
+      "lat": 47.89667,
+      "lon": 1.85419
+    }
+  }
+}

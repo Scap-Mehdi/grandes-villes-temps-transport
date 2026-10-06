@@ -1543,11 +1543,67 @@
     },
     "weekdayTrips": 336
   },
+  "orleans": {
+    "city": "Orléans",
+    "slug": "orleans",
+    "path": "orleans/",
+    "externalUrl": null,
+    "network": "TAO",
+    "source": {
+      "dataset": "https://transport.data.gouv.fr/datasets/gtfs-netex-et-gtfs-rt-reseau-tao-orleans-metropole",
+      "licence": "lo",
+      "fetchedAt": "2026-10-06"
+    },
+    "weekday": "2026-11-03",
+    "saturday": "2026-11-07",
+    "centre": {
+      "station": "République",
+      "firstWeekday": {
+        "time": "04:37",
+        "seconds": 16650,
+        "line": "A"
+      },
+      "lastWeekday": {
+        "time": "00:42 (+1)",
+        "seconds": 88975,
+        "line": "A"
+      },
+      "lastSaturday": {
+        "time": "00:47 (+1)",
+        "seconds": 89225,
+        "line": "A"
+      }
+    },
+    "busiestStation": {
+      "station": "De Gaulle",
+      "tied": [],
+      "passages": 558
+    },
+    "lines": {
+      "A": {
+        "mode": "tram",
+        "color": "#E2121A",
+        "peakPassages": 12,
+        "peakHeadway": 5.0,
+        "endToEndMinutes": 54,
+        "endToEnd": "Hôpital de La Source → Jules Verne"
+      },
+      "B": {
+        "mode": "tram",
+        "color": "#762A80",
+        "peakPassages": 8,
+        "peakHeadway": 7.5,
+        "endToEndMinutes": 40,
+        "endToEnd": "Georges Pompidou → Clos du Hameau"
+      }
+    },
+    "weekdayTrips": 561
+  },
   "paris": {
     "city": "Paris",
     "slug": "paris",
     "path": "paris/",
-    "externalUrl": "https://julesgrandin.github.io/paris-temps-transport/",
+    "externalUrl": null,
     "network": "Île-de-France Mobilités",
     "source": {
       "dataset": "https://transport.data.gouv.fr/datasets/reseau-urbain-et-interurbain-dile-de-france-mobilites",

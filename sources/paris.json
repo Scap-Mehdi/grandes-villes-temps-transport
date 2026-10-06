@@ -1,0 +1,344 @@
+{
+  "city": "Paris",
+  "builtAt": "2026-10-06T11:58:16+00:00",
+  "referenceDate": "2026-10-06",
+  "serviceWindow": "7h–20h",
+  "gtfs": {
+    "network": "Île-de-France Mobilités",
+    "dataset": "https://transport.data.gouv.fr/datasets/reseau-urbain-et-interurbain-dile-de-france-mobilites",
+    "source": "https://www.data.gouv.fr/api/1/datasets/r/413988ed-d340-467b-8be2-7b999fcd207a",
+    "how": "manual",
+    "fetchedAt": "2026-10-05T01:19:57+00:00",
+    "bytes": 136420905,
+    "sha256": "60131344b6fb2c10662c9b666d60b93c4dc07c086e3b4935d9442351eda98a15",
+    "feedInfo": null,
+    "servicePeriod": [
+      "2026-10-01",
+      "2026-11-02"
+    ]
+  },
+  "communes": {
+    "metropole": "Métropole du Grand Paris",
+    "epci": "200054781",
+    "source": "https://geo.api.gouv.fr/epcis/200054781/communes?fields=nom,code&format=geojson&geometry=contour",
+    "how": "download",
+    "fetchedAt": "2026-10-06T11:30:38+00:00",
+    "bytes": 456904,
+    "sha256": "2226380b543a8da9c53a9afe7f9d4d4628a63509217633535e5c4e12aabc416a"
+  },
+  "arrondissements": {
+    "source": "https://geo.api.gouv.fr/communes?type=arrondissement-municipal&codeParent=75056&fields=nom,code&format=geojson&geometry=contour",
+    "how": "download",
+    "fetchedAt": "2026-10-06T11:30:38+00:00",
+    "bytes": 39725,
+    "sha256": "f5b704aece4b82c236f79e24474f159b8f206715fe363c8bfc7079a00f7ae0e9"
+  },
+  "openStreetMap": {
+    "licence": "ODbL, © contributeurs OpenStreetMap",
+    "osm_water_parks": {
+      "source": "Overpass API: [out:json][timeout:180];(relation[\"natural\"=\"water\"](48.64,2.03,49.08,2.67);way[\"natural\"=\"water\"](48.64,2.03,49.08,2.67);relation[\"leisure\"=\"park\"](48.8,2.27,48.92,2.43);way[\"leisure\"=\"park\"](48.8,2.27,48.92,2.43););out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T11:35:17+00:00",
+      "bytes": 12930732,
+      "sha256": "adbcb52173f0b3d65d1e6e6abb6831e851ca17de4c30cca4e5c5cf029aff87e9"
+    },
+    "osm_rivers": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"waterway\"=\"river\"][\"name\"~\"^(La\\ Seine)( - .*)?$\"][\"tunnel\"!~\".\"](48.64,2.03,49.08,2.67);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T11:35:22+00:00",
+      "bytes": 162613,
+      "sha256": "27337defb6883795c3d0b0e12f1bc7aac0140d2e21bfc172e6c1636579b67169"
+    },
+    "osm_bridges": {
+      "source": "Overpass API: [out:json][timeout:110];way[\"bridge\"][\"highway\"][\"highway\"!~\"^(motorway|motorway_link|trunk|trunk_link|construction|proposed)$\"][\"foot\"!=\"no\"](48.64,2.03,49.08,2.67);out geom;",
+      "how": "download",
+      "fetchedAt": "2026-10-06T11:42:44+00:00",
+      "bytes": 4498616,
+      "sha256": "3fdcc9ae148d510620c0a354b6891df508a53fe0f41af032b1c70f184db7d92e"
+    }
+  },
+  "railGeometry": "GTFS shapes.txt",
+  "excludedRoutes": [
+    "IDFM:C01731",
+    "IDFM:C01741",
+    "IDFM:C01730",
+    "IDFM:C01736",
+    "IDFM:C01737",
+    "IDFM:C01738",
+    "IDFM:C01739",
+    "IDFM:C01740",
+    "IDFM:C02711"
+  ],
+  "network": {
+    "lines": {
+      "bus": 728,
+      "metro": 16,
+      "tram": 13,
+      "rer": 5,
+      "cable": 1
+    },
+    "stops": 7556,
+    "railStations": 662
+  },
+  "stats": {
+    "lines": [
+      {
+        "name": "1",
+        "mode": "metro",
+        "color": "#FFBE00",
+        "stations": 25,
+        "headway": 2.2
+      },
+      {
+        "name": "2",
+        "mode": "metro",
+        "color": "#0055C8",
+        "stations": 25,
+        "headway": 2.5
+      },
+      {
+        "name": "3",
+        "mode": "metro",
+        "color": "#6E6E00",
+        "stations": 25,
+        "headway": 2.5
+      },
+      {
+        "name": "4",
+        "mode": "metro",
+        "color": "#A0006E",
+        "stations": 29,
+        "headway": 2.4
+      },
+      {
+        "name": "5",
+        "mode": "metro",
+        "color": "#FF5A00",
+        "stations": 22,
+        "headway": 2.4
+      },
+      {
+        "name": "6",
+        "mode": "metro",
+        "color": "#82DC73",
+        "stations": 28,
+        "headway": 2.5
+      },
+      {
+        "name": "7",
+        "mode": "metro",
+        "color": "#FF82B4",
+        "stations": 38,
+        "headway": 2.4
+      },
+      {
+        "name": "8",
+        "mode": "metro",
+        "color": "#D282BE",
+        "stations": 38,
+        "headway": 3.1
+      },
+      {
+        "name": "9",
+        "mode": "metro",
+        "color": "#D2D200",
+        "stations": 37,
+        "headway": 2.5
+      },
+      {
+        "name": "10",
+        "mode": "metro",
+        "color": "#DC9600",
+        "stations": 23,
+        "headway": 3.7
+      },
+      {
+        "name": "11",
+        "mode": "metro",
+        "color": "#6E491E",
+        "stations": 19,
+        "headway": 2.6
+      },
+      {
+        "name": "12",
+        "mode": "metro",
+        "color": "#00643C",
+        "stations": 31,
+        "headway": 2.8
+      },
+      {
+        "name": "13",
+        "mode": "metro",
+        "color": "#82C8E6",
+        "stations": 32,
+        "headway": 2.2
+      },
+      {
+        "name": "14",
+        "mode": "metro",
+        "color": "#640082",
+        "stations": 21,
+        "headway": 2.3
+      },
+      {
+        "name": "3B",
+        "mode": "metro",
+        "color": "#82C8E6",
+        "stations": 4,
+        "headway": 3.8
+      },
+      {
+        "name": "7B",
+        "mode": "metro",
+        "color": "#82DC73",
+        "stations": 8,
+        "headway": 4.7
+      },
+      {
+        "name": "T1",
+        "mode": "tram",
+        "color": "#0055C8",
+        "stations": 37,
+        "headway": 5.4
+      },
+      {
+        "name": "T2",
+        "mode": "tram",
+        "color": "#A0006E",
+        "stations": 24,
+        "headway": 4.7
+      },
+      {
+        "name": "T4",
+        "mode": "tram",
+        "color": "#DC9600",
+        "stations": 20,
+        "headway": 8.1
+      },
+      {
+        "name": "T5",
+        "mode": "tram",
+        "color": "#640082",
+        "stations": 16,
+        "headway": 4.4
+      },
+      {
+        "name": "T6",
+        "mode": "tram",
+        "color": "#FF0000",
+        "stations": 21,
+        "headway": 5.2
+      },
+      {
+        "name": "T7",
+        "mode": "tram",
+        "color": "#6E491E",
+        "stations": 18,
+        "headway": 7.4
+      },
+      {
+        "name": "T8",
+        "mode": "tram",
+        "color": "#6E6E00",
+        "stations": 17,
+        "headway": 9.0
+      },
+      {
+        "name": "T9",
+        "mode": "tram",
+        "color": "#3C91DC",
+        "stations": 19,
+        "headway": 4.8
+      },
+      {
+        "name": "T10",
+        "mode": "tram",
+        "color": "#6E6E00",
+        "stations": 13,
+        "headway": 7.6
+      },
+      {
+        "name": "T11",
+        "mode": "tram",
+        "color": "#FF5A00",
+        "stations": 7,
+        "headway": 6.7
+      },
+      {
+        "name": "T12",
+        "mode": "tram",
+        "color": "#A50034",
+        "stations": 5,
+        "headway": 11.9
+      },
+      {
+        "name": "T3a",
+        "mode": "tram",
+        "color": "#FF5A00",
+        "stations": 25,
+        "headway": 4.3
+      },
+      {
+        "name": "T3b",
+        "mode": "tram",
+        "color": "#00643C",
+        "stations": 33,
+        "headway": 4.9
+      },
+      {
+        "name": "C1",
+        "mode": "cable",
+        "color": "#3C91DC",
+        "stations": 5,
+        "headway": 2.0
+      },
+      {
+        "name": "A",
+        "mode": "rer",
+        "color": "#EB2132",
+        "stations": 28,
+        "headway": 5.3
+      },
+      {
+        "name": "B",
+        "mode": "rer",
+        "color": "#5091CB",
+        "stations": 37,
+        "headway": 5.7
+      },
+      {
+        "name": "C",
+        "mode": "rer",
+        "color": "#FFCC30",
+        "stations": 44,
+        "headway": 11.3
+      },
+      {
+        "name": "D",
+        "mode": "rer",
+        "color": "#008B5B",
+        "stations": 16,
+        "headway": 6.6
+      },
+      {
+        "name": "E",
+        "mode": "rer",
+        "color": "#B94E9A",
+        "stations": 20,
+        "headway": 12.4
+      }
+    ],
+    "railStations": 662,
+    "busLines": 728,
+    "center": "Châtelet",
+    "within15": 23,
+    "within30": 77,
+    "farthestStation": "Hôpital de Montfermeil",
+    "farthestMinutes": 62,
+    "ogTrip": {
+      "name": "Hôpital Robert Debré",
+      "lat": 48.87941,
+      "lon": 2.40116
+    }
+  }
+}

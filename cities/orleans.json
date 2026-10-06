@@ -1,0 +1,20 @@
+{
+  "slug": "orleans",
+  "order": 25,
+  "name": "Orléans",
+  "network": "TAO",
+  "metropole": "Orléans Métropole",
+  "epci": "244500468",
+  "communes": "served",
+  "rivers": ["La Loire"],
+  "gtfsUrl": "https://www.data.gouv.fr/api/1/datasets/r/b2dfbaa3-47e9-4749-b6a4-750bebd760e7",
+  "gtfsDataset": "https://transport.data.gouv.fr/datasets/gtfs-netex-et-gtfs-rt-reseau-tao-orleans-metropole",
+  "gtfsLicence": "lo",
+  "defaultFrom": {
+    "lat": 47.90289,
+    "lon": 1.90389,
+    "label": "Place du Martroi"
+  },
+  "searchExample": "Gare d'Orléans",
+  "published": "2026-10-06"
+}

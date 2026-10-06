@@ -10,6 +10,7 @@ const DEFAULT_FROM = CITY.defaultFrom;
 const MODE_LABELS = {
   tram: "Tram",
   metro: "Métro",
+  rer: "RER",
   funicular: "Funiculaire",
   cable: "Téléphérique",
   ferry: "Bateau",

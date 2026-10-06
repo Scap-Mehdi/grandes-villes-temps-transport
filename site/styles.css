@@ -319,6 +319,27 @@ h1 {
   letter-spacing: -0.01em;
 }
 
+.original-map {
+  max-width: 620px;
+  margin: 18px auto 0;
+  text-align: left;
+  padding: 12px 16px;
+  border-left: 4px solid var(--green);
+  border-radius: 0 12px 12px 0;
+  background: var(--green-soft);
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.original-map p {
+  margin: 0;
+}
+
+.original-map strong {
+  color: var(--ink);
+}
+
 .search {
   position: relative;
   display: flex;

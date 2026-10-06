@@ -58,7 +58,7 @@ def load_city(slug: str) -> dict:
 
 
 def load_cities(include_rankings_only: bool = False) -> list[dict]:
-    """Cities with a map. Some cities only appear in the rankings (`rankingsOnly`, Paris: its map is Jules Grandin's)."""
+    """Cities with a map. Some cities may only appear in the rankings (`rankingsOnly`, with an `externalUrl` to their map)."""
     cities = [with_defaults(json.loads(path.read_text(encoding="utf-8"))) for path in CITIES_DIR.glob("*.json")]
     cities = [city for city in cities if include_rankings_only or not city.get("rankingsOnly")]
     return sorted(cities, key=lambda city: city["order"])

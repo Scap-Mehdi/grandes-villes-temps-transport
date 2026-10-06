@@ -18,6 +18,8 @@ Généré par `build_pages.py` à partir des fiches `sources/<ville>.json`.
 | [Montpellier](montpellier.json) | TaM | ODbL | 2026-10-03 | 2026-09-21 → 2026-12-31 | 2026-11-03 |
 | [Nantes](nantes.json) | Naolib | Licence Ouverte 2.0 | 2026-10-04 | 2026-09-28 → 2026-12-28 | 2026-11-03 |
 | [Nice](nice.json) | Lignes d'Azur | Licence Ouverte 2.0 | 2026-10-04 | 2026-09-17 → 2026-12-31 | 2026-11-03 |
+| [Orléans](orleans.json) | TAO | Licence Ouverte 2.0 | 2026-10-06 | 2026-09-18 → 2027-01-03 | 2026-11-03 |
+| [Paris](paris.json) | Île-de-France Mobilités | Licence Mobilités | 2026-10-05 (à la main) | 2026-10-01 → 2026-11-02 | 2026-10-06 |
 | [Reims](reims.json) | Citura | Licence Ouverte 2.0 | 2026-10-04 | 2026-09-28 → 2026-11-01 | 2026-10-06 |
 | [Rennes](rennes.json) | STAR | ODbL | 2026-10-04 | 2026-09-30 → 2026-10-18 | 2026-10-06 |
 | [Rouen](rouen.json) | Astuce | Licence Ouverte 2.0 | 2026-10-04 | 2026-10-04 → 2027-08-29 | 2026-10-06 |
