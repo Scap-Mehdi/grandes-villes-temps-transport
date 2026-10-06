@@ -145,7 +145,8 @@ function isOnLand(point) {
 }
 
 function communeAt(point) {
-  return app.data.boroughs.find((commune) => commune.polygons.some((polygon) => pointInPolygon(point, polygon)))?.name;
+  const inside = (area) => area.polygons.some((polygon) => pointInPolygon(point, polygon));
+  return ((app.data.arrondissements ?? []).find(inside) ?? app.data.boroughs.find(inside))?.name;
 }
 
 // --- Graphe du réseau ---------------------------------------------------------
@@ -538,7 +539,7 @@ function buildPaths(data) {
     return path;
   };
   const communeLines = new Path2D();
-  for (const commune of data.boroughs) for (const ring of commune.outline) ringPath(communeLines, ring);
+  for (const area of [...data.boroughs, ...(data.arrondissements ?? [])]) for (const ring of area.outline) ringPath(communeLines, ring);
 
   const routes = new Map();
   for (const route of data.routes) {
@@ -705,10 +706,13 @@ function drawCommuneNames() {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   const font = `600 ${app.view.scale > app.view.fitScale * 2 ? 13 : 10.5}px Inter, sans-serif`;
-  for (const commune of app.data.boroughs) {
+  const arrondissements = app.data.arrondissements ?? [];
+  // Une commune découpée en arrondissements (Marseille) laisse la place aux noms de ses arrondissements.
+  const communes = app.data.boroughs.filter((commune) => !arrondissements.some((a) => a.name.startsWith(`${commune.name} `)));
+  for (const commune of [...communes, ...arrondissements]) {
     const [x, y] = project(commune.label);
     if (x < 0 || y < 0 || x > app.size.width || y > app.size.height) continue;
-    drawHaloText(commune.name.toUpperCase(), x, y, { font, color: "rgba(40, 40, 40, 0.55)", halo: "rgba(255,255,255,0.6)" });
+    drawHaloText((commune.short ?? commune.name).toUpperCase(), x, y, { font, color: "rgba(40, 40, 40, 0.55)", halo: "rgba(255,255,255,0.6)" });
   }
 }
 
@@ -1233,7 +1237,14 @@ $("locate").addEventListener("click", () => {
     ({ coords }) => {
       if (!setFrom(toWorld(coords.latitude, coords.longitude), "Ma position")) toast("Vous êtes hors de la Métropole.");
     },
-    () => toast("Impossible d'obtenir votre position."),
+    (error) =>
+      toast(
+        error.code === error.PERMISSION_DENIED
+          ? "Position refusée : autorisez la localisation, ou cherchez une adresse."
+          : "Impossible d'obtenir votre position : cherchez plutôt une adresse.",
+      ),
+    // Sans délai maximal, certains navigateurs intégrés (X, Reddit…) n'appellent jamais aucun des deux rappels.
+    { timeout: 10000, maximumAge: 60000 },
   );
 });
 

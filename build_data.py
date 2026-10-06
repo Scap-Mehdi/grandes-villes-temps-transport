@@ -11,6 +11,7 @@ import heapq
 import io
 import json
 import math
+import re
 import statistics
 import sys
 import zipfile
@@ -273,6 +274,32 @@ def served_communes(payload: dict, stations: Sequence[dict]) -> set:
         if min(dist(point, rail) for point in inside for rail in rail_points) <= SERVED_MAX_RAIL_DISTANCE:
             names.add(feature["properties"]["nom"])
     return names
+
+
+def extract_arrondissements(data_dir: Path, city: dict) -> List[dict]:
+    """Paris, Lyon, Marseille: the arrondissements are drawn inside the commune, so that the outlying ones show up.
+    Only their outlines and names: the land stays the commune's, whose contour also covers the harbour basins."""
+    if not city.get("arrondissements"):
+        return []
+    arrondissements = []
+    for feature in sorted(load_json(data_dir / "arrondissements.geojson")["features"], key=lambda f: f["properties"]["code"]):
+        polygons = coords_to_polygons(feature["geometry"])
+        if not polygons:
+            continue
+        # « Marseille 15e Arrondissement » → « Marseille 15ᵉ », and « 15ᵉ » on the map.
+        commune, number = re.fullmatch(r"(.+) (\d+)(?:er|e) Arrondissement", feature["properties"]["nom"]).groups()
+        short = number + ("ᵉʳ" if number == "1" else "ᵉ")
+        largest = max((polygon[0] for polygon in polygons), key=lambda ring: abs(ring_area(ring)))
+        arrondissements.append(
+            {
+                "name": f"{commune} {short}",
+                "short": short,
+                "polygons": [serialize_polygon(polygon) for polygon in polygons],
+                "outline": [[round_point(point) for point in polygon[0]] for polygon in polygons],
+                "label": round_point(polygon_centroid(largest)),
+            }
+        )
+    return arrondissements
 
 
 def extract_communes(data_dir: Path, city: dict, stations: Sequence[dict]) -> Tuple[List[dict], MultiPolygon]:
@@ -844,6 +871,7 @@ def write_provenance(city: dict, data_dir: Path, reference_date: date, route_inf
             "servicePeriod": [days[0].isoformat(), days[-1].isoformat()] if days else None,
         },
         "communes": {"metropole": city["metropole"], "epci": city["epci"], **manifest.get("communes.geojson", {})},
+        **({"arrondissements": manifest["arrondissements.geojson"]} if "arrondissements.geojson" in manifest else {}),
         "openStreetMap": {
             "licence": "ODbL, © contributeurs OpenStreetMap",
             **{name.removesuffix(".json"): manifest[name] for name in ("osm_rail.json", "osm_water_parks.json") if name in manifest},
@@ -876,6 +904,7 @@ def main() -> None:
     for station in complexes:
         station["rail"] = any(route_info[route_id]["rail"] for route_id in station["routes"])
     communes, land = extract_communes(data_dir, city, complexes)
+    arrondissements = extract_arrondissements(data_dir, city)
     bounds = multipolygon_bounds(land, LAND_PAD_METERS)
     cols = round((bounds[2] - bounds[0]) / GRID_CELL_METERS)
     rows = round((bounds[3] - bounds[1]) / GRID_CELL_METERS)
@@ -906,6 +935,15 @@ def main() -> None:
         max(x for x, _ in rail_points) + VIEW_PAD_METERS,
         max(y for _, y in rail_points) + VIEW_PAD_METERS,
     )
+    if city.get("view") == "stops":
+        # Framing the tram/metro network alone hides the neighbourhoods it does not reach (Marseille): frame every
+        # stop instead, buses included, which follows where people live without the empty hills and sea.
+        view_bounds = (
+            min(station["point"][0] for station in stations) - VIEW_PAD_METERS,
+            min(station["point"][1] for station in stations) - VIEW_PAD_METERS,
+            max(station["point"][0] for station in stations) + VIEW_PAD_METERS,
+            max(station["point"][1] for station in stations) + VIEW_PAD_METERS,
+        )
     cells, mask = build_grid(land, masked_water, stations, bounds, cols, rows)
 
     output = {
@@ -922,6 +960,7 @@ def main() -> None:
         },
         "context": [serialize_polygon(polygon) for polygon in context],
         "boroughs": communes,
+        **({"arrondissements": arrondissements} if arrondissements else {}),
         "water": [serialize_polygon(polygon) for polygon in masked_water + water],
         "parks": [serialize_polygon(polygon) for polygon in parks],
         "routes": routes,

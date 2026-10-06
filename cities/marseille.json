@@ -24,6 +24,8 @@
   "published": "2026-10-05",
   "busLabel": "Bus et navette maritime",
   "area": "de la ville",
+  "arrondissements": "13055",
+  "view": "stops",
   "osmBbox": [
     43.15,
     5.22,

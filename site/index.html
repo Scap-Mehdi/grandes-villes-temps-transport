@@ -258,7 +258,7 @@
       // Les liens partagés avant l'arrivée des autres villes (?from=…&to=…) ouvraient la carte de Montpellier.
       if (/[?&](from|to)=/.test(location.search)) location.replace("./montpellier/" + location.search);
     </script>
-    <link rel="stylesheet" href="./styles.css?v=3b985c73" />
+    <link rel="stylesheet" href="./styles.css?v=a1490f93" />
   </head>
   <body>
     <header class="topbar">
@@ -279,6 +279,29 @@
           Combien de temps faut-il vraiment pour traverser sa ville en tram ou en métro&nbsp;? Choisissez une ville, posez un
           départ&nbsp;: toute la métropole se colore selon le temps de trajet, calculé à partir des horaires officiels.
         </p>
+        <nav class="city-switch" aria-label="Aller directement à une ville">
+          <a class="chip" href="./angers/">Angers</a>
+          <a class="chip" href="./besancon/">Besançon</a>
+          <a class="chip" href="./bordeaux/">Bordeaux</a>
+          <a class="chip" href="./brest/">Brest</a>
+          <a class="chip" href="./clermont-ferrand/">Clermont-Ferrand</a>
+          <a class="chip" href="./dijon/">Dijon</a>
+          <a class="chip" href="./grenoble/">Grenoble</a>
+          <a class="chip" href="./le-mans/">Le Mans</a>
+          <a class="chip" href="./lille/">Lille</a>
+          <a class="chip" href="./lyon/">Lyon</a>
+          <a class="chip" href="./marseille/">Marseille</a>
+          <a class="chip" href="./montpellier/">Montpellier</a>
+          <a class="chip" href="./nantes/">Nantes</a>
+          <a class="chip" href="./nice/">Nice</a>
+          <a class="chip" href="./reims/">Reims</a>
+          <a class="chip" href="./rennes/">Rennes</a>
+          <a class="chip" href="./rouen/">Rouen</a>
+          <a class="chip" href="./saint-etienne/">Saint-Étienne</a>
+          <a class="chip" href="./strasbourg/">Strasbourg</a>
+          <a class="chip" href="./toulouse/">Toulouse</a>
+          <a class="chip" href="./tours/">Tours</a>
+        </nav>
       </section>
 
       <section aria-labelledby="cities-title">

@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import html
 import json
+import unicodedata
 from datetime import date
 from pathlib import Path
 from string import Template
@@ -476,6 +477,10 @@ def render_home(template: Template, cities: list[dict]) -> str:
         "analytics": ANALYTICS,
         "city_count": str(len(cities)),
         "city_cards": "\n".join(city_card(city, "./", "h2") for city in cities),
+        "city_links": "\n".join(
+            f'          <a class="chip" href="./{city["path"]}">{esc(city["name"])}</a>'
+            for city in sorted(cities, key=lambda city: unicodedata.normalize("NFD", city["name"]))
+        ),
         "faq_html": faq_block(faq),
         "styles_version": short_hash(SITE / "styles.css"),
     }

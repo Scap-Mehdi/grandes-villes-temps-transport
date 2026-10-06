@@ -127,6 +127,10 @@ a {
   gap: 6px;
 }
 
+.hero .city-switch {
+  margin-top: 18px;
+}
+
 .city-switch a.chip {
   color: var(--ink-soft);
   text-decoration: none;
@@ -1194,13 +1198,13 @@ output {
     position: static;
   }
 
-  .steps,
   .stat-grid {
     grid-template-columns: 1fr 1fr;
   }
 
-  .steps li:last-child {
-    grid-column: 1 / -1;
+  /* Sur mobile, le mode d'emploi cède la place à la carte, qui remonte dans le premier écran. */
+  .hero .steps {
+    display: none;
   }
 
   .topbar-inner {
@@ -1269,5 +1273,12 @@ output {
 
   .control-group.actions {
     margin-left: 0;
+  }
+}
+
+@media (max-width: 440px) {
+  /* Sur petit écran, le lien vers le site de l'auteur (repris en pied de page) ferait déborder la barre. */
+  .topbar-link[rel="author"] {
+    display: none;
   }
 }

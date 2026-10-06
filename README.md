@@ -46,6 +46,8 @@ généré dans [sources/README.md](sources/README.md).
 Particularités : le GTFS TCL (Lyon) se télécharge à la main sur data.grandlyon.com (compte requis) ; les GTFS Tisséo
 (Toulouse) et STAR (Rennes) ne couvrent que quelques semaines et sont à retélécharger souvent ; à Marseille et dans
 les nouvelles villes (`"communes": "served"`), la carte se limite aux communes réellement desservies.
+Options de carte : `"arrondissements": "<code INSEE>"` trace les arrondissements municipaux dans la commune (Marseille),
+et `"view": "stops"` cadre la vue initiale sur tous les arrêts, bus compris, plutôt que sur le seul réseau tram/métro.
 
 ## Organisation du site
 

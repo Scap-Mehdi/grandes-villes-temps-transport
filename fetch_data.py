@@ -113,6 +113,12 @@ def main() -> None:
     communes_url = f"https://geo.api.gouv.fr/epcis/{city['epci']}/communes?fields=nom,code&format=geojson&geometry=contour"
     (out / "communes.geojson").write_bytes(download(communes_url))
     record(out, "communes.geojson", communes_url)
+    if city.get("arrondissements"):
+        print("Arrondissements municipaux…")
+        url = (f"https://geo.api.gouv.fr/communes?type=arrondissement-municipal&codeParent={city['arrondissements']}"
+               "&fields=nom,code&format=geojson&geometry=contour")
+        (out / "arrondissements.geojson").write_bytes(download(url))
+        record(out, "arrondissements.geojson", url)
 
     if city.get("railGeometry") == "osm":
         print("Tracés des lignes (OSM)…")
