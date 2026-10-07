@@ -160,7 +160,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" />
-    <link rel="stylesheet" href="../styles.css?v=9e078b8e" />
+    <link rel="stylesheet" href="../styles.css?v=0e5fbc42" />
   </head>
   <body>
     <script id="city-config" type="application/json">{"slug": "montreal", "name": "Montréal", "dataVersion": "330be93f", "defaultFrom": {"lat": 45.5156, "lon": -73.562, "label": "Place Émilie-Gamelin"}, "railNoun": "métro", "railStations": "stations de métro", "busNoun": "bus", "geocoder": "photon", "searchBbox": [45.38, -74.0, 45.72, -73.38]}</script>
@@ -243,16 +243,17 @@
           <canvas id="mapCanvas"></canvas>
 
           <aside id="tripPanel" class="trip-panel" aria-live="polite">
-            <p class="trip-eyebrow">Départ</p>
+            <p id="tripFromEyebrow" class="trip-eyebrow">Départ</p>
             <p id="tripFrom" class="trip-from">Chargement du réseau…</p>
             <div id="tripResult" class="trip-result" hidden>
               <div class="trip-row">
-                <p class="trip-eyebrow">Arrivée</p>
+                <p id="tripToEyebrow" class="trip-eyebrow">Arrivée</p>
                 <button id="removeTo" type="button" class="link-button">Retirer</button>
               </div>
               <p id="tripTo" class="trip-to"></p>
               <p id="tripDuration" class="trip-duration"></p>
               <ol id="tripSteps" class="trip-steps"></ol>
+              <p id="tripPrice" class="trip-price" hidden></p>
               <div id="heatFrom" class="segmented" role="group" aria-label="Point d'où part la carte">
                 <span>Carte depuis</span>
                 <button type="button" data-source="from" aria-pressed="true">le départ</button>
@@ -271,7 +272,7 @@
 
           <div class="legend" aria-hidden="true">
             <div id="legendBar" class="legend-bar"></div>
-            <div class="legend-labels"><span>0</span><span id="legendMid"></span><span id="legendMax"></span></div>
+            <div class="legend-labels"><span id="legendMin">0</span><span id="legendMid"></span><span id="legendMax"></span></div>
           </div>
         </div>
 
@@ -491,18 +492,18 @@
               <span>96&nbsp;% des stations de tram à moins de 30&nbsp;min du centre (Place du Martroi) · réseau TAO</span>
             </span>
           </a>
-          <a class="city-card" href="../bruxelles/">
-            <img src="../og/thumb-bruxelles.jpg" width="600" height="315" alt="" loading="lazy" />
-            <span class="city-card-body">
-              <h3>Bruxelles à portée de métro</h3>
-              <span>53&nbsp;% des stations de métro et de tram à moins de 30&nbsp;min du centre (Grand-Place) · réseau STIB</span>
-            </span>
-          </a>
           <a class="city-card" href="../paris/">
             <img src="../og/thumb-paris.jpg" width="600" height="315" alt="" loading="lazy" />
             <span class="city-card-body">
               <h3>Paris à portée de métro</h3>
               <span>63&nbsp;% des stations de métro, de RER, de Transilien et de tram à moins de 30&nbsp;min du centre (Châtelet) · réseau Île-de-France Mobilités</span>
+            </span>
+          </a>
+          <a class="city-card" href="../bruxelles/">
+            <img src="../og/thumb-bruxelles.jpg" width="600" height="315" alt="" loading="lazy" />
+            <span class="city-card-body">
+              <h3>Bruxelles à portée de métro</h3>
+              <span>53&nbsp;% des stations de métro et de tram à moins de 30&nbsp;min du centre (Grand-Place) · réseau STIB</span>
             </span>
           </a>
           <a class="city-card" href="../liege/">
@@ -562,7 +563,7 @@
     </footer>
 
     <div id="toast" class="toast" role="status" hidden></div>
-    <script type="module" src="../app.js?v=f75d97de"></script>
+    <script type="module" src="../app.js?v=47678c18"></script>
     <!-- Cloudflare Web Analytics (sans cookie). "spa": false : les mises à jour de l'URL ne comptent pas comme des pages vues. -->
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1904c17ed0624c0cab4d69ea1bacc5e7", "spa": false}'></script>
   </body>

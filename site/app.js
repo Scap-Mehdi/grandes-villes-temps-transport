@@ -7,6 +7,8 @@ const DATA_URL = new URL(`./data/${CITY.slug}.json?v=${CITY.dataVersion}`, impor
 // Base Adresse Nationale in France; Photon (OSM) elsewhere, limited to the city's area.
 const GEOCODER_URL = CITY.geocoder === "photon" ? "https://photon.komoot.io/api/" : "https://api-adresse.data.gouv.fr/search/";
 
+const PRICES_URL = CITY.prices ? new URL(`./data/${CITY.slug}.prices.json?v=${CITY.prices.version}`, import.meta.url) : null;
+
 const DEFAULT_FROM = CITY.defaultFrom;
 const MODE_LABELS = {
   tram: "Tram",
@@ -46,6 +48,14 @@ const HEAT_ALPHA = 0.78;
 const HEAT_UPSAMPLE = 3;
 const LUT_SIZE = 512;
 const NEIGHBOURS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+// Option Logement : carte du prix au m², de la mensualité d'un prêt ou du coût total (prêt + temps de trajet).
+const METRIC_PARAMS = { time: "time", prix: "price", mensualite: "monthly", total: "total" };
+const PRICE_DEFAULTS = { surface: 60, rate: 3.5, years: 25, deposit: 0, fees: 7.5, hour: 10, days: 18 };
+const PRICE_INPUTS = { surface: "priceSurface", rate: "priceRate", years: "priceYears", deposit: "priceDeposit", fees: "priceFees", hour: "priceHour", days: "priceDays" };
+const PRICE_URL_PARAMS = { surface: "surf", rate: "taux", years: "duree", deposit: "apport", fees: "frais", hour: "vh", days: "jours" };
+// L'échelle des euros va du 5ᵉ au 95ᵉ centile : quelques cases très chères écraseraient tout le reste.
+const PRICE_SCALE = [0.05, 0.95];
+const TOP_ZONES = 5;
 const RIVER_BRIDGE_CELLS = 4; // cases de 200 m : de quoi traverser le Rhône ou la Garonne
 
 const COLORS = {
@@ -74,6 +84,9 @@ const app = {
   from: null, // { point, label }
   to: null, // { point, label }
   includeBus: false,
+  metric: "time", // "time", "price", "monthly" ou "total" (option Logement)
+  price: { ...PRICE_DEFAULTS },
+  prices: null, // prix par case, chargés à la première utilisation
   maxMinutes: DEFAULT_MAX,
   isochrones: [...DEFAULT_ISOCHRONES],
   heatFrom: "from", // la heatmap part du départ ou de l'arrivée
@@ -505,7 +518,11 @@ function smoothGrid(times, cols, rows) {
 
 /** Peint la grille dans une image (HEAT_UPSAMPLE² pixels par cellule, interpolation bilinéaire). */
 function paintHeat(grid, { fast = false } = {}) {
-  const { cols, rows, times } = grid;
+  const { cols, rows, times, metric } = grid;
+  // Temps de trajet (0 à l'échelle) ou valeur en euros (du 5ᵉ au 95ᵉ centile, sans estompage au-delà).
+  const field = metric ? metric.values : times;
+  const low = metric ? metric.min : 0;
+  const span = metric ? metric.max - metric.min : app.maxMinutes;
   const upsample = fast ? 1 : HEAT_UPSAMPLE;
   const heat = app.heatCanvas;
   heat.width = cols * upsample;
@@ -514,7 +531,7 @@ function paintHeat(grid, { fast = false } = {}) {
   const image = heatCtx.createImageData(heat.width, heat.height);
 
   // Étend les valeurs d'un cran hors de la terre pour que le lissage ne fonce pas les côtes.
-  const filled = fillGaps(times, cols, rows, 2);
+  const filled = fillGaps(field, cols, rows, 2);
 
   // Table de couleurs précalculée : t ∈ [0, 1 + BEYOND_FADE] découpé en LUT_SIZE pas.
   const lutMax = 1 + BEYOND_FADE;
@@ -527,7 +544,7 @@ function paintHeat(grid, { fast = false } = {}) {
     lutBytes.set([r, g, b, alpha], i * 4);
   }
   const pixels = new Uint32Array(image.data.buffer);
-  const toLut = (LUT_SIZE - 1) / (app.maxMinutes * lutMax);
+  const toLut = (LUT_SIZE - 1) / (span * lutMax);
   const step = 1 / upsample;
   const width = heat.width;
   for (let y = 0; y < heat.height; y += 1) {
@@ -555,7 +572,8 @@ function paintHeat(grid, { fast = false } = {}) {
       w = tx * ty;
       if (v11 === v11) { sum += v11 * w; weight += w; }
       if (weight < 0.25) continue;
-      const index = Math.round((sum / weight) * toLut);
+      const value = metric ? clamp(sum / weight, low, metric.max) : sum / weight;
+      const index = Math.round((value - low) * toLut);
       if (index < LUT_SIZE) pixels[y * width + x] = lut[index];
     }
   }
@@ -877,7 +895,7 @@ function render() {
     const minutes = app.solution ? formatMinutes(travelTo(app.solution, app.to.point).minutes) : null;
     drawMarker(app.to.point, COLORS.to, app.heatFrom === "to" ? `Arrivée · ${minutes}` : minutes);
   }
-  if (app.from) drawMarker(app.from.point, COLORS.from, "Départ");
+  if (app.from) drawMarker(app.from.point, COLORS.from, app.metric === "time" ? "Départ" : "Travail");
 }
 
 function requestRender() {
@@ -941,8 +959,11 @@ function recompute({ fast = false } = {}) {
   app.solution = solveFrom(app.from.point);
   app.heatSolution = heatSource() === app.from ? app.solution : solveFrom(app.to.point);
   app.grid = computeGrid(app.heatSolution);
+  app.grid.metric = computeMetric(app.grid);
   paintHeat(app.grid, { fast });
+  updateLegend();
   updatePanel();
+  updateTopZones();
   requestRender();
 }
 
@@ -993,6 +1014,7 @@ function updatePanel() {
     $("tripHint").hidden = true;
     $("tripTo").textContent = app.to.label;
     $("tripDuration").textContent = formatMinutes(itinerary.minutes);
+    updateTripPrice(app.to.point, itinerary.minutes);
     $("tripSteps").replaceChildren(
       ...itinerary.steps
         .filter((step) => step.kind === "ride" || step.minutes >= 0.5)
@@ -1045,8 +1067,16 @@ function contrastText(hex) {
 function updateLegend() {
   const stops = PALETTE.map(([t, [r, g, b]]) => `rgb(${r}, ${g}, ${b}) ${Math.round(t * 100)}%`);
   $("legendBar").style.background = `linear-gradient(90deg, ${stops.join(", ")})`;
-  $("legendMid").textContent = `${Math.round(app.maxMinutes / 2)} min`;
-  $("legendMax").textContent = `${app.maxMinutes} min`;
+  const metric = app.grid?.metric;
+  if (metric) {
+    $("legendMin").textContent = formatMetric(metric.min);
+    $("legendMid").textContent = formatMetric((metric.min + metric.max) / 2);
+    $("legendMax").textContent = formatMetric(metric.max);
+  } else {
+    $("legendMin").textContent = "0";
+    $("legendMid").textContent = `${Math.round(app.maxMinutes / 2)} min`;
+    $("legendMax").textContent = `${app.maxMinutes} min`;
+  }
   $("maxValue").textContent = `${app.maxMinutes} min`;
 }
 
@@ -1067,6 +1097,12 @@ function syncUrl() {
   if (app.to && app.heatFrom === "to") params.set("carte", "arrivee");
   if (app.includeBus) params.set("bus", "1");
   if (app.maxMinutes !== DEFAULT_MAX) params.set("max", String(app.maxMinutes));
+  if (app.metric !== "time") {
+    params.set("couche", Object.keys(METRIC_PARAMS).find((key) => METRIC_PARAMS[key] === app.metric));
+    for (const [key, name] of Object.entries(PRICE_URL_PARAMS)) {
+      if (app.price[key] !== PRICE_DEFAULTS[key]) params.set(name, String(app.price[key]));
+    }
+  }
   const iso = [...app.isochrones].sort((a, b) => a - b).join(",");
   if (iso !== DEFAULT_ISOCHRONES.join(",")) params.set("iso", iso || "0");
   const query = params.toString().replaceAll("%2C", ",");
@@ -1096,6 +1132,15 @@ function restoreFromUrl() {
   }
   const to = parsePair(params.get("to"));
   if (to && setTo(to, null, { quiet: true }) && params.get("carte") === "arrivee") setHeatFrom("to");
+  if (CITY.prices) {
+    for (const [key, name] of Object.entries(PRICE_URL_PARAMS)) {
+      const value = Number(params.get(name));
+      if (params.has(name) && Number.isFinite(value) && value >= 0) app.price[key] = value;
+      $(PRICE_INPUTS[key]).value = String(app.price[key]);
+    }
+    const metric = METRIC_PARAMS[params.get("couche")];
+    if (metric && metric !== "time") setMetric(metric, { quiet: true });
+  }
 }
 
 function toast(message) {
@@ -1106,6 +1151,190 @@ function toast(message) {
   toast.timer = setTimeout(() => {
     element.hidden = true;
   }, 2200);
+}
+
+// --- Option Logement : prix, mensualité, coût total -------------------------
+
+const euros = (value) => `${Math.round(value).toLocaleString("fr-FR")} €`;
+
+function formatMetric(value) {
+  const rounded = app.metric === "price" ? Math.round(value / 100) * 100 : Math.round(value / 10) * 10;
+  return `${rounded.toLocaleString("fr-FR")} ${app.metric === "price" ? "€/m²" : "€/mois"}`;
+}
+
+/** Mensualité d'un prêt amorti à taux fixe (hors assurance). */
+function loanMonthly(principal, ratePercent, years) {
+  if (principal <= 0) return 0;
+  const months = years * 12;
+  const monthlyRate = ratePercent / 100 / 12;
+  return monthlyRate === 0 ? principal / months : (principal * monthlyRate) / (1 - (1 + monthlyRate) ** -months);
+}
+
+/** Coût mensuel d'un logement acheté au prix donné, et du trajet aller-retour valorisé au tarif de l'heure. */
+function monthlyCosts(pricePerM2, minutes) {
+  const { surface, rate, years, deposit, fees, hour, days } = app.price;
+  const principal = Math.max(0, pricePerM2 * surface * (1 + fees / 100) - deposit);
+  const loan = loanMonthly(principal, rate, years);
+  const commute = ((2 * minutes) / 60) * days * hour;
+  return { loan, commute, total: loan + commute };
+}
+
+function cellIndexAt(point) {
+  const { bounds, gridCols: cols, gridRows: rows } = app.data.meta;
+  const col = Math.floor(((point[0] - bounds[0]) / (bounds[2] - bounds[0])) * cols);
+  const row = Math.floor(((point[1] - bounds[1]) / (bounds[3] - bounds[1])) * rows);
+  return col < 0 || row < 0 || col >= cols || row >= rows ? -1 : app.data.mask[row * cols + col];
+}
+
+/** Valeur à colorer pour chaque case selon la couche choisie ; null pour la carte des temps. */
+function computeMetric(grid) {
+  if (app.metric === "time" || !app.prices) return null;
+  const values = new Float32Array(grid.times.length).fill(NaN);
+  app.data.cells.forEach((cell, i) => {
+    const price = app.prices.buy[i];
+    if (!price) return;
+    const index = cell.row * grid.cols + cell.col;
+    const minutes = grid.times[index];
+    if (app.metric === "price") {
+      values[index] = price;
+    } else if (app.metric === "monthly") {
+      values[index] = monthlyCosts(price, minutes).loan;
+    } else if (minutes <= app.maxMinutes) {
+      // Coût total : seules les zones à portée du lieu de travail sont comparées.
+      values[index] = monthlyCosts(price, minutes).total;
+    }
+  });
+  const sorted = Array.from(values).filter(Number.isFinite).sort((a, b) => a - b);
+  if (!sorted.length) return null;
+  const at = (share) => sorted[Math.floor(share * (sorted.length - 1))];
+  const min = at(PRICE_SCALE[0]);
+  return { values, min, max: Math.max(at(PRICE_SCALE[1]), min + 1) };
+}
+
+/** Recalcule la couche sans refaire les plus courts chemins (changement de surface, de taux, d'échelle…). */
+function refreshMetric() {
+  if (!app.grid) return;
+  app.grid.metric = computeMetric(app.grid);
+  paintHeat(app.grid);
+  updateLegend();
+  updatePanel();
+  updateTopZones();
+  requestRender();
+}
+
+function updateTripPrice(point, minutes) {
+  const element = $("tripPrice");
+  if (!element) return;
+  element.hidden = app.metric === "time" || !app.prices;
+  if (element.hidden) return;
+  const cell = cellIndexAt(point);
+  const price = cell >= 0 ? app.prices.buy[cell] : 0;
+  if (!price) {
+    element.textContent = "Pas de prix de vente pour ce point.";
+    return;
+  }
+  const costs = monthlyCosts(price, minutes);
+  const sales = app.prices.buyN[cell];
+  const basis = sales >= CITY.prices.minSales ? `${sales} ventes proches` : "médiane du quartier, peu de ventes proches";
+  element.textContent =
+    `${euros(price)}/m² (${basis}) · prêt ${euros(costs.loan)}/mois pour ${app.price.surface} m² · ` +
+    `trajet ${euros(costs.commute)}/mois · total ${euros(costs.total)}/mois`;
+}
+
+/** Les meilleures zones de la couche (une par commune ou arrondissement), avec assez de ventes pour être fiables. */
+function updateTopZones() {
+  const list = $("priceTop");
+  if (!list) return;
+  list.replaceChildren();
+  const metric = app.grid?.metric;
+  if (!metric) return;
+  const ranked = [];
+  app.data.cells.forEach((cell, i) => {
+    const value = metric.values[cell.row * app.grid.cols + cell.col];
+    if (Number.isFinite(value) && app.prices.buyN[i] >= CITY.prices.minSales) ranked.push([value, i]);
+  });
+  ranked.sort((a, b) => a[0] - b[0]);
+  const seen = new Set();
+  for (const [, i] of ranked) {
+    const cell = app.data.cells[i];
+    const name = communeAt(cell.point) ?? "Zone sans nom";
+    if (seen.has(name)) continue;
+    seen.add(name);
+    const minutes = app.grid.times[cell.row * app.grid.cols + cell.col];
+    const costs = monthlyCosts(app.prices.buy[i], minutes);
+    const price = app.prices.buy[i];
+    const shown = { price: `${euros(price)}/m²`, monthly: `${euros(costs.loan)}/mois`, total: `${euros(costs.total)}/mois` }[app.metric];
+    const details = [shown, formatMinutes(minutes)];
+    if (app.metric !== "price") details.push(`${euros(price)}/m²`);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = `${name} · ${details.join(" · ")}`;
+    button.addEventListener("click", () => setTo(cell.point));
+    const item = document.createElement("li");
+    item.append(button);
+    list.append(item);
+    if (seen.size === TOP_ZONES) break;
+  }
+}
+
+function updatePriceNote() {
+  const { source, from, to, minSales } = CITY.prices;
+  const { surface, hour, days } = app.price;
+  const explain = {
+    price: "Prix au m² des appartements, du moins cher au plus cher.",
+    monthly: `Mensualité d'un prêt pour ${surface} m², frais de notaire inclus.`,
+    total:
+      `Prêt pour ${surface} m² + trajet aller-retour au travail, valorisé ${hour} €/h pendant ${days} jours par mois. ` +
+      `Seules les zones à moins de ${app.maxMinutes} min du travail sont colorées.`,
+  }[app.metric];
+  $("priceNote").textContent =
+    `${explain} Médiane des ventes d'appartements (${source}, ${from.slice(0, 4) === to.slice(0, 4) ? from.slice(0, 4) : `${from.slice(0, 4)} à ${to.slice(0, 4)}`}) autour de chaque case. ` +
+    `Sous ${minSales} ventes proches, valeur du quartier. Les meilleures zones (une par commune ou arrondissement) :`;
+}
+
+/** Bascule entre la carte des temps et les couches de coût. Le départ devient le lieu de travail. */
+async function setMetric(metric, { quiet = false } = {}) {
+  if (!CITY.prices) return;
+  if (metric !== "time" && !app.prices) {
+    try {
+      const response = await fetch(PRICES_URL);
+      if (!response.ok) throw new Error(response.status);
+      app.prices = await response.json();
+    } catch (error) {
+      console.error(error);
+      toast("Impossible de charger les prix.");
+      metric = "time";
+    }
+  }
+  app.metric = metric;
+  const priceMode = metric !== "time";
+  for (const input of document.querySelectorAll("#priceMetric input")) input.checked = input.value === metric;
+  $("priceParams").hidden = !priceMode;
+  $("priceResults").hidden = !priceMode;
+  $("heatFrom").hidden = priceMode;
+  $("tripFromEyebrow").textContent = priceMode ? "Travail" : "Départ";
+  $("tripToEyebrow").textContent = priceMode ? "Logement" : "Arrivée";
+  if (priceMode) updatePriceNote();
+  // Chaque case est un logement possible : la carte part du lieu de travail.
+  if (priceMode && app.heatFrom === "to") setHeatFrom("from");
+  else if (app.grid) refreshMetric();
+  if (!quiet) syncUrl();
+}
+
+if (CITY.prices) {
+  $("priceMetric").addEventListener("change", (event) => setMetric(event.target.value));
+  $("priceParams").addEventListener("input", () => {
+    for (const [key, id] of Object.entries(PRICE_INPUTS)) {
+      const value = Number($(id).value);
+      if ($(id).value !== "" && Number.isFinite(value) && value >= 0) app.price[key] = value;
+    }
+    // Ni division par zéro, ni durée nulle.
+    app.price.years = Math.max(1, app.price.years);
+    app.price.surface = Math.max(1, app.price.surface);
+    updatePriceNote();
+    refreshMetric();
+    syncUrl();
+  });
 }
 
 // --- Interactions sur la carte ----------------------------------------------
@@ -1281,7 +1510,8 @@ $("isoToggles").addEventListener("change", () => {
 $("maxRange").addEventListener("input", (event) => {
   app.maxMinutes = Number(event.target.value);
   updateLegend();
-  if (app.grid) paintHeat(app.grid);
+  if (app.metric === "total") refreshMetric();
+  else if (app.grid) paintHeat(app.grid);
   requestRender();
   syncUrl();
 });

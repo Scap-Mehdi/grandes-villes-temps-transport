@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Download the raw sources of a city into data/<city>/.
 
-Usage: python3 fetch_data.py <city> [--gtfs-only | --context-only | --rivers-only | --rail-only]
+Usage: python3 fetch_data.py <city> [--gtfs-only | --context-only | --rivers-only | --rail-only | --prices-only]
 """
 
 from __future__ import annotations
@@ -12,6 +12,7 @@ import re
 import sys
 import time
 from datetime import datetime, timezone
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -124,6 +125,39 @@ def fetch_rivers(city: dict, out: Path) -> None:
     record(out, "osm_bridges.json", f"Overpass API: {query}")
 
 
+DVF_URL = "https://files.data.gouv.fr/geo-dvf/latest/csv/{year}/departements/{department}.csv.gz"
+DVF_YEARS_KEPT = 3
+
+
+def fetch_prices(city: dict, out: Path) -> None:
+    """Property sales (DVF géolocalisées, Etalab) of the departments listed in `prices.buy.departments`.
+    The latest years published are kept (a year that is not out yet answers 404 and is skipped)."""
+    buy = city.get("prices", {}).get("buy")
+    if not buy:
+        return
+    print("Ventes immobilières (DVF géolocalisées)…")
+    this_year = datetime.now(timezone.utc).year
+    for department in buy["departments"]:
+        kept = 0
+        for year in range(this_year, this_year - 8, -1):
+            if kept == DVF_YEARS_KEPT:
+                break
+            url = DVF_URL.format(year=year, department=department)
+            try:
+                body = download(url)
+            except urllib.error.HTTPError as error:
+                if error.code == 404:
+                    continue
+                raise
+            name = f"dvf_{year}_{department}.csv.gz"
+            (out / name).write_bytes(body)
+            record(out, name, url)
+            print(f"  {name} ({len(body) / 1e6:.1f} Mo)")
+            kept += 1
+        if not kept:
+            sys.exit(f"Aucun fichier DVF trouvé pour le département {department}")
+
+
 def main() -> None:
     if len(sys.argv) < 2:
         sys.exit(__doc__)
@@ -138,6 +172,9 @@ def main() -> None:
         return
     if "--rivers-only" in sys.argv:
         fetch_rivers(city, out)
+        return
+    if "--prices-only" in sys.argv:
+        fetch_prices(city, out)
         return
 
     print(f"GTFS {city['network']}…")
@@ -193,6 +230,7 @@ def main() -> None:
     record(out, "osm_water_parks.json", f"Overpass API: {query}")
     fetch_rivers(city, out)
     fetch_context(city, out)
+    fetch_prices(city, out)
 
 
 if __name__ == "__main__":

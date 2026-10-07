@@ -51,16 +51,17 @@ ${original_map}        <form id="searchForm" class="search" role="search" autoco
           <canvas id="mapCanvas"></canvas>
 
           <aside id="tripPanel" class="trip-panel" aria-live="polite">
-            <p class="trip-eyebrow">Départ</p>
+            <p id="tripFromEyebrow" class="trip-eyebrow">Départ</p>
             <p id="tripFrom" class="trip-from">Chargement du réseau…</p>
             <div id="tripResult" class="trip-result" hidden>
               <div class="trip-row">
-                <p class="trip-eyebrow">Arrivée</p>
+                <p id="tripToEyebrow" class="trip-eyebrow">Arrivée</p>
                 <button id="removeTo" type="button" class="link-button">Retirer</button>
               </div>
               <p id="tripTo" class="trip-to"></p>
               <p id="tripDuration" class="trip-duration"></p>
               <ol id="tripSteps" class="trip-steps"></ol>
+              <p id="tripPrice" class="trip-price" hidden></p>
               <div id="heatFrom" class="segmented" role="group" aria-label="Point d'où part la carte">
                 <span>Carte depuis</span>
                 <button type="button" data-source="from" aria-pressed="true">le départ</button>
@@ -79,7 +80,7 @@ ${original_map}        <form id="searchForm" class="search" role="search" autoco
 
           <div class="legend" aria-hidden="true">
             <div id="legendBar" class="legend-bar"></div>
-            <div class="legend-labels"><span>0</span><span id="legendMid"></span><span id="legendMax"></span></div>
+            <div class="legend-labels"><span id="legendMin">0</span><span id="legendMid"></span><span id="legendMax"></span></div>
           </div>
         </div>
 
@@ -107,8 +108,8 @@ ${original_map}        <form id="searchForm" class="search" role="search" autoco
             <button id="share" type="button" class="button primary">Partager</button>
           </div>
         </div>
-        <p id="reach" class="reach"></p>
-      </section>
+${price_controls}        <p id="reach" class="reach"></p>
+${price_results}      </section>
 
       <section class="section" aria-labelledby="stats-title">
         <h2 id="stats-title">${name} en chiffres</h2>

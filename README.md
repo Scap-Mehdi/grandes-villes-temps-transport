@@ -84,10 +84,34 @@ bateau (`fetch_data.py <ville> --rivers-only` télécharge cours d'eau et ponts)
    (`{"M2": "#9DC64D"}` : le GTFS TEC met tout le métro de Charleroi en jaune).
 3. `python3 build.py <ville> --fetch`, puis vérifier le tableau de contrôle et `node tools/check_trips.mjs <ville>`.
 
+## Option Logement : prix au m², mensualité, coût total
+
+Une ville qui a un bloc `"prices": {"buy": {"departments": ["75"]}}` dans `cities/<ville>.json` (Paris pour le premier essai)
+propose, sous la carte, trois couches en plus du temps de trajet : prix au m², mensualité du prêt, coût total
+(mensualité + trajet aller-retour valorisé à l'heure). Le départ devient alors le lieu de travail et chaque case de la carte
+un logement possible. L'arrivée évalue un logement précis, et la liste des meilleures zones (une par commune ou
+arrondissement) se règle avec la surface, le taux, la durée, l'apport, les frais de notaire, la valeur de l'heure et le nombre
+de jours de travail par mois (tout est dans le lien de partage).
+
+```bash
+python3 fetch_data.py paris --prices-only   # fichiers DVF géolocalisées (Etalab) des 3 dernières années publiées
+python3 build_prices.py paris               # écrit site/data/paris.prices.json et sources/paris.prices.json
+python3 build_pages.py                      # la page n'affiche l'option que si le fichier de prix existe
+python3 tools/test_prices.py                # filtres des ventes et prix par case
+```
+
+Méthode : une vente par mutation DVF (type « Vente », un seul appartement, ni maison ni local d'activité dans l'acte), prix au m²
+de surface bâtie entre 1 000 et 30 000 €/m², surface de 9 à 300 m². Chaque case de 200 m prend la médiane des 40 ventes les plus
+proches dans 600 m, puis 1 km, puis 1,5 km (au moins 15 ventes), sinon la médiane de son arrondissement ou de sa commune.
+Les cases à moins de 15 ventes proches ne figurent pas dans la liste des meilleures zones. Le prix est un prix passé, pas une
+annonce. DVF ne couvre pas l'Alsace-Moselle (Strasbourg), la Belgique ni le Québec. Les loyers (ANIL, encadrement de Paris)
+ne sont pas encore traités.
+
 ## Données
 
 - GTFS théoriques des réseaux via [transport.data.gouv.fr](https://transport.data.gouv.fr/) (TCL via [data.grandlyon.com](https://data.grandlyon.com/)), sous Licence Ouverte, ODbL ou Licence Mobilités selon les réseaux
 - Tracés des lignes (quand le GTFS n'en fournit pas), eau et parcs : © contributeurs OpenStreetMap (ODbL), via Overpass
+- Prix de vente au m² (option Logement) : [DVF géolocalisées](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees), Etalab et DGFiP, Licence Ouverte
 - Contours des communes de chaque métropole ([geo.api.gouv.fr](https://geo.api.gouv.fr/))
 - Recherche d'adresse côté navigateur : [api-adresse.data.gouv.fr](https://adresse.data.gouv.fr/)
 - Mesure d'audience : Cloudflare Web Analytics (sans cookie)

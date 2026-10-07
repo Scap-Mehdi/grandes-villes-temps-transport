@@ -12,7 +12,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from cities import load_cities
+from cities import load_cities, load_city
 
 ROOT = Path(__file__).resolve().parent
 
@@ -40,6 +40,8 @@ def main() -> None:
         if "--fetch" in flags:
             run("fetch_data.py", slug)
         run("build_data.py", slug)
+        if load_city(slug).get("prices", {}).get("buy") and list((ROOT / "data" / slug).glob("dvf_*.csv.gz")):
+            run("build_prices.py", slug)
     run("tools/rankings.py")
     run("build_pages.py")
     if "--no-og" not in flags:

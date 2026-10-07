@@ -65,5 +65,12 @@
     48.92,
     2.47
   ],
-  "transferTimes": "gtfs"
+  "transferTimes": "gtfs",
+  "prices": {
+    "buy": {
+      "departments": [
+        "75"
+      ]
+    }
+  }
 }

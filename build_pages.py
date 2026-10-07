@@ -368,6 +368,41 @@ def original_map(city: dict) -> str:
 """
 
 
+def price_blocks(city: dict) -> tuple[dict | None, str, str]:
+    """Option « Logement » of the map (cost layers), only when the prices of the city have been built
+    (build_prices.py): the `prices` entry of the page config, the controls and the results block."""
+    path = SITE / "data" / f"{city['slug']}.prices.json"
+    if not path.exists():
+        return None, "", ""
+    meta = json.loads(path.read_text(encoding="utf-8"))["meta"]
+    config = {"version": short_hash(path), "source": meta["source"], "from": meta["from"], "to": meta["to"], "minSales": meta["minSales"]}
+    controls = """        <div id="priceControls" class="controls price-controls">
+          <div id="priceMetric" class="control-group">
+            <span class="control-label">Carte</span>
+            <label class="pill-toggle"><input type="radio" name="priceMetric" value="time" checked /> Temps de trajet</label>
+            <label class="pill-toggle"><input type="radio" name="priceMetric" value="price" /> Prix au m²</label>
+            <label class="pill-toggle"><input type="radio" name="priceMetric" value="monthly" /> Mensualité du prêt</label>
+            <label class="pill-toggle"><input type="radio" name="priceMetric" value="total" /> Coût total (prêt + trajet)</label>
+          </div>
+          <div id="priceParams" class="control-group price-params" hidden>
+            <label>Surface <input id="priceSurface" type="number" min="9" max="300" step="1" value="60" /> m²</label>
+            <label>Taux <input id="priceRate" type="number" min="0" max="15" step="0.05" value="3.5" /> %</label>
+            <label>Durée <input id="priceYears" type="number" min="5" max="35" step="1" value="25" /> ans</label>
+            <label>Apport <input id="priceDeposit" type="number" min="0" step="1000" value="0" /> €</label>
+            <label>Frais de notaire <input id="priceFees" type="number" min="0" max="15" step="0.5" value="7.5" /> %</label>
+            <label>Valeur de l'heure <input id="priceHour" type="number" min="0" max="200" step="1" value="10" /> €</label>
+            <label>Jours par mois <input id="priceDays" type="number" min="0" max="31" step="1" value="18" /> jours</label>
+          </div>
+        </div>
+"""
+    results = """        <div id="priceResults" class="price-results" hidden>
+          <p id="priceNote" class="price-note"></p>
+          <ol id="priceTop" class="price-top"></ol>
+        </div>
+"""
+    return config, controls, results
+
+
 def render_city(template: Template, cities: list[dict], city: dict) -> str:
     url = SITE_URL + city["path"]
     base = "../"
@@ -443,6 +478,9 @@ def render_city(template: Template, cities: list[dict], city: dict) -> str:
         "geocoder": city["geocoder"],
         "searchBbox": city["osmBbox"],
     }
+    prices_config, price_controls, price_results = price_blocks(city)
+    if prices_config:
+        config["prices"] = prices_config
     feeds = " et ".join(f'<a href="{esc(feed["dataset"])}">GTFS {esc(feed["network"])}</a>' for feed in gtfs_feeds(city))
     data_credit = f'Horaires&nbsp;: {feeds} ({esc(city["metropole"])}).'
 
@@ -463,6 +501,8 @@ def render_city(template: Template, cities: list[dict], city: dict) -> str:
         "base": base,
         "city_config": json.dumps(config, ensure_ascii=False).replace("</", "<\\/"),
         "city_items": items,
+        "price_controls": price_controls,
+        "price_results": price_results,
         "original_map": original_map(city),
         "headline": headline,
         "name": esc(city["name"]),
